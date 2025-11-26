@@ -11,7 +11,7 @@ export default function UserLayout() {
       <MainNavbar />
 
       {/* Page Content Wrapper */}
-      <main style={{ minHeight: "80vh", paddingTop: "20px" }}>
+      <main style={{ minHeight: "80vh" }}>
         <Outlet />
       </main>
 

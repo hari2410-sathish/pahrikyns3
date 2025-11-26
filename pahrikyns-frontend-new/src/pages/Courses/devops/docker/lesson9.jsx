@@ -1,9 +1,9 @@
 ﻿export const meta = {
   title: "Docker Lesson 9",
-  description: "Auto-generated placeholder for docker lesson 9. Replace this with real lesson content.",
+  description: "docker logs, inspect, stats, troubleshooting container issues.",
   difficulty: "Intermediate",
-  duration: "17 min",
-  tags: [['docker']],
+  duration: "10 min",
+  tags: ['docker','logs','troubleshoot'],
   updated: "2025-11-25",
   thumbnail: ""
 };
@@ -12,10 +12,31 @@ function Lesson9() {
   return (
     <div style={{ padding: 20 }}>
       <h1>DOCKER - Lesson 9</h1>
-      <p>Auto-generated placeholder content for lesson 9 of docker. Replace with real lesson material.</p>
+
+      <h2>Check Logs</h2>
+      <pre>
+{`docker logs <container-id>`}
+      </pre>
+
+      <h2>Inspect Container</h2>
+      <pre>
+{`docker inspect <container-id>`}
+      </pre>
+
+      <h2>Monitor Containers</h2>
+      <pre>
+{`docker stats`}
+      </pre>
+
+      <h2>Common Issues</h2>
+      <ul>
+        <li>Port conflict → change -p value</li>
+        <li>Container keeps restarting → app crash</li>
+        <li>Permission denied → use sudo</li>
+      </ul>
     </div>
   );
 }
 
-Lesson9.displayName = "DOCKER Lesson 9 â€“ Placeholder";
+Lesson9.displayName = "DOCKER Lesson 9 – Full Content";
 export default Lesson9;

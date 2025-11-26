@@ -1,9 +1,9 @@
 ﻿export const meta = {
   title: "Docker Lesson 12",
-  description: "Auto-generated placeholder for docker lesson 12. Replace this with real lesson content.",
+  description: "Difference between volume, bind mount, and how to persist data.",
   difficulty: "Intermediate",
-  duration: "20 min",
-  tags: [['docker']],
+  duration: "13 min",
+  tags: ['docker','volume','mount'],
   updated: "2025-11-25",
   thumbnail: ""
 };
@@ -12,10 +12,25 @@ function Lesson12() {
   return (
     <div style={{ padding: 20 }}>
       <h1>DOCKER - Lesson 12</h1>
-      <p>Auto-generated placeholder content for lesson 12 of docker. Replace with real lesson material.</p>
+
+      <h2>Docker Volume</h2>
+      <p>Managed by Docker. Most common for databases.</p>
+
+      <pre>{`docker volume create data-vol`}</pre>
+
+      <h2>Bind Mount</h2>
+      <p>Links a host folder to a container folder.</p>
+
+      <pre>{`docker run -v /host/path:/container/path nginx`}</pre>
+
+      <h2>Which is Best?</h2>
+      <ul>
+        <li>Volume → Recommended for apps.</li>
+        <li>Bind mount → Development work.</li>
+      </ul>
     </div>
   );
 }
 
-Lesson12.displayName = "DOCKER Lesson 12 â€“ Placeholder";
+Lesson12.displayName = "DOCKER Lesson 12 – Full Content";
 export default Lesson12;

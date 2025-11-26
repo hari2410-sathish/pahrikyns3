@@ -1,9 +1,21 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAdminAuth } from "../contexts/AdminAuthContext";
 
-export default function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+export default function ProtectedRoute({ children, role }) {
+  const { admin } = useAdminAuth();
+  const location = useLocation();
 
-  if (loading) return <p>Loading...</p>;
-  return user ? children : <Navigate to="/login" />;
+  // ADMIN PROTECTED ROUTES
+  if (role === "admin") {
+    if (!admin) {
+      return (
+        <Navigate
+          to="/admin/login"
+          state={{ from: location.pathname }}
+        />
+      );
+    }
+  }
+
+  return children;
 }

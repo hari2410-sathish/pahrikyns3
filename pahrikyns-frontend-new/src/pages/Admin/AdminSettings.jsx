@@ -1,7 +1,7 @@
-// src/pages/Admin/Settings.jsx
-// Full neon settings page for admin
+// src/pages/Admin/AdminSettings.jsx
+// Full neon settings page for admin + Trusted Devices Manager
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -14,8 +14,18 @@ import {
   Avatar,
   Divider,
 } from "@mui/material";
-import { AppThemeContext } from "../../ThemeContext"; // if you have it; else remove
 
+import { AppThemeContext } from "../../ThemeContext";
+
+// device store helpers
+import {
+  getTrustedDevices,
+  removeTrustedDevice,
+} from "../../utils/deviceStore";
+
+// ------------------------------------------
+// REUSABLE SETTINGS CARD
+// ------------------------------------------
 function SettingsCard({ title, subtitle, children }) {
   return (
     <Box
@@ -29,7 +39,6 @@ function SettingsCard({ title, subtitle, children }) {
         overflow: "hidden",
       }}
     >
-      {/* subtle top gradient line */}
       <Box
         sx={{
           position: "absolute",
@@ -38,44 +47,64 @@ function SettingsCard({ title, subtitle, children }) {
           width: "100%",
           height: 2,
           background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-          opacity: 0.9,
         }}
       />
+
       <Typography sx={{ fontWeight: 800, mb: 0.5 }}>{title}</Typography>
+
       {subtitle && (
         <Typography sx={{ fontSize: 13, opacity: 0.7, mb: 2 }}>
           {subtitle}
         </Typography>
       )}
+
       {children}
     </Box>
   );
 }
 
-export default function Settings() {
-  // fake profile state
+// ------------------------------------------
+// MAIN COMPONENT
+// ------------------------------------------
+export default function AdminSettings() {
+  // ---------- PROFILE ----------
   const [profile, setProfile] = useState({
     name: "Admin User",
     email: "admin@pahrikyns.com",
   });
 
+  // ---------- NOTIFS ----------
   const [notifications, setNotifications] = useState({
     emailAlerts: true,
     newEnrollments: true,
     courseUpdates: false,
   });
 
+  // ---------- UI SETTINGS ----------
   const [uiSettings, setUiSettings] = useState({
     compactSidebar: false,
     reducedMotion: false,
     glowIntensity: 70,
   });
 
-  // optional: if you use AppThemeContext for variants
+  // ---------- THEME CONTEXT ----------
   const themeContext = useContext(AppThemeContext || {});
   const variant = themeContext?.variant;
   const setVariant = themeContext?.setVariant;
 
+  // ---------- TRUSTED DEVICES ----------
+  const [trustedDevices, setTrustedDevices] = useState([]);
+
+  useEffect(() => {
+    setTrustedDevices(getTrustedDevices());
+  }, []);
+
+  const handleRemoveDevice = (deviceId) => {
+    removeTrustedDevice(deviceId);
+    setTrustedDevices(getTrustedDevices());
+  };
+
+  // ---------- HANDLERS ----------
   const handleProfileChange = (key) => (e) => {
     setProfile((prev) => ({ ...prev, [key]: e.target.value }));
   };
@@ -108,7 +137,7 @@ export default function Settings() {
 
   return (
     <Box sx={{ p: 4, color: "white", position: "relative", zIndex: 1 }}>
-      {/* Page title */}
+      {/* PAGE TITLE */}
       <Box sx={{ mb: 4 }}>
         <Typography sx={{ fontSize: 28, fontWeight: 900 }}>
           Admin Settings
@@ -119,7 +148,8 @@ export default function Settings() {
       </Box>
 
       <Grid container spacing={3}>
-        {/* ================= PROFILE ================= */}
+
+        {/* ------------------ PROFILE ------------------ */}
         <Grid item xs={12} md={6}>
           <SettingsCard
             title="Profile & Account"
@@ -137,8 +167,11 @@ export default function Settings() {
               >
                 {profile.name[0]}
               </Avatar>
+
               <Box>
-                <Typography sx={{ fontWeight: 700 }}>{profile.name}</Typography>
+                <Typography sx={{ fontWeight: 700 }}>
+                  {profile.name}
+                </Typography>
                 <Typography sx={{ fontSize: 13, opacity: 0.7 }}>
                   Admin • PAHRIKYNS Teaching
                 </Typography>
@@ -152,14 +185,13 @@ export default function Settings() {
               fullWidth
               sx={{
                 mb: 2,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                },
+                "& .MuiOutlinedInput-root": { color: "white" },
                 "& .MuiInputLabel-root": {
                   color: "rgba(148,163,184,0.9)",
                 },
               }}
             />
+
             <TextField
               label="Email Address"
               value={profile.email}
@@ -167,9 +199,7 @@ export default function Settings() {
               fullWidth
               sx={{
                 mb: 2,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                },
+                "& .MuiOutlinedInput-root": { color: "white" },
                 "& .MuiInputLabel-root": {
                   color: "rgba(148,163,184,0.9)",
                 },
@@ -178,6 +208,7 @@ export default function Settings() {
 
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={1}>
               <Button sx={primaryButtonSx}>Save Profile</Button>
+
               <Button
                 sx={{
                   textTransform: "none",
@@ -198,7 +229,7 @@ export default function Settings() {
           </SettingsCard>
         </Grid>
 
-        {/* ================= NOTIFICATIONS ================= */}
+        {/* ------------------ NOTIFICATIONS ------------------ */}
         <Grid item xs={12} md={6}>
           <SettingsCard
             title="Notifications"
@@ -207,19 +238,21 @@ export default function Settings() {
             <Stack spacing={2}>
               <RowToggle
                 label="Email alerts"
-                description="Important updates about your account and platform."
+                description="Important updates about your account"
                 checked={notifications.emailAlerts}
                 onChange={handleNotifToggle("emailAlerts")}
               />
+
               <RowToggle
                 label="New enrollments"
-                description="Get notified when students enroll into your courses."
+                description="When students enroll into your courses"
                 checked={notifications.newEnrollments}
                 onChange={handleNotifToggle("newEnrollments")}
               />
+
               <RowToggle
                 label="Course updates"
-                description="Reminders about unpublished changes and drafts."
+                description="Reminders about drafts & changes"
                 checked={notifications.courseUpdates}
                 onChange={handleNotifToggle("courseUpdates")}
               />
@@ -227,7 +260,7 @@ export default function Settings() {
           </SettingsCard>
         </Grid>
 
-        {/* ================= THEME & UI ================= */}
+        {/* ------------------ THEME & UI ------------------ */}
         <Grid item xs={12} md={6}>
           <SettingsCard
             title="Theme & Interface"
@@ -238,6 +271,7 @@ export default function Settings() {
                 <Typography sx={{ fontSize: 13, opacity: 0.7, mb: 1 }}>
                   Global Theme Variant
                 </Typography>
+
                 <Stack direction="row" spacing={1.5} mb={3}>
                   <Button
                     onClick={() => setVariant("futuristic")}
@@ -262,6 +296,7 @@ export default function Settings() {
                   >
                     Futuristic
                   </Button>
+
                   <Button
                     onClick={() => setVariant("corporate")}
                     sx={{
@@ -291,13 +326,14 @@ export default function Settings() {
 
             <RowToggle
               label="Compact sidebar"
-              description="Reduce sidebar width when not hovered."
+              description="Reduce sidebar width"
               checked={uiSettings.compactSidebar}
               onChange={handleUiToggle("compactSidebar")}
             />
+
             <RowToggle
               label="Reduce motion"
-              description="Turn off heavy animations for better performance."
+              description="Turn off animations"
               checked={uiSettings.reducedMotion}
               onChange={handleUiToggle("reducedMotion")}
             />
@@ -307,6 +343,7 @@ export default function Settings() {
             <Typography sx={{ fontSize: 13, opacity: 0.7, mb: 1 }}>
               Neon glow intensity
             </Typography>
+
             <Stack direction="row" spacing={2} alignItems="center">
               <Slider
                 value={uiSettings.glowIntensity}
@@ -319,11 +356,11 @@ export default function Settings() {
                     boxShadow: "0 0 10px #00eaff",
                   },
                   "& .MuiSlider-track": {
-                    background:
-                      "linear-gradient(90deg,#00eaff,#7b3fe4)",
+                    background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
                   },
                 }}
               />
+
               <Typography sx={{ fontSize: 13, width: 40, textAlign: "right" }}>
                 {uiSettings.glowIntensity}%
               </Typography>
@@ -331,27 +368,101 @@ export default function Settings() {
           </SettingsCard>
         </Grid>
 
-        {/* ================= SECURITY / DANGER ================= */}
+        {/* ------------------ SECURITY ------------------ */}
         <Grid item xs={12} md={6}>
           <SettingsCard
             title="Security"
             subtitle="Keep your admin account safe."
           >
+
             <RowToggle
               label="Login alerts"
-              description="Get an email whenever a new device logs in."
+              description="Email when new device logs in"
               checked={true}
               onChange={() => {}}
             />
 
             <Divider sx={{ my: 2, borderColor: "rgba(148,163,184,0.4)" }} />
 
-            <Typography sx={{ fontSize: 13, opacity: 0.8, mb: 1 }}>
-              Danger zone
+            {/* TRUSTED DEVICES LIST */}
+            <Typography sx={{ fontSize: 16, fontWeight: 700, mb: 1 }}>
+              Trusted Devices
             </Typography>
+
+            <Typography sx={{ fontSize: 13, opacity: 0.7, mb: 2 }}>
+              These devices skip extra OTP verification.
+            </Typography>
+
+            <Box
+              sx={{
+                border: "1px solid rgba(0,255,255,0.25)",
+                borderRadius: 2,
+                p: 2,
+                mb: 2,
+                background: "rgba(0,20,40,0.4)",
+              }}
+            >
+              {trustedDevices.length === 0 ? (
+                <Typography sx={{ opacity: 0.6, fontSize: 13 }}>
+                  No trusted devices.
+                </Typography>
+              ) : (
+                trustedDevices.map((dev) => (
+                  <Box
+                    key={dev.deviceId}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      py: 1,
+                      borderBottom:
+                        "1px solid rgba(0,255,255,0.1)",
+                    }}
+                  >
+                    <Box>
+                      <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                        {dev.label}
+                      </Typography>
+
+                      <Typography sx={{ fontSize: 12, opacity: 0.6 }}>
+                        Device ID: {dev.deviceId}
+                      </Typography>
+
+                      <Typography sx={{ fontSize: 12, opacity: 0.6 }}>
+                        Added: {new Date(dev.addedAt).toLocaleString()}
+                      </Typography>
+                    </Box>
+
+                    <Button
+                      onClick={() =>
+                        handleRemoveDevice(dev.deviceId)
+                      }
+                      sx={{
+                        fontSize: 12,
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: "999px",
+                        color: "#ff6b6b",
+                        border:
+                          "1px solid rgba(255,107,107,0.7)",
+                        "&:hover": {
+                          background: "rgba(255,107,107,0.2)",
+                        },
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </Box>
+                ))
+              )}
+            </Box>
+
+            <Typography sx={{ fontSize: 13, opacity: 0.7, mb: 1 }}>
+              Danger Zone
+            </Typography>
+
             <Typography sx={{ fontSize: 12, opacity: 0.6, mb: 2 }}>
-              Log out from all devices if you suspect someone else has access
-              to your admin account.
+              Logout from all devices if you suspect unauthorized access.
             </Typography>
 
             <Button
@@ -372,12 +483,15 @@ export default function Settings() {
             </Button>
           </SettingsCard>
         </Grid>
+
       </Grid>
     </Box>
   );
 }
 
-/** small helper for label + switch line */
+// ------------------------------------------
+// ROW TOGGLE COMPONENT
+// ------------------------------------------
 function RowToggle({ label, description, checked, onChange }) {
   return (
     <Box
@@ -392,12 +506,14 @@ function RowToggle({ label, description, checked, onChange }) {
         <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
           {label}
         </Typography>
+
         {description && (
           <Typography sx={{ fontSize: 12, opacity: 0.7 }}>
             {description}
           </Typography>
         )}
       </Box>
+
       <Switch checked={checked} onChange={onChange} />
     </Box>
   );

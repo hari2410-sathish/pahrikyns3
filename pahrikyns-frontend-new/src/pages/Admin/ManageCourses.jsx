@@ -15,6 +15,7 @@ import { useTheme } from "@mui/material/styles";
 import CourseCard from "../../components/admin/CourseCard";
 import CourseTable from "../../components/admin/CourseTable";
 import AddCourseModal from "../../components/admin/AddCourseModal";
+import CSVImportModal from "../../components/admin/CSVImportModal"; // ✅ ADDED
 
 const initialCourses = [
   {
@@ -55,6 +56,7 @@ export default function ManageCourses() {
   const [level, setLevel] = useState("All");
   const [sort, setSort] = useState("students_desc");
   const [openAdd, setOpenAdd] = useState(false);
+  const [openImport, setOpenImport] = useState(false); // ✅ CSV IMPORT STATE
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -91,7 +93,7 @@ export default function ManageCourses() {
   const handleAddCourse = (newCourse) => {
     setCourses((prev) => [
       ...prev,
-      { id: prev.length + 1, status: "Draft", ...newCourse },
+      { id: Date.now(), status: "Draft", ...newCourse },
     ]);
     setOpenAdd(false);
   };
@@ -110,7 +112,7 @@ export default function ManageCourses() {
         alignItems={{ xs: "stretch", md: "center" }}
         justifyContent="space-between"
       >
-        {/* Search + filters row */}
+        {/* Search + filters */}
         <Stack
           direction={{ xs: "column", md: "row" }}
           spacing={2}
@@ -189,28 +191,44 @@ export default function ManageCourses() {
           </TextField>
         </Stack>
 
-        {/* Add Course button */}
-        <Button
-          onClick={() => setOpenAdd(true)}
-          sx={{
-            px: 3,
-            py: 1.2,
-            borderRadius: "999px",
-            fontWeight: 700,
-            background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-            color: "#020617",
-            textTransform: "none",
-            boxShadow: "0 0 20px rgba(0,234,255,0.4)",
-            "&:hover": {
-              boxShadow: "0 0 30px rgba(123,63,228,0.6)",
-            },
-          }}
-        >
-          + Add Course
-        </Button>
+        {/* Right-side buttons */}
+        <Stack direction="row" spacing={2}>
+          {/* CSV IMPORT BUTTON */}
+          <Button
+            onClick={() => setOpenImport(true)}
+            sx={{
+              px: 3,
+              py: 1.2,
+              borderRadius: "999px",
+              fontWeight: 700,
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(0,255,255,0.3)",
+              color: "#00eaff",
+              "&:hover": { background: "rgba(0,255,255,0.15)" },
+            }}
+          >
+            Import CSV
+          </Button>
+
+          {/* ADD COURSE */}
+          <Button
+            onClick={() => setOpenAdd(true)}
+            sx={{
+              px: 3,
+              py: 1.2,
+              borderRadius: "999px",
+              fontWeight: 700,
+              background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
+              color: "#020617",
+              boxShadow: "0 0 20px rgba(0,234,255,0.4)",
+            }}
+          >
+            + Add Course
+          </Button>
+        </Stack>
       </Stack>
 
-      {/* Tabs for view mode (but hybrid) */}
+      {/* VIEW SWITCH */}
       <Tabs
         value={tab}
         onChange={(e, v) => setTab(v)}
@@ -229,7 +247,7 @@ export default function ManageCourses() {
         <Tab label="Table View" />
       </Tabs>
 
-      {/* VIEW AREA */}
+      {/* CARD VIEW */}
       {tab === 0 && (
         <Grid container spacing={3}>
           {filteredCourses.map((course) => (
@@ -243,11 +261,11 @@ export default function ManageCourses() {
         </Grid>
       )}
 
+      {/* TABLE VIEW */}
       {tab === 1 && (
         <CourseTable
           courses={filteredCourses}
           onDeleteCourse={handleDeleteCourse}
-          // hybrid: on mobile, table component can show cards instead
           isMobile={isMobile}
         />
       )}
@@ -257,6 +275,25 @@ export default function ManageCourses() {
         open={openAdd}
         onClose={() => setOpenAdd(false)}
         onAdd={handleAddCourse}
+      />
+
+      {/* CSV IMPORT MODAL */}
+      <CSVImportModal
+        open={openImport}
+        onClose={() => setOpenImport(false)}
+        type="Courses"
+        onImport={(rows) => {
+          const formatted = rows.map((r) => ({
+            id: Date.now() + Math.random(),
+            title: r.title,
+            category: r.category,
+            level: r.level,
+            lessons: Number(r.lessons || 0),
+            students: Number(r.students || 0),
+            status: r.status || "Draft",
+          }));
+          setCourses((prev) => [...prev, ...formatted]);
+        }}
       />
     </Box>
   );

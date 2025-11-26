@@ -1,9 +1,9 @@
 ﻿export const meta = {
   title: "Docker Lesson 18",
-  description: "Auto-generated placeholder for docker lesson 18. Replace this with real lesson content.",
+  description: "Security best practices, least privilege, image scanning, secrets.",
   difficulty: "Advanced",
-  duration: "26 min",
-  tags: [['docker']],
+  duration: "16 min",
+  tags: ['docker','security'],
   updated: "2025-11-25",
   thumbnail: ""
 };
@@ -12,10 +12,26 @@ function Lesson18() {
   return (
     <div style={{ padding: 20 }}>
       <h1>DOCKER - Lesson 18</h1>
-      <p>Auto-generated placeholder content for lesson 18 of docker. Replace with real lesson material.</p>
+
+      <h2>Security Best Practices</h2>
+      <ul>
+        <li>Use official images.</li>
+        <li>Scan images for vulnerabilities.</li>
+        <li>Do not run containers as root.</li>
+        <li>Use .dockerignore to remove sensitive files.</li>
+        <li>Keep Docker updated.</li>
+      </ul>
+
+      <h2>Scan Image</h2>
+      <pre>{`docker scan nginx`}</pre>
+
+      <h2>Use Secrets</h2>
+      <pre>{`docker secret create db_pass password.txt`}</pre>
+
+      <p>Security is critical for production deployments.</p>
     </div>
   );
 }
 
-Lesson18.displayName = "DOCKER Lesson 18 â€“ Placeholder";
+Lesson18.displayName = "DOCKER Lesson 18 – Full Content";
 export default Lesson18;
