@@ -4,19 +4,40 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Admin {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  name     String?
-  role     String  @default("admin")
+  id         String      @id @default(cuid())
+  email      String      @unique
+  password   String
+  role       String      @default("admin")
+  isActive   Boolean     @default(true)
+  totpSecret String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  devices    Device[]
+  otps       OtpStore[]
+}
+
+model Device {
+  id        String    @id @default(cuid())
+  admin     Admin     @relation(fields: [adminId], references: [id])
+  adminId   String
+  name      String?
+  lastSeen  DateTime?
+  locked    Boolean   @default(false)
+  createdAt DateTime  @default(now())
 }
 
 model OtpStore {
-  id        Int      @id @default(autoincrement())
-  email     String
+  id        String    @id @default(cuid())
+  admin     Admin?    @relation(fields: [adminId], references: [id])
+  adminId   String?
   otp       String
+  method    String
   expiresAt DateTime
+  used      Boolean   @default(false)
+  createdAt DateTime  @default(now())
 }

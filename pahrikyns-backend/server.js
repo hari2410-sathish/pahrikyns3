@@ -1,22 +1,21 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-import adminRoutes from "./routes/adminRoutes.js";
-import otpRoutes from "./routes/otpRoutes.js";
-
-dotenv.config();
+const adminRoutes = require('./src/routes/adminRoutes');
 
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-app.use("/api/admin", adminRoutes);
-app.use("/api/otp", otpRoutes);
+// Correct prefix
+app.use('/admin', adminRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Backend running...");
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message || 'Server error' });
 });
 
 const PORT = process.env.PORT || 5000;

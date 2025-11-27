@@ -12,8 +12,10 @@ D:.
 ÃÄÄÄapi
 ³       admin.js
 ³       auth.js
+³       axios.js
 ³       course.js
 ³       fakeAdminAPI.js
+³       otp.js
 ³       
 ÃÄÄÄassets
 ³       react.svg
@@ -21,11 +23,14 @@ D:.
 ÃÄÄÄcomponents
 ³   ÃÄÄÄadmin
 ³   ³       AddCourseModal.jsx
+³   ³       AddStudentModal.jsx
 ³   ³       AdminSidebar.jsx
 ³   ³       AdminTopbar.jsx
 ³   ³       BarChart.jsx
 ³   ³       CourseCard.jsx
 ³   ³       CourseTable.jsx
+³   ³       CSVImportModal.jsx
+³   ³       DeviceAlertModal.jsx
 ³   ³       LineChart.jsx
 ³   ³       PieMini.jsx
 ³   ³       StatCard.jsx
@@ -78,21 +83,26 @@ D:.
 ³   ³       AddLesson.jsx
 ³   ³       AdminDashboard.jsx
 ³   ³       AdminSettings.jsx
-³   ³       AdminSidebar.jsx
-³   ³       AdminTopbar.jsx
+³   ³       CourseDetails.jsx
 ³   ³       Dashboard.jsx
 ³   ³       EditCourse.jsx
 ³   ³       ManageCourses.jsx
 ³   ³       ManageStudents.jsx
 ³   ³       Notification.jsx
 ³   ³       SearchBox.jsx
-³   ³       Setting.jsx
 ³   ³       StudentDetails.jsx
 ³   ³       
 ³   ÃÄÄÄAuth
+³   ³       AdminForgotPassword.jsx
+³   ³       AdminLogin.jsx
+³   ³       AdminOTPVerify.jsx
+³   ³       AdminRegister.jsx
+³   ³       AdminResetPassword.jsx
+³   ³       AdminTOTPSetup.jsx
 ³   ³       Login.jsx
 ³   ³       LoginForgetPassword.jsx
 ³   ³       Register.jsx
+³   ³       ResetPassword.jsx
 ³   ³       
 ³   ÃÄÄÄCourses
 ³   ³   ³   CategoryPage.jsx
@@ -775,9 +785,12 @@ D:.
 ³       
 ÀÄÄÄutils
         adminAuth.js
+        AdminProtectedRoute.jsx
         auth.js
         courseLoader.js
         courseModel.js
+        deviceHelper.js
+        deviceStore.js
         helpers.js
         notifications.js
         ProtectedRoute.jsx

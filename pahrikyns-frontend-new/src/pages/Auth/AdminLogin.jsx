@@ -1,262 +1,61 @@
-// src/pages/Auth/AdminLogin.jsx
-import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  Typography,
-  Button,
-  Paper,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import api from "../../api/axios";
-
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAdminAuth } from "../../contexts/AdminAuthContext";
-
-import DeviceAlertModal from "../../components/admin/DeviceAlertModal";
-import {
-  isDeviceTrusted,
-  getDeviceFingerprint,
-  fingerprintToId,
-  getPersistentDeviceId,
-} from "../../utils/deviceHelper";
-
-import {
-  getTrustedDevices,
-  addTrustedDevice,
-} from "../../utils/deviceStore";
+import React, { useState, useContext } from "react";
+import { Box, TextField, Button, Paper, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { AdminAuthContext } from "../../contexts/AdminAuthContext";
 
 export default function AdminLogin() {
-  const [showPass, setShowPass] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const { login } = useContext(AdminAuthContext);
 
-  const [deviceModal, setDeviceModal] = useState(false);
-  const [deviceInfo, setDeviceInfo] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAdminAuth();
 
-  const from = location.state?.from || "/admin";
-
-  // TRUST DEVICE
-  const handleTrust = () => {
-    const { fingerprintId, persistentId, fp } = deviceInfo;
-
-    addTrustedDevice({
-      deviceId: persistentId,
-      fingerprintId,
-      label: `${fp.platform} • ${fp.scr}`,
-      addedAt: new Date().toISOString(),
-    });
-
-    setDeviceModal(false);
-    navigate("/admin/verify-otp");
-  };
-
-  const handleReport = () => {
-    alert("Suspicious login reported!");
-    setDeviceModal(false);
-  };
-
-  const handleLogoutDevice = () => {
-    navigate("/admin/login");
-  };
-
-  // -------------------------------------------------------
-  // LOGIN SUBMIT  ✅ FIXED HERE
-  // -------------------------------------------------------
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!form.email || !form.password) {
-      alert("Enter email and password");
-      return;
-    }
-
     try {
-      // 🔥 FIXED ROUTE HERE
-      const res = await api.post("/admin/login", {
-        email: form.email,
-        password: form.password,
-      });
+      const res = await login({ email, password });
 
-      // save token
-      localStorage.setItem("adminToken", res.data.token);
-
-      // store admin user in context
-      login(form.email, form.password);
-
-      // DEVICE SECURITY CHECK
-      const trustedList = getTrustedDevices();
-      const check = isDeviceTrusted(trustedList);
-
-      if (!check.trusted) {
-        setDeviceInfo(check);
-        setDeviceModal(true);
-        return;
+      if (res.next === "otp") {
+        sessionStorage.setItem("pre_otp_token", res.token);
+        navigate("/admin/verify-otp"); // ✅ FIXED ROUTE
       }
-
-      navigate("/admin/verify-otp");
-
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
-  };
+  }
 
-  // -------------------------------------------------------
-  // UI
-  // -------------------------------------------------------
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "radial-gradient(circle, #020617, #000)",
-        p: 3,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {[...Array(25)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: "absolute",
-            width: `${10 + Math.random() * 20}px`,
-            height: `${10 + Math.random() * 20}px`,
-            borderRadius: "50%",
-            background: "rgba(0,234,255,0.7)",
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            filter: "blur(12px)",
-            opacity: 0.3,
-            animation: `float ${4 + Math.random() * 6}s infinite ease-in-out`,
-          }}
-        />
-      ))}
-
-      <style>{`
-        @keyframes float {
-          0%,100% { transform: translateY(0); opacity: 0.3; }
-          50% { transform: translateY(-20px); opacity: 0.8; }
-        }
-      `}</style>
-
-      <Paper
-        elevation={12}
-        sx={{
-          width: "100%",
-          maxWidth: 380,
-          p: 4,
-          borderRadius: 4,
-          textAlign: "center",
-          background: "rgba(10,20,40,0.85)",
-          border: "1px solid rgba(0,255,255,0.25)",
-          boxShadow: "0 0 40px rgba(0,255,255,0.25)",
-          backdropFilter: "blur(12px)",
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: 28,
-            fontWeight: 800,
-            mb: 3,
-            background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          ADMIN LOGIN
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
+      <Paper sx={{ p: 4, width: 400 }}>
+        <Typography variant="h6" mb={2}>
+          Admin Login
         </Typography>
 
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
             label="Email"
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            sx={{
-              mb: 2.5,
-              "& .MuiOutlinedInput-root": {
-                background: "rgba(255,255,255,0.07)",
-                borderRadius: "10px",
-              },
-              "& .MuiInputLabel-root": { color: "#94a3b8" },
-            }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mb: 2 }}
           />
 
           <TextField
             fullWidth
             label="Password"
-            type={showPass ? "text" : "password"}
-            value={form.password}
-            onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPass(!showPass)}
-                    sx={{ color: "#00eaff" }}
-                  >
-                    {showPass ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              mb: 3,
-              "& .MuiOutlinedInput-root": {
-                background: "rgba(255,255,255,0.07)",
-                borderRadius: "10px",
-              },
-              "& .MuiInputLabel-root": { color: "#94a3b8" },
-            }}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ mb: 2 }}
           />
 
-          <Button
-            fullWidth
-            type="submit"
-            sx={{
-              mt: 1,
-              py: 1.2,
-              borderRadius: "999px",
-              fontWeight: 800,
-              fontSize: 16,
-              background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-              color: "#020617",
-              textTransform: "none",
-              boxShadow: "0 0 20px rgba(0,234,255,0.45)",
-              "&:hover": {
-                boxShadow: "0 0 30px rgba(123,63,228,0.7)",
-              },
-            }}
-          >
-            Login
+          <Button type="submit" variant="contained" fullWidth>
+            NEXT
           </Button>
         </form>
-
-        <Typography sx={{ mt: 2, opacity: 0.6 }}>
-          © 2025 Admin Panel • Secure Access
-        </Typography>
       </Paper>
-
-      <DeviceAlertModal
-        open={deviceModal}
-        deviceInfo={deviceInfo}
-        onTrust={handleTrust}
-        onReport={handleReport}
-        onLogout={handleLogoutDevice}
-      />
     </Box>
   );
 }

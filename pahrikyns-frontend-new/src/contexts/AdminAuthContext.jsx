@@ -1,98 +1,70 @@
-// src/contexts/AdminAuthContext.jsx
+import React, { createContext, useContext, useState } from "react";
+import API from "../api/axios";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { loginAdmin, verifyAdminToken } from "../api/admin";
-
-const AUTH_TOKEN_KEY = "admin_auth_token_v1";
-const AUTH_USER_KEY = "admin_user_v1";
-
-const AdminAuthContext = createContext(null);
-
-export function useAdminAuth() {
-  return useContext(AdminAuthContext);
-}
+export const AdminAuthContext = createContext();
+export const useAdminAuth = () => useContext(AdminAuthContext);
 
 export function AdminAuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    try {
-      const raw = localStorage.getItem(AUTH_USER_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) {
-      return null;
-    }
-  });
-
-  const [token, setToken] = useState(() =>
-    localStorage.getItem(AUTH_TOKEN_KEY)
+  const [admin, setAdmin] = useState(
+    JSON.parse(localStorage.getItem("admin")) || null
   );
 
-  const [loading, setLoading] = useState(true);
+  // LOGIN
+  async function login({ email, password }) {
+    const res = await API.post("/admin/login", { email, password });
 
-  // ----------------- ON MOUNT: VERIFY TOKEN -----------------
-  useEffect(() => {
-    async function init() {
-      if (token) {
-        const payload = verifyAdminToken(token);
+    if (res.data.next === "otp") {
+      sessionStorage.setItem("pre_otp_token", res.data.token);
+    }
 
-        if (!payload) {
-          localStorage.removeItem(AUTH_TOKEN_KEY);
-          localStorage.removeItem(AUTH_USER_KEY);
-          setToken(null);
-          setUser(null);
-        } else {
-          if (!user) {
-            try {
-              const raw = localStorage.getItem(AUTH_USER_KEY);
-              if (raw) setUser(JSON.parse(raw));
-            } catch {}
-          }
-        }
+    return res.data;
+  }
+
+  // SEND OTP
+  async function sendOtp({ email, method }) {
+    const token = sessionStorage.getItem("pre_otp_token");
+
+    return API.post(
+      "/admin/send-otp",
+      { email, method },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-      setLoading(false);
+    );
+  }
+
+  // VERIFY OTP
+  async function verifyOtp({ email, otp }) {
+    const res = await API.post("/admin/verify-otp", { email, otp });
+
+    if (res.data.ok && res.data.token) {
+      const adminObj = { email, role: "admin" };
+
+      setAdmin(adminObj);
+      localStorage.setItem("admin", JSON.stringify(adminObj));
+      localStorage.setItem("admin_token", res.data.token);
     }
 
-    init();
-    // eslint-disable-next-line
-  }, []);
+    return res.data;
+  }
 
-  // ----------------- ADMIN LOGIN -----------------
-  const login = async (email, password) => {
-    setLoading(true);
-
-    const resp = await loginAdmin(email, password);
-
-    if (resp.ok) {
-      localStorage.setItem(AUTH_TOKEN_KEY, resp.token);
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(resp.user));
-
-      setToken(resp.token);
-      setUser(resp.user);
-      setLoading(false);
-
-      return { ok: true };
-    } else {
-      setLoading(false);
-      return { ok: false, error: resp.error || "Admin login failed" };
-    }
-  };
-
-  // ----------------- LOGOUT -----------------
-  const logout = () => {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(AUTH_USER_KEY);
-    setToken(null);
-    setUser(null);
-  };
+  function logout() {
+    setAdmin(null);
+    localStorage.removeItem("admin");
+    localStorage.removeItem("admin_token");
+    sessionStorage.removeItem("pre_otp_token");
+  }
 
   return (
     <AdminAuthContext.Provider
       value={{
-        user,
-        token,
-        loading,
+        admin,
         login,
+        sendOtp,
+        verifyOtp,
         logout,
-        isAuthenticated: Boolean(user && token),
       }}
     >
       {children}

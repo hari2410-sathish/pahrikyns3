@@ -3,6 +3,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
+
 import AdminSidebar from "../components/admin/AdminSidebar";
 import AdminTopbar from "../components/admin/AdminTopbar";
 import MainNavbar from "../components/global/MainNavbar";
@@ -18,26 +19,53 @@ export default function AdminLayout() {
         color: "white",
       }}
     >
-      {/* 🔹 NAVBAR FIXED AT TOP */}
-      <Box sx={{ position: "fixed", top: 0, width: "100%", zIndex: 2000 }}>
+      {/* 🔹 FIXED MAIN NAVBAR AT TOP */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          width: "100%",
+          zIndex: 2000,
+          bgcolor: "rgba(0,0,0,0.35)",
+          backdropFilter: "blur(10px)",
+        }}
+      >
         <MainNavbar />
       </Box>
 
-      {/* 🔹 PUSH CONTENT BELOW NAVBAR */}
-      <Box sx={{ display: "flex", width: "100%", pt: "90px" }}>
-        {/* 🔹 SIDEBAR */}
-        <AdminSidebar />
+      {/* 🔹 PUSH CONTENT DOWN AFTER NAVBAR HEIGHT */}
+      <Box
+        sx={{
+          display: "flex",
+          width: "100%",
+          pt: "90px", // height of MainNavbar
+        }}
+      >
+        {/* 🔹 LEFT SIDEBAR */}
+        <Box sx={{ position: "sticky", top: "90px", height: "calc(100vh - 90px)" }}>
+          <AdminSidebar />
+        </Box>
 
-        {/* 🔹 RIGHT CONTENT AREA */}
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* 🔹 RIGHT MAIN CONTENT */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+          }}
+        >
+          {/* 🔹 TOPBAR (INSIDE ADMIN ONLY) */}
           <AdminTopbar />
 
+          {/* 🔹 PAGE AREA */}
           <Box
             sx={{
               flex: 1,
               px: 4,
               py: 3,
               width: "100%",
+              overflowY: "auto",
             }}
           >
             <Outlet />
