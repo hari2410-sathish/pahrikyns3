@@ -18,9 +18,17 @@ export default function AdminLogin() {
       const res = await login({ email, password });
 
       if (res.next === "otp") {
+
+        // 🔥 SAVE EMAIL FOR OTP PAGE
+        sessionStorage.setItem("admin_email", email);
+
+        // 🔥 SAVE TEMP TOKEN (IF NEEDED)
         sessionStorage.setItem("pre_otp_token", res.token);
-        navigate("/admin/otp");   // ✅ FIXED ROUTE
+
+        // 🔥 CORRECT OTP ROUTE
+        navigate("/admin/verify-otp");
       }
+
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }

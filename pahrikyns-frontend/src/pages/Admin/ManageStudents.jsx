@@ -1,237 +1,222 @@
-import React, { useState, useMemo } from "react";
+// === ULTRA PRO STUDENTS PAGE ===
+// Copy/Paste — Complete UI
+
+import React, { useState, useEffect } from "react";
 import {
   Box,
-  Tabs,
-  Tab,
-  Grid,
+  Typography,
   TextField,
+  Select,
   MenuItem,
-  Button,
-  Stack,
-  useMediaQuery,
+  InputLabel,
+  FormControl,
+  Chip,
+  IconButton,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Avatar,
+  Paper,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
-import StudentCard from "../../components/admin/StudentCard";
-import StudentTable from "../../components/admin/StudentTable";
-import AddStudentModal from "../../components/admin/AddStudentModal";
-import CSVImportModal from "../../components/admin/CSVImportModal"; // ✅ Added CSV modal
-
-const initialStudents = [
-  { id: 1, name: "Sathish Kumar", email: "sathish@example.com", enrolled: 5, status: "Active" },
-  { id: 2, name: "Hari Prasath", email: "hari@example.com", enrolled: 3, status: "Pending" },
-  { id: 3, name: "Vignesh R", email: "vig@example.com", enrolled: 7, status: "Active" },
-];
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import BlockIcon from "@mui/icons-material/Block";
 
 export default function ManageStudents() {
-  const [tab, setTab] = useState(0);
-  const [students, setStudents] = useState(initialStudents);
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("All");
-  const [minCourses, setMinCourses] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [students, setStudents] = useState([]);
 
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openImport, setOpenImport] = useState(false); // ✅ CSV Import State
+  useEffect(() => {
+    loadStudents();
+  }, []);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  function loadStudents() {
+    // FAKE DATA — Replace with real API later
+    setStudents([
+      {
+        id: 1,
+        name: "Hari Sathish",
+        email: "hari@gmail.com",
+        status: "active",
+        course: "DevOps",
+        progress: 72,
+      },
+      {
+        id: 2,
+        name: "Arun Kumar",
+        email: "arun@gmail.com",
+        status: "suspended",
+        course: "Docker",
+        progress: 40,
+      },
+      {
+        id: 3,
+        name: "Priya Devi",
+        email: "priya@gmail.com",
+        status: "graduated",
+        course: "AWS",
+        progress: 100,
+      },
+    ]);
+  }
 
-  const filteredStudents = useMemo(() => {
-    let list = [...students];
+  // FILTER + SEARCH
+  const filtered = students.filter((s) => {
+    const matchText =
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.email.toLowerCase().includes(search.toLowerCase());
 
-    // Search filter
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(q) ||
-          s.email.toLowerCase().includes(q)
-      );
-    }
+    const matchFilter =
+      filter === "all" ? true : s.status === filter;
 
-    // Status filter
-    if (status !== "All") list = list.filter((s) => s.status === status);
+    return matchText && matchFilter;
+  });
 
-    // Min enrolled filter
-    if (minCourses !== "") {
-      const n = Number(minCourses) || 0;
-      list = list.filter((s) => s.enrolled >= n);
-    }
-
-    return list;
-  }, [students, search, status, minCourses]);
-
-  const handleRemove = (id) => {
-    setStudents((prev) => prev.filter((s) => s.id !== id));
+  const statusColors = {
+    active: "success",
+    suspended: "warning",
+    graduated: "primary",
   };
 
   return (
-    <Box sx={{ color: "white", p: 3, position: "relative", zIndex: 1 }}>
-      
-      {/* ================== TOP CONTROLS ================== */}
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        mb={3}
-        alignItems={{ xs: "stretch", md: "center" }}
-        justifyContent="space-between"
+    <Box sx={{ color: "white", p: 1 }}>
+      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
+        Students Management
+      </Typography>
+
+      {/* SEARCH + FILTER BAR */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 3,
+          flexWrap: "wrap",
+        }}
       >
-        
-        {/* Search + filters */}
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={2}
-          flex={1}
-          alignItems={{ xs: "stretch", md: "center" }}
-        >
-          <TextField
-            placeholder="Search students..."
-            size="small"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+        <TextField
+          label="Search Students"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          sx={{
+            input: { color: "white" },
+            label: { color: "gray" },
+            width: "260px",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+              "&:hover fieldset": {
+                borderColor: "rgba(0,255,255,0.5)",
+              },
+            },
+          }}
+        />
+
+        <FormControl sx={{ minWidth: 160 }}>
+          <InputLabel sx={{ color: "gray" }}>Filter</InputLabel>
+          <Select
+            value={filter}
+            label="Filter"
+            onChange={(e) => setFilter(e.target.value)}
             sx={{
-              minWidth: { xs: "100%", md: 220 },
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "999px",
-                background: "rgba(15,23,42,0.7)",
-                color: "white",
-                "& fieldset": { borderColor: "rgba(148,163,184,0.5)" },
+              color: "white",
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(255,255,255,0.2)",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "rgba(0,255,255,0.5)",
               },
             }}
-          />
-
-          <TextField
-            select
-            size="small"
-            label="Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            sx={{ minWidth: 140 }}
           >
-            <MenuItem value="All">All</MenuItem>
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Pending">Pending</MenuItem>
-          </TextField>
+            <MenuItem value="all">All Students</MenuItem>
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="suspended">Suspended</MenuItem>
+            <MenuItem value="graduated">Graduated</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
-          <TextField
-            size="small"
-            label="Min Courses"
-            value={minCourses}
-            onChange={(e) => setMinCourses(e.target.value)}
-            sx={{ minWidth: 120 }}
-          />
-        </Stack>
-
-        {/* Right Buttons */}
-        <Stack direction="row" spacing={2}>
-          
-          {/* IMPORT CSV BUTTON */}
-          <Button
-            onClick={() => setOpenImport(true)}
-            sx={{
-              px: 3,
-              py: 1.2,
-              borderRadius: "999px",
-              fontWeight: 700,
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(0,255,255,0.3)",
-              color: "#00eaff",
-              "&:hover": { background: "rgba(0,255,255,0.15)" },
-            }}
-          >
-            Import CSV
-          </Button>
-
-          {/* ADD STUDENT BUTTON */}
-          <Button
-            onClick={() => setOpenAdd(true)}
-            sx={{
-              px: 3,
-              py: 1.2,
-              borderRadius: "999px",
-              fontWeight: 700,
-              background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-              color: "#020617",
-              boxShadow: "0 0 20px rgba(0,234,255,0.4)",
-            }}
-          >
-            + Add Student
-          </Button>
-        </Stack>
-      </Stack>
-
-      {/* ================== VIEW SWITCH ================== */}
-      <Tabs
-        value={tab}
-        onChange={(e, v) => setTab(v)}
+      {/* PRO TABLE */}
+      <Paper
         sx={{
-          mb: 3,
-          "& .MuiTab-root": { color: "rgba(248,250,252,0.7)", fontWeight: 700 },
-          "& .Mui-selected": { color: "#00eaff" },
-          "& .MuiTabs-indicator": {
-            background: "#00eaff",
-            height: 3,
-            borderRadius: "999px",
-          },
+          background: "rgba(0,0,0,0.35)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "12px",
+          border: "1px solid rgba(255,255,255,0.08)",
+          overflow: "hidden",
         }}
       >
-        <Tab label="Cards View" />
-        <Tab label="Table View" />
-      </Tabs>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Student</TableCell>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Email</TableCell>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Course</TableCell>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Status</TableCell>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Progress</TableCell>
+              <TableCell sx={{ color: "cyan", fontWeight: 700 }}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
 
-      {/* ================== CARDS VIEW ================== */}
-      {tab === 0 && (
-        <Grid container spacing={3}>
-          {filteredStudents.map((student) => (
-            <Grid item xs={12} sm={6} md={4} key={student.id}>
-              <StudentCard
-                student={student}
-                onRemove={() => handleRemove(student.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
+          <TableBody>
+            {filtered.map((s) => (
+              <TableRow
+                key={s.id}
+                sx={{
+                  "&:hover": {
+                    background: "rgba(0,255,255,0.08)",
+                  },
+                }}
+              >
+                {/* Avatar + Name */}
+                <TableCell>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Avatar sx={{ bgcolor: "#00bcd4" }}>
+                      {s.name[0].toUpperCase()}
+                    </Avatar>
+                    {s.name}
+                  </Box>
+                </TableCell>
 
-      {/* ================== TABLE VIEW ================== */}
-      {tab === 1 && (
-        <StudentTable
-          students={filteredStudents}
-          onRemove={handleRemove}
-          isMobile={isMobile}
-        />
-      )}
+                <TableCell>{s.email}</TableCell>
+                <TableCell>{s.course}</TableCell>
 
-      {/* ================== ADD STUDENT MODAL ================== */}
-      <AddStudentModal
-        open={openAdd}
-        onClose={() => setOpenAdd(false)}
-        onAdd={(student) =>
-          setStudents((prev) => [
-            ...prev,
-            { id: Date.now(), ...student }
-          ])
-        }
-      />
+                <TableCell>
+                  <Chip
+                    label={s.status}
+                    color={statusColors[s.status]}
+                    sx={{ textTransform: "capitalize" }}
+                  />
+                </TableCell>
 
-      {/* ================== CSV IMPORT MODAL ================== */}
-      <CSVImportModal
-        open={openImport}
-        onClose={() => setOpenImport(false)}
-        type="Students"
-        onImport={(rows) => {
-          const formatted = rows.map((r) => ({
-            id: Date.now() + Math.random(),
-            name: r.name,
-            email: r.email,
-            enrolled: Number(r.enrolled || 0),
-            status: r.status || "Active",
-          }));
-          
-          setStudents((prev) => [...prev, ...formatted]);
-        }}
-      />
+                <TableCell>{s.progress}%</TableCell>
 
+                <TableCell>
+                  <IconButton color="primary">
+                    <VisibilityIcon />
+                  </IconButton>
+                  <IconButton color="secondary">
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton color="error">
+                    <BlockIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} sx={{ textAlign: "center", py: 3 }}>
+                  No students found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Paper>
     </Box>
   );
 }

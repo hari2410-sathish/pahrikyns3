@@ -1,61 +1,56 @@
-// src/api/auth.js
+import axios from "axios";
 
-// ---------- USER LOGIN ----------
-export async function loginUser({ email, password }) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === "test@example.com" && password === "123456") {
-        resolve({
-          data: {
-            token: "user_token_123",
-            user: {
-              id: 1,
-              name: "Test User",
-              email,
-            },
-          },
-        });
-      } else {
-        reject({ message: "Invalid credentials" });
-      }
-    }, 800);
-  });
+const API = axios.create({
+  baseURL: "http://localhost:5000",
+});
+
+// ------------------------------
+// USER REGISTER
+// ------------------------------
+export function registerUser(data) {
+  return API.post("/auth/user/register", data);
 }
 
-// ---------- USER REGISTER ----------
-export async function registerUser(payload) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: {
-          message: "User registered successfully",
-          user: payload,
-        },
-      });
-    }, 800);
-  });
+// ------------------------------
+// SEND OTP
+// ------------------------------
+export function sendOTP(data) {
+  return API.post("/auth/user/send-otp", data);  
 }
 
-// ---------- FORGOT PASSWORD ----------
-export async function requestPasswordReset(email) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: { message: "Reset link sent to your email" },
-      });
-    }, 800);
-  });
+// ------------------------------
+// VERIFY OTP
+// ------------------------------
+export function verifyOTP(data) {
+  return API.post("/auth/user/verify-otp", data);
 }
 
-// ---------- RESET PASSWORD ----------
-export async function resetPassword({ token, newPassword }) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: {
-          message: "Password reset successful!",
-        },
-      });
-    }, 800);
-  });
+// ------------------------------
+// RESEND OTP
+// ------------------------------
+export function resendOTP(data) {
+  return API.post("/auth/user/resend-otp", data);
 }
+
+// ------------------------------
+// LOGIN
+// ------------------------------
+export function loginUser(data) {
+  return API.post("/auth/user/login", data);
+}
+
+// ------------------------------
+// FORGOT PASSWORD
+// ------------------------------
+export function requestPasswordReset(data) {
+  return API.post("/auth/user/request-reset", data);
+}
+
+// ------------------------------
+// RESET PASSWORD
+// ------------------------------
+export function resetPassword(data) {
+  return API.post("/auth/user/reset-password", data);
+}
+
+export default API;

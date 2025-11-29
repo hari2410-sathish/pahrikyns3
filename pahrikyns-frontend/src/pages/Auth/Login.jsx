@@ -7,6 +7,9 @@ import {
   Paper,
   InputAdornment,
   IconButton,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -15,32 +18,52 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { loginUser } from "../../api/auth";
+import { getDeviceInfo } from "../../utils/deviceHelper";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
+  const [toast, setToast] = useState({
+    open: false,
+    msg: "",
+    type: "error",
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
 
-  // Go back to original page after login
   const from = location.state?.from || "/dashboard";
+
+  const showToast = (msg, type = "error") =>
+    setToast({ open: true, msg, type });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.email || !form.password) {
-      alert("Please enter email & password");
+      showToast("Please enter email & password");
       return;
     }
 
+    setLoading(true);
     try {
-      const res = await loginUser(form);
+      const device = getDeviceInfo();
+      const res = await loginUser({ ...form, device });
+
+      if (res.data.requiresOTP) {
+        navigate("/otp", { state: { email: form.email } });
+        return;
+      }
+
       login(res.data);
       navigate(from, { replace: true });
     } catch (err) {
-      alert("Invalid credentials");
+      showToast("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,7 +80,6 @@ export default function Login() {
         overflow: "hidden",
       }}
     >
-      {/* Floating Neon Orbs */}
       {[...Array(30)].map((_, i) => (
         <Box
           key={i}
@@ -162,6 +184,7 @@ export default function Login() {
           <Button
             fullWidth
             type="submit"
+            disabled={loading}
             sx={{
               mt: 1,
               py: 1.2,
@@ -177,7 +200,7 @@ export default function Login() {
               },
             }}
           >
-            Login
+            {loading ? <CircularProgress size={26} /> : "Login"}
           </Button>
         </form>
 
@@ -185,6 +208,14 @@ export default function Login() {
           © 2025 PAHRIKYNS • Secure Login
         </Typography>
       </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={() => setToast({ ...toast, open: false })}
+      >
+        <Alert severity={toast.type}>{toast.msg}</Alert>
+      </Snackbar>
     </Box>
   );
 }

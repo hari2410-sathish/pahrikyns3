@@ -6,43 +6,86 @@ import {
   Button,
   Paper,
   InputAdornment,
-  IconButton
+  IconButton,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { resetPassword } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ResetPassword() {
   const [showPass, setShowPass] = useState(false);
   const [showPass2, setShowPass2] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
+  const [toast, setToast] = useState({
+    open: false,
+    msg: "",
+    type: "error",
+  });
+
+  const showToast = (msg, type = "error") =>
+    setToast({ open: true, msg, type });
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // comes from OTP verification page
+  const resetToken = location.state?.resetToken;
+
+  // If no token → block access
+  if (!resetToken) {
+    navigate("/forgot-password");
+    return null;
+  }
+
+  const validatePassword = () => {
+    if (form.newPassword.length < 6) return "Minimum 6 characters";
+    if (!/[A-Z]/.test(form.newPassword)) return "Must include one uppercase letter";
+    if (!/[0-9]/.test(form.newPassword)) return "Must include one number";
+    return "";
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (form.newPassword.length < 6) {
-      alert("Password must be at least 6 characters");
+    const error = validatePassword();
+    if (error) {
+      showToast(error);
       return;
     }
 
     if (form.newPassword !== form.confirmPassword) {
-      alert("Passwords do not match");
+      showToast("Passwords do not match");
       return;
     }
 
-    await resetPassword(form.newPassword);
+    try {
+      setLoading(true);
 
-    alert("Password changed successfully!");
-    navigate("/login");
+      await resetPassword({
+        token: resetToken,
+        newPassword: form.newPassword,
+      });
+
+      showToast("Password changed successfully!", "success");
+
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (err) {
+      showToast("Failed to reset password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,7 +101,6 @@ export default function ResetPassword() {
         overflow: "hidden",
       }}
     >
-      {/* Floating Neon Orbs */}
       {[...Array(26)].map((_, i) => (
         <Box
           key={i}
@@ -66,7 +108,7 @@ export default function ResetPassword() {
             position: "absolute",
             width: `${10 + Math.random() * 18}px`,
             height: `${10 + Math.random() * 18}px`,
-            borderRadius: "50%",
+            borderRadius: "50%`,
             background: "rgba(0,234,255,0.7)",
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
@@ -88,7 +130,7 @@ export default function ResetPassword() {
         elevation={12}
         sx={{
           width: "100%",
-          maxWidth: 380,
+          maxWidth: 400,
           p: 4,
           borderRadius: 4,
           textAlign: "center",
@@ -121,6 +163,7 @@ export default function ResetPassword() {
             onChange={(e) =>
               setForm({ ...form, newPassword: e.target.value })
             }
+            helperText={validatePassword()}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -177,6 +220,7 @@ export default function ResetPassword() {
           <Button
             fullWidth
             type="submit"
+            disabled={loading}
             sx={{
               py: 1.2,
               borderRadius: "999px",
@@ -186,12 +230,9 @@ export default function ResetPassword() {
               color: "#020617",
               textTransform: "none",
               boxShadow: "0 0 20px rgba(0,234,255,0.45)",
-              "&:hover": {
-                boxShadow: "0 0 30px rgba(123,63,228,0.7)",
-              },
             }}
           >
-            Reset Password
+            {loading ? <CircularProgress size={26} /> : "Reset Password"}
           </Button>
         </form>
 
@@ -199,6 +240,14 @@ export default function ResetPassword() {
           © 2025 Secure Recovery • PAHRIKYNS
         </Typography>
       </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={() => setToast({ ...toast, open: false })}
+      >
+        <Alert severity={toast.type}>{toast.msg}</Alert>
+      </Snackbar>
     </Box>
   );
 }

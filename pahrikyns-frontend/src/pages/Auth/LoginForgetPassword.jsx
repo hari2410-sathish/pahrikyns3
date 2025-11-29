@@ -5,27 +5,49 @@ import {
   Typography,
   Button,
   Paper,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 
-import { sendResetEmail } from "../../api/auth";
+import { sendResetOTP } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [toast, setToast] = useState({
+    open: false,
+    msg: "",
+    type: "error",
+  });
+
+  const showToast = (msg, type = "error") =>
+    setToast({ open: true, msg, type });
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email) {
-      alert("Enter your email");
+      showToast("Please enter your email");
       return;
     }
 
-    await sendResetEmail(email);
+    try {
+      setLoading(true);
+      await sendResetOTP({ email });
 
-    alert("Password reset link sent to your email!");
-    navigate("/reset-password");
+      showToast("OTP sent to your email!", "success");
+
+      navigate("/reset-verify", { state: { email } });
+    } catch (err) {
+      showToast("Failed to send reset OTP");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,7 +63,6 @@ export default function ForgotPassword() {
         overflow: "hidden",
       }}
     >
-      {/* Neon Floating Orbs */}
       {[...Array(26)].map((_, i) => (
         <Box
           key={i}
@@ -50,7 +71,7 @@ export default function ForgotPassword() {
             width: `${10 + Math.random() * 18}px`,
             height: `${10 + Math.random() * 18}px`,
             borderRadius: "50%",
-            background: "rgba(0,234,255,0.7)",
+            background: "rgba(0,234,255,0.7)`,
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
             filter: "blur(12px)",
@@ -59,13 +80,6 @@ export default function ForgotPassword() {
           }}
         />
       ))}
-
-      <style>{`
-        @keyframes float {
-          0%,100% { transform: translateY(0); opacity: 0.3; }
-          50% { transform: translateY(-18px); opacity: 0.8; }
-        }
-      `}</style>
 
       <Paper
         elevation={12}
@@ -85,7 +99,7 @@ export default function ForgotPassword() {
           sx={{
             fontSize: 26,
             fontWeight: 800,
-            mb: 3,
+            mb: 2,
             background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
             WebkitBackgroundClip: "text",
             color: "transparent",
@@ -94,14 +108,14 @@ export default function ForgotPassword() {
           Forgot Password
         </Typography>
 
-        <Typography sx={{ opacity: 0.6, mb: 3, fontSize: 14 }}>
-          Enter your email and we'll send you a reset link.
+        <Typography sx={{ opacity: 0.6, mb: 3 }}>
+          Enter your email to receive an OTP.
         </Typography>
 
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Email"
+            label="Email Address"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -118,6 +132,7 @@ export default function ForgotPassword() {
           <Button
             fullWidth
             type="submit"
+            disabled={loading}
             sx={{
               py: 1.2,
               borderRadius: "999px",
@@ -127,20 +142,24 @@ export default function ForgotPassword() {
               color: "#020617",
               textTransform: "none",
               boxShadow: "0 0 20px rgba(0,234,255,0.45)",
-              "&:hover": {
-                boxShadow: "0 0 30px rgba(123,63,228,0.7)",
-              },
             }}
           >
-            Send Reset Link
+            {loading ? <CircularProgress size={26} /> : "Send OTP"}
           </Button>
         </form>
 
         <Typography sx={{ mt: 2, opacity: 0.6 }}>
-          © 2025 Secure Recovery • PAHRIKYNS
+          © 2025 PAHRIKYNS • Secure Recovery
         </Typography>
       </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={() => setToast({ ...toast, open: false })}
+      >
+        <Alert severity={toast.type}>{toast.msg}</Alert>
+      </Snackbar>
     </Box>
   );
 }
-    

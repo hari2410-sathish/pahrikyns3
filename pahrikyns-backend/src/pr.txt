@@ -1,0 +1,24 @@
+Folder PATH listing for volume New Volume
+Volume serial number is C042-A80A
+D:.
+³   pr.txt
+³   struture.txt
+³   
+ÃÄÄÄconfig
+³       email.js
+³       prismaClient.js
+³       sms.js
+³       
+ÃÄÄÄcontrollers
+³       adminController.js
+³       otpController.js
+³       
+ÃÄÄÄhelpers
+³       generateOTP.js
+³       
+ÃÄÄÄroutes
+³       adminRoutes.js
+³       
+ÀÄÄÄutils
+        generateToken.js
+        
