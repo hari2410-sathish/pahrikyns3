@@ -2,35 +2,39 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "http://localhost:5000",
+  withCredentials: true,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
-// REGISTER
-export function registerUser(data) {
-  console.log("REGISTER SENDING:", data);
-  return API.post("/auth/user/register", data);
-}
+// 🔐 Auto attach token (FIXED)
+API.interceptors.request.use((config) => {
+  const url = config.url || "";
 
-// SEND OTP
-export function sendOTP(data) {
-  return API.post("/auth/user/send-otp", data);
-}
+  // ===============================
+  // ADMIN ROUTES → ADMIN TOKEN
+  // ===============================
+  if (url.startsWith("/admin")) {
+    const adminToken = localStorage.getItem("ADMIN_TOKEN");
+    if (adminToken) {
+      config.headers.Authorization = `Bearer ${adminToken}`;
+    }
+    return config;
+  }
 
-// VERIFY OTP
-export function verifyOTP(data) {
-  return API.post("/auth/user/verify-otp", data);
-}
+  // ===============================
+  // USER ROUTES → USER TOKEN ONLY
+  // ===============================
+  if (url.startsWith("/auth/user")) {
+    const userToken = localStorage.getItem("USER_TOKEN");
+    if (userToken) {
+      config.headers.Authorization = `Bearer ${userToken}`;
+    }
+    return config;
+  }
 
-// RESEND OTP
-export function resendOTP(data) {
-  return API.post("/auth/user/resend-otp", data);
-}
-
-// LOGIN
-export function loginUser(data) {
-  return API.post("/auth/user/login", data);
-}
+  return config;
+});
 
 export default API;

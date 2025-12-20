@@ -1,73 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Paper, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+} from "@mui/material";
 
-// Stub — replace backend later
-async function fetchCertData(id) {
-  const demo = {
-    CERT1001: {
-      id: "CERT1001",
-      studentName: "Hari Sathish",
-      course: "DevOps Mastery",
-      date: "2025-02-14",
-      score: 94,
-      status: "active",
-    },
-  };
-  return demo[id] || null;
-}
+import { verifyPublicCertificate } from "../../modules/adminmodules/Adminapi/certificatesAdmin";
 
 export default function VerifyCertificate() {
-  const { certId } = useParams();
-  const [data, setData] = useState(null);
+  const [code, setCode] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchCertData(certId).then(setData);
-  }, [certId]);
-
-  if (!data)
-    return (
-      <Box sx={{ p: 4, color: "white" }}>
-        Certificate not found or invalid.
-      </Box>
-    );
+  const handleVerify = async () => {
+    try {
+      setLoading(true);
+      const data = await verifyPublicCertificate(code);
+      setResult(data);
+    } catch (err) {
+      console.error("Verification failed", err);
+      setResult(null);
+      alert("Invalid or expired certificate");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Box sx={{ p: 4, color: "white" }}>
-      <Paper sx={{ p: 3, borderRadius: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700 }}>
-          Certificate Verification
+    <Box
+      sx={{
+        minHeight: "70vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Paper sx={{ p: 4, width: 420 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Verify Certificate
         </Typography>
 
-        <Typography sx={{ mt: 2 }}>
-          <b>ID:</b> {data.id}
-        </Typography>
+        <TextField
+          fullWidth
+          placeholder="Enter Verification Code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          sx={{ mb: 2 }}
+        />
 
-        <Typography>
-          <b>Student:</b> {data.studentName}
-        </Typography>
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleVerify}
+          disabled={loading}
+        >
+          {loading ? "Verifying..." : "Verify"}
+        </Button>
 
-        <Typography>
-          <b>Course:</b> {data.course}
-        </Typography>
-
-        <Typography>
-          <b>Date:</b> {data.date}
-        </Typography>
-
-        <Typography>
-          <b>Status:</b> {data.status}
-        </Typography>
-
-        <Box sx={{ mt: 2 }}>
-          <Button
-            variant="contained"
-            onClick={() => window.print()}
-            sx={{ fontWeight: 700 }}
-          >
-            Print / Save as PDF
-          </Button>
-        </Box>
+        {result && (
+          <Box sx={{ mt: 2 }}>
+            <Typography>
+              <b>User:</b> {result.userName}
+            </Typography>
+            <Typography>
+              <b>Course:</b> {result.courseTitle}
+            </Typography>
+            <Typography>
+              <b>Status:</b> {result.status}
+            </Typography>
+          </Box>
+        )}
       </Paper>
     </Box>
   );

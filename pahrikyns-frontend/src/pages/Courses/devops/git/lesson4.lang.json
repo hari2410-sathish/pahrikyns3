@@ -1,0 +1,154 @@
+{
+  "en": {
+    "title": "Lesson 4 - Git Branch (Team Workflow)",
+    "subtitle": "In this lesson you will fully understand how branches work in real team projects.",
+    "sections": [
+      {
+        "title": "Why Git Branch Is Needed",
+        "description": "Branching allows developers to work independently without disturbing the main project.",
+        "points": [
+          "Multiple developers can work at the same time",
+          "Main branch stays stable",
+          "New features are built separately",
+          "Experiments can be done safely",
+          "Production code remains protected"
+        ],
+        "table": {
+          "headers": ["Without Branch", "With Branch"],
+          "rows": [
+            ["Direct work on main", "Safe feature branches"],
+            ["High risk of bugs", "Low risk"],
+            ["Team conflicts", "Smooth collaboration"],
+            ["No isolation", "Full isolation"]
+          ]
+        },
+        "note": "Every professional company uses branching strategy."
+      },
+      {
+        "title": "What Is a Git Branch (Internal Concept)",
+        "description": "A branch is simply a movable pointer to a commit.",
+        "points": [
+          "Each branch points to a commit",
+          "main is the default branch",
+          "New branch copies the current state",
+          "Branches are lightweight"
+        ],
+        "diagram": "main → C1 → C2 → C3\nfeature → (starts from C3)",
+        "commands": [
+          "git branch",
+          "git branch feature-login"
+        ],
+        "note": "Branch creation does NOT duplicate files physically."
+      },
+      {
+        "title": "Switching Between Branches",
+        "description": "Switching means moving your HEAD pointer.",
+        "points": [
+          "HEAD always points to current branch",
+          "Switching updates working directory",
+          "Uncommitted changes may block switching"
+        ],
+        "commands": [
+          "git switch feature-login",
+          "git checkout feature-login"
+        ],
+        "table": {
+          "headers": ["Command", "Purpose"],
+          "rows": [
+            ["git switch", "Modern safe command"],
+            ["git checkout", "Old multi-purpose command"]
+          ]
+        },
+        "warning": "Always commit or stash before switching branches."
+      },
+      {
+        "title": "Creating and Working in a Feature Branch",
+        "description": "Let us simulate real development workflow.",
+        "points": [
+          "Create branch",
+          "Switch to branch",
+          "Make changes",
+          "Commit changes"
+        ],
+        "commands": [
+          "git branch feature-payment",
+          "git switch feature-payment",
+          "git add .",
+          "git commit -m \"payment feature work\""
+        ],
+        "diagram": "main → C1 → C2\nfeature-payment → C3",
+        "note": "Each feature gets its own branch."
+      },
+      {
+        "title": "Team Scenario – 3 Developers Workflow",
+        "description": "Let us assume real company setup.",
+        "points": [
+          "Developer A works on login",
+          "Developer B works on payments",
+          "Developer C works on UI",
+          "All work independently using branches"
+        ],
+        "diagram": "main → C1\nlogin → C2\npayment → C3\nui → C4",
+        "table": {
+          "headers": ["Developer", "Branch"],
+          "rows": [
+            ["A", "feature-login"],
+            ["B", "feature-payment"],
+            ["C", "feature-ui"]
+          ]
+        },
+        "note": "Impossible without branches in real projects."
+      },
+      {
+        "title": "Merging Branches (Preview)",
+        "description": "After work is completed, branches are merged.",
+        "points": [
+          "Merge combines branch history",
+          "Main becomes updated",
+          "Feature branch can be deleted"
+        ],
+        "commands": [
+          "git switch main",
+          "git merge feature-login"
+        ],
+        "note": "We will study merge deeply in next lesson."
+      },
+      {
+        "title": "Common Branching Mistakes",
+        "points": [
+          "Working directly on main",
+          "Not pulling latest main",
+          "Deleting wrong branch",
+          "Forgetting to switch branch"
+        ],
+        "table": {
+          "headers": ["Mistake", "Problem"],
+          "rows": [
+            ["Work on main", "Production bug risk"],
+            ["No pull", "Merge conflicts"],
+            ["Delete wrong branch", "Code loss"],
+            ["Wrong branch work", "Confusion"]
+          ]
+        },
+        "warning": "Always double-check branch name before commit."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "பாடம் 4 - Git Branch (தொழில்முறை குழு வேலை)",
+    "subtitle": "இந்த பாடத்தில் Git Branch முழுமையாக புரிந்து கொள்வீர்கள்.",
+    "sections": [
+      {
+        "title": "Git Branch ஏன் தேவை?",
+        "points": [
+          "ஒவ்வொருவரும் தனியாக வேலை செய்யலாம்",
+          "Main branch பாதுகாப்பாக இருக்கும்",
+          "Bug risk குறையும்",
+          "Team conflict இல்லாமல் வேலை செய்யலாம்"
+        ],
+        "note": "நிறுவனங்களில் branch இல்லை என்றால் project ஓடாது."
+      }
+    ]
+  }
+}

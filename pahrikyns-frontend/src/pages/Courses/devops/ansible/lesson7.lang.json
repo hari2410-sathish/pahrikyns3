@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 7: Ad-Hoc Commands",
+    "subtitle": "Running one-line automation tasks using Ansible ad-hoc commands",
+    "sections": [
+      {
+        "heading": "1. What are Ad-Hoc Commands?",
+        "content": "Ad-hoc commands are one-line Ansible commands used to perform quick tasks without writing a full playbook."
+      },
+      {
+        "heading": "2. When to Use Ad-Hoc Commands?",
+        "content": "Use ad-hoc commands for quick checks, reboots, file copy, package installation and service status."
+      },
+      {
+        "heading": "3. Basic Command Structure",
+        "content": "ansible <host-pattern> -m <module> -a <arguments>"
+      },
+      {
+        "heading": "4. Ping Test Using Ad-Hoc Command",
+        "content": "Use: ansible all -m ping to check connectivity of all servers."
+      },
+      {
+        "heading": "5. Running Shell Commands",
+        "content": "Use shell module to run Linux commands: ansible all -m shell -a \"uptime\""
+      },
+      {
+        "heading": "6. Installing Package Using Ad-Hoc",
+        "content": "Use package module to install a package: ansible all -m apt -a \"name=nginx state=present\""
+      },
+      {
+        "heading": "7. Copying Files Using Ad-Hoc",
+        "content": "Use copy module: ansible all -m copy -a \"src=test.txt dest=/tmp/test.txt\""
+      },
+      {
+        "heading": "8. Managing Services",
+        "content": "Use service module to start/stop services: ansible all -m service -a \"name=nginx state=started\""
+      },
+      {
+        "heading": "9. Rebooting Servers",
+        "content": "Use reboot module: ansible all -m reboot"
+      },
+      {
+        "heading": "10. Checking Disk Space",
+        "content": "Use shell module: ansible all -m shell -a \"df -h\""
+      },
+      {
+        "heading": "11. Advantages of Ad-Hoc Commands",
+        "content": "Fast execution, no playbook required, ideal for troubleshooting and quick automation."
+      },
+      {
+        "heading": "Lesson 7 Summary",
+        "content": "You learned what ad-hoc commands are, when to use them, and how to perform common tasks using them."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 7: Ad-Hoc Commands",
+    "subtitle": "Playbook எழுதாமல் ஒரே command மூலம் automation செய்வது",
+    "sections": [
+      {
+        "heading": "1. Ad-Hoc Command என்றால் என்ன?",
+        "content": "ஒரே command-ல் quick task செய்ய பயன்படுத்தப்படும் Ansible command தான் Ad-hoc command."
+      },
+      {
+        "heading": "2. எப்போது Ad-Hoc பயன்படுத்தலாம்?",
+        "content": "Quick test, reboot, file copy, software install போன்ற வேலையிற்கு பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "3. Basic Command Structure",
+        "content": "ansible <hosts> -m <module> -a <arguments>"
+      },
+      {
+        "heading": "4. Ping Test",
+        "content": "ansible all -m ping command மூலம் server connectivity test செய்யலாம்."
+      },
+      {
+        "heading": "5. Linux Command Run செய்வது",
+        "content": "shell module மூலம் uptime போன்ற command run செய்யலாம்."
+      },
+      {
+        "heading": "6. Software Install",
+        "content": "apt module மூலம் nginx install செய்யலாம்."
+      },
+      {
+        "heading": "7. File Copy",
+        "content": "copy module மூலம் files server-ல் copy செய்யலாம்."
+      },
+      {
+        "heading": "8. Service Control",
+        "content": "service module மூலம் services start/stop செய்யலாம்."
+      },
+      {
+        "heading": "9. Server Reboot",
+        "content": "reboot module மூலம் server restart செய்யலாம்."
+      },
+      {
+        "heading": "10. Disk Space Check",
+        "content": "df -h command மூலம் disk space check செய்யலாம்."
+      },
+      {
+        "heading": "11. Ad-Hoc Command Advantages",
+        "content": "Fast execution, playbook தேவையில்லை, troubleshooting-க்கு best."
+      },
+      {
+        "heading": "Lesson 7 Summary",
+        "content": "Ad-hoc commands எப்படி பயன்படுத்துவது என்பதை நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 7: Ad-Hoc Commands",
+    "subtitle": "One-line command use panni quick automation panna method",
+    "sections": [
+      {
+        "heading": "1. Ad-Hoc Command na enna?",
+        "content": "Playbook venaama single command-la task panna use pannradhu dhaan ad-hoc command."
+      },
+      {
+        "heading": "2. Eppodhu Use Pannanum?",
+        "content": "Quick test, reboot, file copy, software install-ku use pannalaam."
+      },
+      {
+        "heading": "3. Command Structure",
+        "content": "ansible <hosts> -m <module> -a <arguments>"
+      },
+      {
+        "heading": "4. Ping Test",
+        "content": "ansible all -m ping use panni servers test pannalaam."
+      },
+      {
+        "heading": "5. Shell Commands",
+        "content": "ansible all -m shell -a \"uptime\" use pannalaam."
+      },
+      {
+        "heading": "6. Package Install",
+        "content": "apt module use panni nginx install pannalaam."
+      },
+      {
+        "heading": "7. File Copy",
+        "content": "copy module use panni files copy pannalaam."
+      },
+      {
+        "heading": "8. Service Control",
+        "content": "service module use panni service start/stop pannalaam."
+      },
+      {
+        "heading": "9. Reboot Server",
+        "content": "reboot module use panni server restart pannalaam."
+      },
+      {
+        "heading": "10. Disk Space Check",
+        "content": "df -h use panni disk space check pannalaam."
+      },
+      {
+        "heading": "11. Advantages",
+        "content": "Fast, simple, playbook theva illa, troubleshooting-ku super."
+      },
+      {
+        "heading": "Lesson 7 Summary",
+        "content": "Ad-hoc commands full clear. Next playbooks-kku strong foundation."
+      }
+    ]
+  }
+}

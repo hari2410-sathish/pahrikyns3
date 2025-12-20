@@ -16,6 +16,9 @@ import NFSImg from "../../../../assets/docker/nfs-storage.png";
 import CSIImg from "../../../../assets/docker/csi-architecture.png";
 
 export default function Lesson14() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.75, fontSize: 17 }}>
       <h1 style={{ fontSize: 38, fontWeight: 800 }}>

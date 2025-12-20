@@ -1,0 +1,471 @@
+{
+  "en": {
+    "meta": {
+      "difficulty": "Beginner",
+      "duration": "60 min"
+    },
+    "title": "Lesson 2 - Installing Git & First Time Setup",
+    "subtitle": "Install Git on your system, configure your identity, and make your first commit.",
+    "sections": [
+      {
+        "title": "Overview – What We Will Do in This Lesson",
+        "description": "In this lesson you will practically install Git on your system, configure your name and email, create your first repository, and make your first commit. After this lesson you will be fully ready to work with any Git project.",
+        "points": [
+          "Understand what 'installing Git' actually means.",
+          "Install Git on Windows, Linux and macOS using step-by-step instructions.",
+          "Verify Git installation using the git --version command.",
+          "Configure your global username and email so that every commit has your identity.",
+          "Create your first Git repository using git init.",
+          "Create a file, track it with Git and create your first commit.",
+          "See the complete flow from Working Directory → Staging Area → Repository."
+        ],
+        "table": {
+          "headers": ["Task", "Outcome"],
+          "rows": [
+            ["Install Git", "You get the git command available on your machine."],
+            ["Configure username/email", "Your commits are linked to your identity."],
+            ["Create repository", "You get a folder where Git tracks everything."],
+            ["Make first commit", "You save the first snapshot of your project."]
+          ]
+        },
+        "note": "Do not worry if you are new to command line. We will use only a few simple commands and explain each one slowly."
+      },
+      {
+        "title": "What Does 'Installing Git' Mean?",
+        "description": "Before we start clicking buttons and running commands, it is important to understand what exactly happens when we ‘install Git’.",
+        "points": [
+          "Git is a normal software like any other tool. It has to be installed once on your system.",
+          "After installation you will get access to the git command in your terminal (Command Prompt, PowerShell, Git Bash, Linux Shell etc).",
+          "You can then use this single git command for thousands of everyday tasks like git init, git status, git add, git commit and more.",
+          "The installation process is different for Windows, Linux and macOS, but the final result is the same: you can run git on your machine.",
+          "Installing Git does not create any repository automatically. It only makes the Git engine available.",
+          "Repositories are created later inside your project folders using the git init command."
+        ],
+        "table": {
+          "headers": ["Item", "Explanation"],
+          "rows": [
+            ["Git software", "The binaries and libraries installed in your OS."],
+            ["Git command", "The CLI interface you use in terminal."],
+            ["Repository", "A project folder that is being tracked by Git."],
+            ["Working Directory", "Your normal files and folders where you edit code."]
+          ]
+        },
+        "note": "Think of Git installation as installing the engine. Creating a repository is like creating a new car that uses that engine."
+      },
+      {
+        "title": "Install Git on Windows (Step-by-Step)",
+        "description": "Most beginners start on Windows. The easiest way to install Git on Windows is by downloading the official installer from the Git website.",
+        "points": [
+          "Open any browser such as Chrome, Edge or Firefox.",
+          "Go to the official website: https://git-scm.com/",
+          "On the home page you will see a large 'Download' button.",
+          "The site will automatically detect your operating system and suggest a Windows installer.",
+          "Download the .exe file. This is the installer for Git on Windows.",
+          "Once downloaded, double click the installer to start the setup wizard."
+        ],
+        "steps": [
+          "Click Next on the welcome screen.",
+          "Select the installation path or keep the default (usually C:\\Program Files\\Git).",
+          "Choose the components – keep defaults unless you know what you are doing.",
+          "For editor selection, Notepad or VS Code is fine.",
+          "For PATH environment, choose 'Git from the command line and also from 3rd-party software'.",
+          "For HTTPS transport, you can keep the default option.",
+          "For line endings, choose the default recommended setting.",
+          "Click Install and wait for the installation to complete.",
+          "Finally click Finish. You now have Git installed on Windows."
+        ],
+        "commands": [
+          "After installing, open 'Git Bash' or 'Command Prompt' and run:",
+          "git --version"
+        ],
+        "table": {
+          "headers": ["Setup Screen", "Recommended Option", "Why"],
+          "rows": [
+            ["Editor selection", "Use default or Visual Studio Code", "Any editor works, but VS Code integrates nicely."],
+            ["PATH environment", "Git from command line and 3rd-party software", "Lets you use git in all terminals and tools."],
+            ["HTTPS backend", "Use default option", "Works for almost all users without extra work."],
+            ["Line endings", "Checkout Windows-style, commit Unix-style", "Avoids line-ending problems when working with Linux servers."]
+          ]
+        },
+        "note": "If you are not sure on any screen during installation, just keep the default option. The default options are perfectly fine for 99% of use cases."
+      },
+      {
+        "title": "Install Git on Linux (Ubuntu / Debian / CentOS etc.)",
+        "description": "On Linux, Git is usually installed using the package manager of your distribution. The command is slightly different for each family of Linux.",
+        "points": [
+          "Most Linux distributions already have Git in their official repositories.",
+          "You need sudo (admin) access to install packages.",
+          "Using the package manager keeps Git up to date with system updates."
+        ],
+        "commands": [
+          "# On Ubuntu / Debian based systems:",
+          "sudo apt update",
+          "sudo apt install git -y",
+          "",
+          "# On CentOS / RHEL (older versions):",
+          "sudo yum install git -y",
+          "",
+          "# On Fedora / newer RHEL:",
+          "sudo dnf install git -y",
+          "",
+          "# Verify after installation:",
+          "git --version"
+        ],
+        "table": {
+          "headers": ["Linux Family", "Package Manager", "Example Install Command"],
+          "rows": [
+            ["Ubuntu / Debian", "apt", "sudo apt install git -y"],
+            ["CentOS / RHEL (old)", "yum", "sudo yum install git -y"],
+            ["Fedora / RHEL (new)", "dnf", "sudo dnf install git -y"],
+            ["Arch Linux", "pacman", "sudo pacman -S git"]
+          ]
+        },
+        "note": "If git --version shows a valid version number, Git is installed correctly on your Linux machine."
+      },
+      {
+        "title": "Install Git on macOS",
+        "description": "On macOS you can install Git either via Homebrew or by installing the Xcode Command Line Tools.",
+        "points": [
+          "Homebrew is the most popular package manager for macOS.",
+          "If you do not have Homebrew installed, you can either install it or use the Xcode Command Line Tools method.",
+          "Both methods result in the git command being available."
+        ],
+        "commands": [
+          "# Option 1 – Using Homebrew:",
+          "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
+          "brew install git",
+          "",
+          "# Option 2 – Using Xcode Command Line Tools:",
+          "xcode-select --install",
+          "",
+          "# After installing Git using any method:",
+          "git --version"
+        ],
+        "table": {
+          "headers": ["Method", "Command", "When to Use"],
+          "rows": [
+            ["Homebrew", "brew install git", "Recommended for developers who already use or want Homebrew."],
+            ["Xcode CLT", "xcode-select --install", "Simple choice if you also use Xcode / iOS development."],
+            ["Standalone installer", "Download from git-scm.com", "Alternative if you do not want Brew or Xcode."]
+          ]
+        },
+        "note": "It does not matter which method you choose. As long as git --version works, you are good to go."
+      },
+      {
+        "title": "Verify Git Installation on Any OS",
+        "description": "After installation, the first thing you should do is verify that Git is correctly installed and available in your PATH.",
+        "points": [
+          "Open your favourite terminal (Command Prompt, PowerShell, Git Bash, Linux Shell or macOS Terminal).",
+          "Type git --version and press Enter.",
+          "You should see something like git version 2.x.x.",
+          "If you see 'command not found' or similar, it means Git is not installed or PATH is not configured."
+        ],
+        "commands": [
+          "git --version"
+        ],
+        "table": {
+          "headers": ["Command Output", "Meaning", "Action Needed"],
+          "rows": [
+            ["git version 2.43.0", "Git is installed and accessible.", "No action needed."],
+            ["'git' is not recognized", "The git command is not found.", "Re-open terminal or reinstall with correct PATH option."],
+            ["Permission denied", "You do not have permission for the binary.", "Try running as admin or fix file permissions."]
+          ]
+        },
+        "note": "Always verify installation before trying to use advanced Git commands. This small step saves a lot of debugging later."
+      },
+      {
+        "title": "First-Time Configuration – Setting Username and Email",
+        "description": "Git needs to know who you are so that it can attach your identity to every commit. This is done using the config system.",
+        "points": [
+          "user.name and user.email are the most important global settings.",
+          "They are stored in a global config file so you set them only once per machine.",
+          "Every commit you create after this will carry this name and email address.",
+          "You can override them per repository if needed, but global config is enough for now."
+        ],
+        "commands": [
+          "# Set your global identity (run once on each machine):",
+          "git config --global user.name \"Your Name\"",
+          "git config --global user.email \"your-email@example.com\"",
+          "",
+          "# Verify the configuration:",
+          "git config --list",
+          "",
+          "# Or check individually:",
+          "git config user.name",
+          "git config user.email"
+        ],
+        "table": {
+          "headers": ["Config Key", "Example Value", "Purpose"],
+          "rows": [
+            ["user.name", "Hari Sathish", "Name displayed in commit history."],
+            ["user.email", "hari@example.com", "Email shown in commits / used by hosting providers."],
+            ["core.editor", "code --wait", "Optional – which editor to use when Git needs to open one."]
+          ]
+        },
+        "note": "Use the same email address that you plan to use with GitHub / GitLab. This helps connect your commits to your online profile.",
+        "warning": "Never use someone else’s email here. It is your personal developer identity."
+      },
+      {
+        "title": "Creating Your First Git Repository",
+        "description": "Now that Git is installed and configured, it is time to create your very first repository and let Git start tracking a folder.",
+        "points": [
+          "A Git repository is just a normal folder with an extra hidden .git directory inside.",
+          "You can create a new repository in any empty or existing project folder.",
+          "The git init command converts a normal folder into a Git repository."
+        ],
+        "steps": [
+          "Create a new folder named my-first-git-project on your Desktop or any location.",
+          "Open a terminal inside this folder. On Windows you can right click → 'Open Git Bash here'.",
+          "Run git init.",
+          "Git will create a hidden folder named .git and show the message 'Initialized empty Git repository'."
+        ],
+        "commands": [
+          "mkdir my-first-git-project",
+          "cd my-first-git-project",
+          "git init",
+          "",
+          "# On success you will see:",
+          "# Initialized empty Git repository in /path/to/my-first-git-project/.git/"
+        ],
+        "table": {
+          "headers": ["Command", "What It Does"],
+          "rows": [
+            ["mkdir my-first-git-project", "Creates a new folder for your project."],
+            ["cd my-first-git-project", "Moves into that folder so you can work inside it."],
+            ["git init", "Creates a new empty Git repository in the current folder."]
+          ]
+        },
+        "note": "You can run git status any time to see what Git thinks about your repository."
+      },
+      {
+        "title": "Your First File, Status Check and Staging",
+        "description": "Next you will create your first file, check the status of the repository, and stage the file for commit.",
+        "points": [
+          "Newly created files start as 'untracked' – Git knows they exist but is not tracking them yet.",
+          "git status is your best friend; it shows which files are untracked, modified, staged etc.",
+          "To start tracking a file you must add it to the staging area using git add."
+        ],
+        "steps": [
+          "Inside the my-first-git-project folder, create a file index.html.",
+          "Add some simple content like a basic HTML skeleton or even just a single line.",
+          "Run git status and observe that the file is shown under 'Untracked files'.",
+          "Run git add index.html or git add . to stage the file.",
+          "Run git status again and observe that the file moved to 'Changes to be committed'."
+        ],
+        "commands": [
+          "# Create file (Linux/macOS):",
+          "touch index.html",
+          "",
+          "# On Windows you can also use:",
+          "echo \"<h1>Hello Git</h1>\" > index.html",
+          "",
+          "# Check status:",
+          "git status",
+          "",
+          "# Stage the file:",
+          "git add index.html",
+          "# or to add all new/modified files:",
+          "git add .",
+          "",
+          "# Check status again:",
+          "git status"
+        ],
+        "table": {
+          "headers": ["State", "Description", "How to Move to Next State"],
+          "rows": [
+            ["Untracked", "File exists but Git is not tracking it.", "Use git add file-name."],
+            ["Staged", "File is ready to be committed.", "Use git commit -m \"message\"."],
+            ["Committed", "File is saved in Git history.", "Create a new change and repeat the cycle."]
+          ]
+        },
+        "note": "Always read the git status output line by line. It literally tells you what to do next.",
+        "warning": "Do not ignore the 'nothing added to commit' or 'nothing to commit' messages. They explain exactly what is happening."
+      },
+      {
+        "title": "Your First Commit – Saving a Snapshot",
+        "description": "A commit is like a save point or checkpoint in your project. Now that you have a staged file, you can create your first commit.",
+        "points": [
+          "Commits are created from the staging area only – whatever is staged gets recorded.",
+          "Each commit has a message that explains what changed.",
+          "Commits form a timeline so that you can travel back in history anytime."
+        ],
+        "steps": [
+          "Ensure index.html is staged by running git status.",
+          "Run git commit with a meaningful message such as 'Add index.html skeleton'.",
+          "After committing, run git status again to see the clean working tree message."
+        ],
+        "commands": [
+          "# Create first commit:",
+          "git commit -m \"Add index.html skeleton\"",
+          "",
+          "# View status after committing:",
+          "git status"
+        ],
+        "table": {
+          "headers": ["Command", "Meaning"],
+          "rows": [
+            ["git commit -m \"message\"", "Create a new commit with files from staging area."],
+            ["git log", "Show the commit history (we will see more in later lessons)."],
+            ["git status", "Show working directory and staging area status."]
+          ]
+        },
+        "note": "Use clear commit messages. Future you (and your team) will thank you for good commit messages."
+      },
+      {
+        "title": "Putting It All Together – Install to First Commit Workflow",
+        "description": "This section summarises the full journey you have taken in this lesson, from installing Git up to your first commit.",
+        "points": [
+          "You installed Git on your operating system.",
+          "You verified the installation using git --version.",
+          "You configured your user.name and user.email.",
+          "You created a new folder and initialized a repository using git init.",
+          "You created a file, checked status and staged it using git add.",
+          "You made your first commit using git commit -m \"message\"."
+        ],
+        "table": {
+          "headers": ["Step", "Command", "Short Description"],
+          "rows": [
+            ["1. Install Git", "Platform specific installer / package manager", "Get git command in the system."],
+            ["2. Verify", "git --version", "Confirm installation."],
+            ["3. Configure", "git config --global user.name / user.email", "Set identity for commits."],
+            ["4. New folder", "mkdir my-first-git-project && cd my-first-git-project", "Create project directory."],
+            ["5. Init repo", "git init", "Start Git tracking for the folder."],
+            ["6. Create file", "index.html", "Add actual content."],
+            ["7. Stage", "git add index.html", "Move change to staging area."],
+            ["8. Commit", "git commit -m \"Add index.html skeleton\"", "Save snapshot in history."]
+          ]
+        },
+        "note": "You have completed the minimum setup that every developer does on a new machine: install Git, configure identity, create a repo, and make a first commit."
+      },
+      {
+        "title": "Common Installation Problems & Fixes",
+        "description": "Here are some common issues that beginners face while installing Git and how to fix them quickly.",
+        "points": [
+          "git: command not found – Git is not installed or terminal needs to be restarted.",
+          "Permission denied during installation – you may need admin / sudo rights.",
+          "Wrong version shown – multiple Git installations on PATH.",
+          "PATH issues on Windows when 'Use Git from Git Bash only' was selected."
+        ],
+        "table": {
+          "headers": ["Problem", "Possible Cause", "Suggested Fix"],
+          "rows": [
+            [
+              "git: command not found",
+              "Git not installed or PATH not updated.",
+              "Reinstall Git and make sure you choose the option that adds Git to PATH, then restart the terminal."
+            ],
+            [
+              "'git' is not recognized as an internal or external command",
+              "Windows cannot find git.exe in PATH.",
+              "Open a new Command Prompt or Git Bash window after installation, or reinstall with correct PATH option."
+            ],
+            [
+              "Permission denied while installing via apt/yum/dnf",
+              "You are not running the command with enough privileges.",
+              "Add sudo before the command or use a user with admin rights."
+            ],
+            [
+              "git version is old",
+              "Linux distribution repository has an older Git package.",
+              "Check if your distro has a newer repo, or install manually from git-scm.com if really needed."
+            ]
+          ]
+        },
+        "warning": "Do not try to download Git from random third-party websites. Always use official sources like git-scm.com or your OS package manager.",
+        "note": "If you are stuck, run git --version and take a screenshot of your error. That one command tells a lot about your situation."
+      },
+      {
+        "title": "Quick Quiz – Check Your Understanding",
+        "description": "Before moving to the next lesson, quickly test yourself with these short questions. Try to answer them without looking above.",
+        "quiz": {
+          "questions": [
+            {
+              "q": "Which command shows the installed version of Git?",
+              "options": [
+                "git show-version",
+                "git --version",
+                "git version-check",
+                "git info"
+              ],
+              "answerIndex": 1,
+              "explanation": "git --version is the standard command to display the installed Git version."
+            },
+            {
+              "q": "Which configuration keys are required to set your identity in Git?",
+              "options": [
+                "user.name and user.email",
+                "user.id and user.mail",
+                "core.user and core.email",
+                "name.git and email.git"
+              ],
+              "answerIndex": 0,
+              "explanation": "Git uses user.name and user.email to store your identity for commits."
+            },
+            {
+              "q": "What does git init do inside a folder?",
+              "options": [
+                "Deletes all files in the folder.",
+                "Creates a backup on GitHub automatically.",
+                "Converts the folder into a Git repository by creating a .git directory.",
+                "Installs Git on your system."
+              ],
+              "answerIndex": 2,
+              "explanation": "git init creates a new empty Git repository by adding a hidden .git folder."
+            },
+            {
+              "q": "Which command moves changes from 'untracked/modified' to 'staged' state?",
+              "options": [
+                "git status",
+                "git add",
+                "git stage-commit",
+                "git push"
+              ],
+              "answerIndex": 1,
+              "explanation": "git add stages changes so that they can be committed."
+            },
+            {
+              "q": "Where are your commits stored before pushing to any remote?",
+              "options": [
+                "In the cloud only.",
+                "In the .git folder inside your repository.",
+                "In a temporary cache that is deleted on restart.",
+                "In your IDE settings."
+              ],
+              "answerIndex": 1,
+              "explanation": "Git stores all commits and internal data inside the .git folder within your repository."
+            }
+          ]
+        },
+        "note": "If you were able to answer most of these questions, you are ready to confidently move to the next Git lesson."
+      }
+    ]
+  },
+  "ta": {
+    "title": "பாடம் 2 - Git நிறுவல் மற்றும் முதன்மை அமைப்பு",
+    "subtitle": "இந்த பாடத்தில் Git software-ஐ install பண்ணி, username/email set பண்ணி, உங்க first repository & first commit create பண்ண போறீங்க.",
+    "sections": [
+      {
+        "title": "இந்த பாடத்தில் என்ன கற்க போறோம்?",
+        "points": [
+          "Windows / Linux / macOS ல Git எப்படி install பண்ணணும் என்று பாப்போம்.",
+          "git --version command use பண்ணி install சரியா ஆச்சா இல்லையா என்று check பண்ணப் போறோம்.",
+          "Git க்கு தேவையான user.name மற்றும் user.email set பண்ணப் போறோம்.",
+          "ஒரு simple project folder create பண்ணி அதை git init மூலம் repository ஆக்கப் போறோம்.",
+          "index.html மாதிரி ஒரு file create பண்ணி, git add & git commit மூலம் first commit பண்ணப் போறோம்."
+        ],
+        "note": "Shell / terminal புது விஷயம் இருந்தாலும் கவலைப்பட வேண்டாம். ஒவ்வொரு command-யும் slow-ஆ explain பண்ணியிருக்கோம்."
+      },
+      {
+        "title": "Git install ஆனதா எப்படி தெரியும்?",
+        "points": [
+          "Terminal-ல git --version என்று type பண்ணி enter அழுத்துங்க.",
+          "git version 2.x.x மாதிரி output வந்தா Git சரியாக install ஆனது.",
+          "command not found / 'git' is not recognized என்று வந்தா install பண்ணல அல்லது PATH problem."
+        ],
+        "commands": [
+          "git --version"
+        ]
+      }
+    ]
+  }
+}

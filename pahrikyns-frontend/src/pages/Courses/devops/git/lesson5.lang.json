@@ -1,0 +1,105 @@
+{
+  "en": {
+    "title": "Git – Lesson 5: Stash, Restore, Reset (Soft / Mixed / Hard)",
+    "subtitle": "Deep understanding of Git undo and recovery commands with real rescue lab.",
+    "goal": "After this lesson you will confidently recover deleted work, undo commits, revert file changes, and safely switch tasks using Git stash.",
+    "sections": [
+      {
+        "title": "Why These Commands Matter",
+        "description": "These commands act as your undo superpowers in Git.",
+        "points": [
+          "stash → Save unfinished work temporarily",
+          "restore → Undo file changes",
+          "reset → Undo commits safely or dangerously"
+        ],
+        "warning": "These commands are powerful. Wrong usage can permanently delete data."
+      },
+      {
+        "title": "git stash — Save Unfinished Work",
+        "description": "Stash temporarily stores your changes without committing.",
+        "commands": [
+          "git stash",
+          "git stash list",
+          "git stash pop",
+          "git stash apply",
+          "git stash drop",
+          "git stash push -m \"WIP: login page UI\"",
+          "git stash push -u"
+        ],
+        "points": [
+          "Switch tasks without committing",
+          "Save half-done work",
+          "Recover work later"
+        ],
+        "note": "git stash pop = apply + delete | git stash apply = apply only"
+      },
+      {
+        "title": "git restore — Undo File Changes",
+        "commands": [
+          "git restore file.txt",
+          "git restore --staged file.txt",
+          "git restore --source <commit-id> file.txt"
+        ],
+        "warning": "Restore only affects files, not commits."
+      },
+      {
+        "title": "git reset — Soft, Mixed and Hard",
+        "commands": [
+          "git reset --soft HEAD~1",
+          "git reset HEAD~1",
+          "git reset --hard HEAD~1",
+          "git reset --hard <commit-id>"
+        ],
+        "warning": "Hard reset permanently deletes all uncommitted changes."
+      },
+      {
+        "title": "Mini Project — Undo & Rescue Lab",
+        "commands": [
+          "mkdir rescue-lab",
+          "cd rescue-lab",
+          "git init",
+          "echo \"line 1\" > demo.txt",
+          "git add .",
+          "git commit -m \"Initial commit\"",
+          "echo \"work in progress\" >> demo.txt",
+          "git stash push -m \"WIP: editing demo file\"",
+          "git stash list",
+          "git stash pop",
+          "git add .",
+          "git commit -m \"Oops: bad commit\"",
+          "git reset --soft HEAD~1",
+          "echo \"bad data\" >> demo.txt",
+          "git restore demo.txt"
+        ]
+      },
+      {
+        "title": "Troubleshooting & Recovery",
+        "points": [
+          "Use git reflog to recover lost commits",
+          "Stash conflicts can be resolved like merge conflicts"
+        ],
+        "commands": [
+          "git reflog",
+          "git reset --hard <old-hash>",
+          "git status",
+          "git add .",
+          "git commit"
+        ]
+      },
+      {
+        "title": "Interview Questions",
+        "points": [
+          "Difference between soft, mixed and hard reset?",
+          "Difference between git restore and git reset?",
+          "What is git stash used for?",
+          "How to recover commit after hard reset?",
+          "Difference between stash apply and stash pop?"
+        ]
+      },
+      {
+        "title": "Conclusion",
+        "description": "You now have full control over undo, recovery and safe task switching in Git."
+      }
+    ]
+  }
+}

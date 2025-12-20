@@ -2,24 +2,46 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   try {
-    let authHeader = req.headers.authorization;
+    const authHeader =
+      req.headers["authorization"] || req.headers["Authorization"];
 
-    if (!authHeader)
-      return res.status(401).json({ error: "No token provided" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Authorization token required" });
+    }
 
-    // Format: Bearer token
     const token = authHeader.split(" ")[1];
 
-    if (!token)
-      return res.status(401).json({ error: "Token missing" });
+    if (!token) {
+      return res.status(401).json({ error: "Token not provided" });
+    }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).json({ error: "Token expired" });
+      }
+      return res.status(401).json({ error: "Invalid token" });
+    }
 
-    req.user = decoded;  // contains { id, email }
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({ error: "Invalid token payload" });
+    }
+
+    // ✅ Attach user (future-ready for RBAC)
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role || "student",
+    };
+
     next();
-
   } catch (err) {
-    console.log(err);
-    return res.status(401).json({ error: "Invalid or expired token" });
+    console.error("Auth Middleware Fatal Error:", err);
+
+    return res.status(401).json({
+      error: "Authentication failed",
+    });
   }
 };

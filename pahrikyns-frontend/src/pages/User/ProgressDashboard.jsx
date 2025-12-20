@@ -1,23 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { getCourseProgress } from "../../api/auth";
+import API from "../../api/axios";
 
 export default function ProgressDashboard() {
-  const { token } = useAuth();
+  const { user, loading } = useAuth();
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getCourseProgress(token).then((res) => setData(res.data));
-  }, []);
+    if (loading || !user) return;
+
+    const loadProgress = async () => {
+      try {
+        // ✅ fetch all user courses
+        const res = await API.get("/auth/user/my-courses");
+        setData(res.data || []);
+      } catch (err) {
+        console.error("❌ Progress load error:", err);
+        setError("Failed to load course progress");
+      }
+    };
+
+    loadProgress();
+  }, [user, loading]);
+
+  if (loading) {
+    return <p style={{ color: "white" }}>Loading dashboard...</p>;
+  }
 
   return (
-    <div>
-      <h2>Course Progress</h2>
+    <div style={{ color: "white" }}>
+      <h2>📊 My Course Progress</h2>
 
-      {data.map((p) => (
-        <div key={p.id}>
-          <h3>{p.course.title}</h3>
-          <p>{p.percentage}% Completed</p>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {data.length === 0 && <p>No courses enrolled yet.</p>}
+
+      {data.map((course) => (
+        <div
+          key={course.id}
+          style={{
+            background: "#0f172a",
+            padding: "16px",
+            borderRadius: "8px",
+            marginBottom: "12px",
+          }}
+        >
+          <h3>{course.title}</h3>
+          <p>Progress: {course.progress || 0}%</p>
         </div>
       ))}
     </div>

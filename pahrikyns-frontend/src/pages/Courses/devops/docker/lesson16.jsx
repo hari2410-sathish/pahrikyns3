@@ -14,6 +14,9 @@ import GrafanaImg from "../../../../assets/docker/grafana.png";
 import LoggingImg from "../../../../assets/docker/logging.png";
 
 export default function Lesson16() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.75, fontSize: 17 }}>
       <h1 style={{ fontSize: 38, fontWeight: 800 }}>Lesson 16 — Full Production Deployment</h1>

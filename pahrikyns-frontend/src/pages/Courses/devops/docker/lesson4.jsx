@@ -9,6 +9,9 @@
   thumbnail: ""
 };
 export default function Lesson4() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 30, lineHeight: 1.75, fontSize: 17, maxWidth: 1100, margin: "auto" }}>
 

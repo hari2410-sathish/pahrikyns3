@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 1 (Full Theory)",
+    "subtitle": "Introduction to Ansible, categories, use cases, configuration, deployment, artifacts and installation",
+    "sections": [
+      {
+        "heading": "1. What is Ansible?",
+        "content": "Ansible is an open-source automation tool used to manage computers automatically. It helps us configure servers, deploy applications, and manage IT infrastructure easily using YAML files."
+      },
+      {
+        "heading": "2. Which Category Does Ansible Belong To?",
+        "content": "Ansible is a Configuration Management Tool, Deployment Tool, Orchestration Tool and DevOps Automation Tool. Other tools are Puppet, Chef and SaltStack."
+      },
+      {
+        "heading": "3. Why Use Ansible?",
+        "content": "Ansible is agentless, uses only SSH, easy to learn with YAML, lightweight, fast, reduces human errors and supports Linux, Windows, Cloud, Docker and Kubernetes."
+      },
+      {
+        "heading": "4. Main Use of Ansible",
+        "content": "Ansible is mainly used for server setup, software installation, application deployment, cloud infrastructure setup and security configuration."
+      },
+      {
+        "heading": "5. Ansible Configuration",
+        "content": "Configuration means setting up servers with correct software and settings so every server remains in the desired state."
+      },
+      {
+        "heading": "6. Ansible Deployment",
+        "content": "Deployment means uploading and running applications automatically across multiple servers using Ansible."
+      },
+      {
+        "heading": "7. Ansible Strategy",
+        "content": "Strategies define how tasks run on servers: Linear (default), Free (parallel) and Rolling (batch updates)."
+      },
+      {
+        "heading": "8. Ansible Design",
+        "content": "Ansible follows a control node and managed node architecture. Control node sends playbooks to managed nodes via SSH."
+      },
+      {
+        "heading": "9. Ansible Artifact",
+        "content": "Artifacts are output files generated during automation such as JAR, WAR, logs and backup files."
+      },
+      {
+        "heading": "10. WAR and JAR Files",
+        "content": "JAR is a Java application file run using java -jar. WAR is a web application file deployed in servers like Tomcat."
+      },
+      {
+        "heading": "11. Ansible Installation",
+        "content": "Install Ansible on Linux using apt for Ubuntu and yum for CentOS/RHEL. Verify using ansible --version."
+      },
+      {
+        "heading": "Lesson 1 Summary",
+        "content": "Ansible is an agentless automation tool used for configuration, deployment and DevOps automation."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 1 (முழு விளக்கம்)",
+    "subtitle": "Ansible அறிமுகம், வகைகள், பயன்பாடுகள், deployment, artifacts மற்றும் நிறுவல்",
+    "sections": [
+      {
+        "heading": "1. Ansible என்றால் என்ன?",
+        "content": "Ansible என்பது open-source automation tool. இது server setup, application deployment மற்றும் IT management-க்கு பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "2. Ansible எந்த வகையில் வருகிறது?",
+        "content": "Configuration management, Deployment, Orchestration மற்றும் DevOps automation category-க்கு Ansible வருகிறது."
+      },
+      {
+        "heading": "3. ஏன் Ansible பயன்படுத்த வேண்டும்?",
+        "content": "Agent தேவையில்லை, SSH மட்டும் பயன்படுத்தும், YAML எளிது, வேகமானது, மனிதப் பிழைகளை குறைக்கும்."
+      },
+      {
+        "heading": "4. Ansible இன் முக்கிய பயன்பாடு",
+        "content": "Server setup, software install, application deployment, cloud setup மற்றும் security configuration."
+      },
+      {
+        "heading": "5. Ansible Configuration",
+        "content": "அனைத்து servers-லும் ஒரே மாதிரியான அமைப்பை வைத்திருக்க configuration பயன்படுகிறது."
+      },
+      {
+        "heading": "6. Ansible Deployment",
+        "content": "பல servers-க்கு ஒரே நேரத்தில் application deploy செய்ய Ansible பயன்படுகிறது."
+      },
+      {
+        "heading": "7. Ansible Strategy",
+        "content": "Linear, Free மற்றும் Rolling ஆகிய strategy-கள் task execution-ஐ தீர்மானிக்கின்றன."
+      },
+      {
+        "heading": "8. Ansible Design",
+        "content": "Control node மற்றும் Managed node ஆகிய architecture-ஐ Ansible பயன்படுத்துகிறது."
+      },
+      {
+        "heading": "9. Ansible Artifact",
+        "content": "Automation process-க்கு பிறகு உருவாகும் output files தான் artifacts."
+      },
+      {
+        "heading": "10. WAR மற்றும் JAR கோப்புகள்",
+        "content": "JAR java application file. WAR web application file."
+      },
+      {
+        "heading": "11. Ansible Installation",
+        "content": "Ubuntu-ல் apt, CentOS/RHEL-ல் yum மூலம் Ansible நிறுவலாம்."
+      },
+      {
+        "heading": "Lesson 1 Summary",
+        "content": "Ansible ஒரு முக்கிய DevOps automation tool ஆகும்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 1 (Full Intro)",
+    "subtitle": "Ansible basics, usage, deployment, artifacts and installation",
+    "sections": [
+      {
+        "heading": "1. Ansible na enna?",
+        "content": "Ansible nu solradhu open-source automation tool. Servers manage panna use aagum."
+      },
+      {
+        "heading": "2. Ansible endha category?",
+        "content": "Configuration, Deployment, Orchestration, DevOps automation category."
+      },
+      {
+        "heading": "3. Yen Ansible use pannranga?",
+        "content": "Agent thevai illa, SSH use pannum, YAML simple, fast and error kammi."
+      },
+      {
+        "heading": "4. Ansible main usage",
+        "content": "Server setup, software install, app deploy, cloud infra setup."
+      },
+      {
+        "heading": "5. Ansible Configuration",
+        "content": "Ellaa servers-um same state-la irukka configuration help pannum."
+      },
+      {
+        "heading": "6. Ansible Deployment",
+        "content": "Multiple servers-kku ore time-la app deploy panna help pannum."
+      },
+      {
+        "heading": "7. Ansible Strategy",
+        "content": "Linear, Free, Rolling nu strategy types irukku."
+      },
+      {
+        "heading": "8. Ansible Design",
+        "content": "Control node + Managed node architecture use pannum."
+      },
+      {
+        "heading": "9. Ansible Artifact",
+        "content": "Build/deploy apram create aagura files artifacts nu solluvaanga."
+      },
+      {
+        "heading": "10. WAR & JAR Files",
+        "content": "JAR direct run panna mudiyum. WAR Tomcat-kulla deploy panna vendum."
+      },
+      {
+        "heading": "11. Ansible Installation",
+        "content": "Ubuntu-ல் apt, CentOS-ல் yum use panni install pannalaam."
+      },
+      {
+        "heading": "Lesson 1 Summary",
+        "content": "Ansible romba important DevOps automation tool."
+      }
+    ]
+  }
+}

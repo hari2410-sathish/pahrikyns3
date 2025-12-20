@@ -10,6 +10,9 @@
 };
 
 export default function Lesson6() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 30, lineHeight: 1.75, maxWidth: 1100, margin: "auto", fontSize: 17 }}>
       <h1 style={{ fontSize: 38, fontWeight: 800 }}>Docker Lesson 6 — Docker Compose Masterclass</h1>

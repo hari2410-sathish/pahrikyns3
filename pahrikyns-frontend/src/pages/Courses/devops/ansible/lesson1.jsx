@@ -1,38 +1,34 @@
-﻿export const meta = {
+﻿import React from "react";
+import lang from "./lesson1.lang.json";
+import { useLanguage } from "../../../../contexts/LanguageContext";
+
+export const meta = {
   title: "Ansible Lesson 1",
-  description: "What is Ansible, why use Ansible, agentless configuration management.",
+  description: "Introduction to Ansible automation",
   difficulty: "Beginner",
-  duration: "9 min",
-  tags: ['ansible'],
+  duration: "45 min",
+  tags: ["ansible", "devops", "automation"],
   updated: "2025-11-25",
   thumbnail: ""
 };
 
-function Lesson1() {
+export default function Lesson1() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
-    <div style={{ padding: 20 }}>
-      <h1>ANSIBLE - Lesson 1</h1>
+    <div style={{ padding: 20, lineHeight: 1.8 }}>
+      <h1>{data.title}</h1>
+      <p style={{ color: "#555", marginBottom: 20 }}>{data.subtitle}</p>
 
-      <h2>What is Ansible?</h2>
-      <p>
-        Ansible is an open-source automation tool used for configuration 
-        management, application deployment, and IT orchestration.
-      </p>
-
-      <h2>Why Use Ansible?</h2>
-      <ul>
-        <li>No agent — uses SSH</li>
-        <li>Lightweight & fast</li>
-        <li>Easy YAML syntax</li>
-        <li>Idempotent (runs same result every time)</li>
-        <li>Used in DevOps pipelines</li>
-      </ul>
-
-      <h2>Who Uses Ansible?</h2>
-      <p>Amazon, Netflix, Adobe, NASA, RedHat.</p>
+      {data.sections.map((s, i) => (
+        <section key={i} style={{ marginBottom: 24 }}>
+          <h2>{s.heading}</h2>
+          <p>{s.content}</p>
+        </section>
+      ))}
     </div>
   );
 }
 
 Lesson1.displayName = "ANSIBLE Lesson 1 – Full Content";
-export default Lesson1;

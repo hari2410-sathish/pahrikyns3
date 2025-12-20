@@ -1,0 +1,116 @@
+{
+  "en": {
+    "title": "Docker – Lesson 1: Complete Introduction to Docker",
+    "subtitle": "Fundamentals of Docker, containers, images, architecture and use-cases",
+    "sections": [
+      {
+        "heading": "1️⃣ What is Docker?",
+        "content": "Docker is a platform that allows you to package an application and its dependencies inside a lightweight, portable container."
+      },
+      {
+        "heading": "2️⃣ Docker vs Virtual Machines",
+        "content": "Virtual Machines are heavy and include a full OS. Docker containers are lightweight and share the host kernel."
+      },
+      {
+        "heading": "3️⃣ Docker Architecture",
+        "content": "Docker works using three main components: Client, Daemon and Registry."
+      },
+      {
+        "heading": "4️⃣ Docker Engine",
+        "content": "Docker Engine consists of the daemon, REST API and Docker CLI."
+      },
+      {
+        "heading": "5️⃣ Images, Containers & Layers",
+        "content": "Images are read-only templates, containers are running instances, and layers make images efficient."
+      },
+      {
+        "heading": "6️⃣ Container Lifecycle",
+        "content": "Containers follow a lifecycle: create, start, stop, restart and remove."
+      },
+      {
+        "heading": "7️⃣ Why Companies Use Docker",
+        "content": "Docker is widely used for microservices, CI/CD, cloud deployment and development environments."
+      },
+      {
+        "heading": "8️⃣ Summary",
+        "content": "You now understand Docker fundamentals and are ready to proceed to installation."
+      }
+    ]
+  },
+  "ta": {
+    "title": "Docker – பாடம் 1: Docker அறிமுகம்",
+    "subtitle": "Docker அடிப்படைகள், containers, images, architecture மற்றும் பயன்பாடுகள்",
+    "sections": [
+      {
+        "heading": "1️⃣ Docker என்றால் என்ன?",
+        "content": "Docker என்பது application மற்றும் dependencies-ஐ lightweight container-ஆக package செய்வதற்கான platform."
+      },
+      {
+        "heading": "2️⃣ Docker vs Virtual Machine",
+        "content": "Virtual Machine ஒரு முழு OS உடன் இயங்கும். Docker container host kernel-ஐ பகிர்ந்து பயன்படுத்தும்."
+      },
+      {
+        "heading": "3️⃣ Docker Architecture",
+        "content": "Docker Client, Daemon மற்றும் Registry ஆகிய மூன்று முக்கிய கூறுகளை கொண்டது."
+      },
+      {
+        "heading": "4️⃣ Docker Engine",
+        "content": "Docker Engine daemon, REST API மற்றும் CLI ஆகியவற்றால் உருவாகியுள்ளது."
+      },
+      {
+        "heading": "5️⃣ Images, Containers & Layers",
+        "content": "Image என்பது template, Container என்பது runtime instance, Layers image-ஐ efficient-ஆக மாற்றும்."
+      },
+      {
+        "heading": "6️⃣ Container Lifecycle",
+        "content": "Container create → start → stop → restart → remove என்ற lifecycle உடையது."
+      },
+      {
+        "heading": "7️⃣ Docker பயன்பாடுகள்",
+        "content": "Microservices, CI/CD, Cloud deployment ஆகியவற்றில் Docker பரவலாக பயன்படுகிறது."
+      },
+      {
+        "heading": "8️⃣ சுருக்கம்",
+        "content": "Docker அடிப்படைகளை இப்போது நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+  "tl": {
+    "title": "Docker – Lesson 1: Docker Intro",
+    "subtitle": "Docker basics, containers, images, architecture & use-cases",
+    "sections": [
+      {
+        "heading": "1️⃣ Docker na enna?",
+        "content": "Docker nu solradhu application-um dependencies-um lightweight container-kkulla pack pannura platform."
+      },
+      {
+        "heading": "2️⃣ Docker vs Virtual Machine",
+        "content": "VM full OS use pannum. Docker container host kernel share pannum."
+      },
+      {
+        "heading": "3️⃣ Docker Architecture",
+        "content": "Docker Client, Daemon, Registry nu 3 main parts irukku."
+      },
+      {
+        "heading": "4️⃣ Docker Engine",
+        "content": "Docker Engine-la daemon, REST API, CLI ellam irukku."
+      },
+      {
+        "heading": "5️⃣ Images, Containers & Layers",
+        "content": "Image = template, Container = running instance, Layers = efficiency."
+      },
+      {
+        "heading": "6️⃣ Container Lifecycle",
+        "content": "Container create → start → stop → restart → remove."
+      },
+      {
+        "heading": "7️⃣ Companies yen Docker use pannranga?",
+        "content": "CI/CD, microservices, cloud deployment, dev environment ellam Docker use pannranga."
+      },
+      {
+        "heading": "8️⃣ Summary",
+        "content": "Docker basics clear aagiduchu. Next lesson install pannalaam."
+      }
+    ]
+  }
+}

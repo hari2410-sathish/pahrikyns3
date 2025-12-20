@@ -19,6 +19,9 @@ import GitStashConflictImg from "../../../../assets/git/git-stash-conflict.png";
 import GitStashWorkflowImg from "../../../../assets/git/git-stash-workflow.png";
 
 export default function Lesson8() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div
       style={{

@@ -1,0 +1,273 @@
+// src/components/global/MainNavbar.jsx
+import React, { useState, useRef, useEffect, useContext } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  IconButton,
+  Popper,
+  Paper,
+  Typography,
+  InputBase,
+  ClickAwayListener,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Drawer,
+  Divider,
+  Badge,
+  Avatar,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+
+/* ================= ICONS ================= */
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import BuildIcon from "@mui/icons-material/Build";
+import CloudIcon from "@mui/icons-material/Cloud";
+import ComputerIcon from "@mui/icons-material/Computer";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import AdbIcon from "@mui/icons-material/Adb";
+import PrecisionIcon from "@mui/icons-material/PrecisionManufacturing";
+import CloudQueueIcon from "@mui/icons-material/CloudQueue";
+import ConstructionIcon from "@mui/icons-material/Construction";
+import StorageIcon from "@mui/icons-material/Storage";
+import CodeIcon from "@mui/icons-material/Code";
+import LayersIcon from "@mui/icons-material/Layers";
+
+/* ================= CONTEXT ================= */
+import { useAuth } from "../../contexts/AuthContext";
+import { AppThemeContext } from "../../ThemeContext";
+import { getNotifications, markAllRead } from "../../utils/notifications";
+
+const NAV_HEIGHT = 60;
+
+/* ================= MENUS ================= */
+const MENU = {
+  devops: {
+    title: "DevOps",
+    desc: "CI/CD, containers & infra automation",
+    items: [
+      { name: "Git", link: "/courses/devops/git", icon: <GitHubIcon /> },
+      { name: "Docker", link: "/courses/devops/docker", icon: <AdbIcon /> },
+      { name: "Jenkins", link: "/courses/devops/jenkins", icon: <PrecisionIcon /> },
+      { name: "Kubernetes", link: "/courses/devops/kubernetes", icon: <CloudQueueIcon /> },
+      { name: "Terraform", link: "/courses/devops/terraform", icon: <ConstructionIcon /> },
+      { name: "Prometheus", link: "/courses/devops/prometheus", icon: <StorageIcon /> },
+      { name: "Grafana", link: "/courses/devops/grafana", icon: <LayersIcon /> },
+      { name: "Ansible", link: "/courses/devops/ansible", icon: <BuildIcon /> },
+    ],
+  },
+  aws: {
+    title: "AWS",
+    desc: "Core AWS services",
+    items: [
+      { name: "EC2", link: "/courses/aws/ec2", icon: <StorageIcon /> },
+      { name: "S3", link: "/courses/aws/s3", icon: <StorageIcon /> },
+      { name: "IAM", link: "/courses/aws/iam", icon: <CodeIcon /> },
+      { name: "Lambda", link: "/courses/aws/lambda", icon: <CodeIcon /> },
+      { name: "VPC", link: "/courses/aws/vpc", icon: <CloudIcon /> },
+      { name: "RDS", link: "/courses/aws/rds", icon: <StorageIcon /> },
+    ],
+  },
+};
+
+const RESUME_MENU = {
+  title: "Resume",
+  desc: "Build your professional resume",
+  items: [
+    { name: "Templates", link: "/resume/templates" },
+    { name: "Build Resume", link: "/resume/builder" },
+    { name: "My Resumes", link: "/resume" },
+  ],
+};
+
+export default function MainNavbar() {
+  const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useContext(AppThemeContext);
+  const navigate = useNavigate();
+
+  const coursesBtnRef = useRef(null);
+  const resumeBtnRef = useRef(null);
+
+  const [active, setActive] = useState("devops");
+  const [open, setOpen] = useState(false);
+  const [drawer, setDrawer] = useState(false);
+  const [query, setQuery] = useState("");
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const [notifications, setNotifications] = useState(() => getNotifications());
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === "notifications") {
+        setNotifications(getNotifications());
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const closeMenu = () => {
+    setOpen(false);
+  };
+
+  /* ================= STYLES ================= */
+  const navBtn = {
+    textTransform: "none",
+    color: "#e3dcf0ff",
+    fontWeight: 700,
+    fontSize: 16,
+    px: 2,
+    "&:hover": {
+      color: "#000",
+      background: "rgba(0,234,255,0.85)",
+    },
+  };
+
+  const profileItemStyle = {
+    px: 2,
+    py: 1,
+    fontSize: 14,
+    cursor: "pointer",
+    textDecoration: "none",
+    color: "#0f172a",
+    "&:hover": { background: "#e0f2fe" },
+  };
+
+  return (
+    <>
+      <AppBar
+        position="sticky"
+        sx={{
+          height: NAV_HEIGHT,
+          background: "rgba(6,18,40,0.75)",
+          backdropFilter: "blur(14px)",
+        }}
+      >
+        <Toolbar sx={{ maxWidth: 1400, mx: "auto", width: "100%" }}>
+          {/* LOGO */}
+          <Box component={Link} to="/" sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Avatar sx={{ bgcolor: "#00eaff", mr: 1 }}>P</Avatar>
+            <Typography sx={{ color: "#fff", fontWeight: 800 }}>PAHRIKYNS</Typography>
+          </Box>
+
+          {/* LEFT MENU */}
+          <Box sx={{ ml: 3 }}>
+            <Button sx={navBtn} component={Link} to="/">Home</Button>
+            <Button
+              ref={coursesBtnRef}
+              sx={navBtn}
+              onMouseEnter={() => { setActive("devops"); setOpen(true); }}
+            >
+              Courses ▾
+            </Button>
+            <Button
+              ref={resumeBtnRef}
+              sx={navBtn}
+              onMouseEnter={() => { setActive("resume"); setOpen(true); }}
+            >
+              Resume ▾
+            </Button>
+          </Box>
+
+          <Box sx={{ flex: 1 }} />
+
+          {/* RIGHT */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <InputBase
+              placeholder="Search…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              sx={{ color: "#fff", px: 1, border: "1px solid #334155", borderRadius: 1 }}
+            />
+            <IconButton onClick={toggleTheme}>
+              {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+
+            {!user ? (
+              <>
+                <Button component={Link} to="/login" variant="contained">Login</Button>
+                <Button component={Link} to="/register" variant="outlined">Register</Button>
+              </>
+            ) : (
+              <ClickAwayListener onClickAway={() => setProfileOpen(false)}>
+                <Box sx={{ position: "relative" }}>
+                  <Avatar onClick={() => setProfileOpen((v) => !v)} sx={{ cursor: "pointer" }}>
+                    {user?.name?.[0]?.toUpperCase() || "U"}
+                  </Avatar>
+                  {profileOpen && (
+                    <Paper sx={{ position: "absolute", right: 0, top: 44 }}>
+                      <Box sx={profileItemStyle} onClick={() => navigate("/dashboard")}>
+                        Dashboard
+                      </Box>
+                      <Box
+                        sx={profileItemStyle}
+                        onClick={() => {
+                          logout();
+                          navigate("/");
+                        }}
+                      >
+                        Logout
+                      </Box>
+                    </Paper>
+                  )}
+                </Box>
+              </ClickAwayListener>
+            )}
+
+            <IconButton sx={{ display: { md: "none" } }} onClick={() => setDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* MEGA MENU */}
+      <Popper
+        open={open}
+        anchorEl={active === "resume" ? resumeBtnRef.current : coursesBtnRef.current}
+        placement="bottom-start"
+        onMouseLeave={closeMenu}
+      >
+        <ClickAwayListener onClickAway={closeMenu}>
+          <Paper sx={{ width: 520, p: 2 }}>
+            <Typography sx={{ fontWeight: 800, mb: 1 }}>
+              {active === "resume" ? RESUME_MENU.title : MENU[active]?.title}
+            </Typography>
+            {(active === "resume" ? RESUME_MENU.items : MENU[active]?.items)?.map((it) => (
+              <Box
+                key={it.name}
+                component={Link}
+                to={it.link}
+                onClick={closeMenu}
+                sx={{ display: "block", py: 0.6, textDecoration: "none" }}
+              >
+                {it.name}
+              </Box>
+            ))}
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
+
+      {/* MOBILE DRAWER */}
+      <Drawer open={drawer} onClose={() => setDrawer(false)}>
+        <Box sx={{ width: 260, p: 2 }}>
+          <Typography sx={{ fontWeight: 800 }}>Menu</Typography>
+          <Divider sx={{ my: 1 }} />
+          {[...Object.values(MENU).flatMap((m) => m.items), ...RESUME_MENU.items].map((it) => (
+            <ListItemButton key={it.name} component={Link} to={it.link} onClick={() => setDrawer(false)}>
+              <ListItemText primary={it.name} />
+            </ListItemButton>
+          ))}
+        </Box>
+      </Drawer>
+    </>
+  );
+}

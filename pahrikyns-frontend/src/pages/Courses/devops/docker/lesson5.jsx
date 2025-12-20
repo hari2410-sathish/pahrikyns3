@@ -10,6 +10,9 @@
 };
 
 export default function Lesson5() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 30, maxWidth: 1100, margin: "auto", lineHeight: 1.75, fontSize: 17 }}>
 

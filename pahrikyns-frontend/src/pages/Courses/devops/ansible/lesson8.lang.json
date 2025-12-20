@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 8: Playbook Basics",
+    "subtitle": "Understanding what playbooks are, their structure, hosts, and tasks",
+    "sections": [
+      {
+        "heading": "1. What is an Ansible Playbook?",
+        "content": "An Ansible playbook is a YAML file where you define automation steps to be executed on managed servers."
+      },
+      {
+        "heading": "2. Why Playbooks are Important?",
+        "content": "Playbooks allow you to automate complex tasks in a repeatable and consistent way."
+      },
+      {
+        "heading": "3. Playbook File Extension",
+        "content": "Ansible playbooks are saved with .yml or .yaml extension."
+      },
+      {
+        "heading": "4. Basic Structure of a Playbook",
+        "content": "A playbook contains hosts, become, tasks and modules written in YAML format."
+      },
+      {
+        "heading": "5. What is a Play?",
+        "content": "A play is a set of tasks executed on a specific group of hosts."
+      },
+      {
+        "heading": "6. Understanding Hosts in Playbook",
+        "content": "Hosts define which group of servers the playbook will run on."
+      },
+      {
+        "heading": "7. What is a Task?",
+        "content": "A task is a single automation step such as installing a package or starting a service."
+      },
+      {
+        "heading": "8. Using Modules in Tasks",
+        "content": "Each task uses a module like apt, yum, service, copy, shell, etc."
+      },
+      {
+        "heading": "9. Example Simple Playbook",
+        "content": "--- name: Install nginx hosts: web become: yes tasks: - name: Install nginx apt: name=nginx state=present"
+      },
+      {
+        "heading": "10. Running a Playbook",
+        "content": "Use the command: ansible-playbook playbook.yml"
+      },
+      {
+        "heading": "11. What is Become (sudo)?",
+        "content": "Become allows Ansible to run tasks with root privileges using sudo."
+      },
+      {
+        "heading": "12. Playbook Idempotency",
+        "content": "Ansible ensures idempotency, meaning running the same playbook multiple times will not change the result unnecessarily."
+      },
+      {
+        "heading": "Lesson 8 Summary",
+        "content": "You learned what playbooks are, their structure, how tasks work, and how to run a simple playbook."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 8: Playbook அடிப்படைகள்",
+    "subtitle": "Playbook என்றால் என்ன, அதன் structure, hosts, tasks பற்றி",
+    "sections": [
+      {
+        "heading": "1. Ansible Playbook என்றால் என்ன?",
+        "content": "Playbook என்பது automation steps எழுதப்படும் YAML file ஆகும்."
+      },
+      {
+        "heading": "2. Playbook ஏன் முக்கியம்?",
+        "content": "Complex automation-ஐ repeatable & consistent-ஆக செய்ய playbooks உதவுகின்றன."
+      },
+      {
+        "heading": "3. Playbook File Extension",
+        "content": ".yml அல்லது .yaml extension-ல் playbook save செய்ய வேண்டும்."
+      },
+      {
+        "heading": "4. Playbook Structure",
+        "content": "Hosts, become, tasks, modules ஆகியவை playbook-ல் இருக்கும்."
+      },
+      {
+        "heading": "5. Play என்றால் என்ன?",
+        "content": "ஒரு group of hosts-க்கு run ஆகும் tasks தொகுப்பே play ஆகும்."
+      },
+      {
+        "heading": "6. Hosts என்றால் என்ன?",
+        "content": "எந்த server group-ல் playbook run ஆக வேண்டும் என்பதை hosts define செய்யும்."
+      },
+      {
+        "heading": "7. Task என்றால் என்ன?",
+        "content": "Install, start service போன்ற ஒவ்வொரு step-ம் task ஆகும்."
+      },
+      {
+        "heading": "8. Module பயன்பாடு",
+        "content": "apt, yum, service, copy, shell போன்ற modules task-களில் பயன்படுத்தப்படுகின்றன."
+      },
+      {
+        "heading": "9. Simple Playbook Example",
+        "content": "nginx install செய்யும் basic example playbook structure."
+      },
+      {
+        "heading": "10. Playbook Run செய்வது",
+        "content": "ansible-playbook playbook.yml command பயன்படுத்த வேண்டும்."
+      },
+      {
+        "heading": "11. Become (sudo) என்றால் என்ன?",
+        "content": "Root privilege-ஆக command run செய்ய become பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "12. Idempotency",
+        "content": "ஒரே playbook-ஐ மீண்டும் மீண்டும் run செய்தாலும் output same தான் இருக்கும்."
+      },
+      {
+        "heading": "Lesson 8 Summary",
+        "content": "Playbook basics, structure, tasks மற்றும் run செய்வது பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 8: Playbook Basics",
+    "subtitle": "Playbook structure, hosts, tasks & run panna method",
+    "sections": [
+      {
+        "heading": "1. Playbook na enna?",
+        "content": "Automation steps ezhudhuva YAML file dhaan playbook."
+      },
+      {
+        "heading": "2. Yen Playbook Important?",
+        "content": "Big automation work repeatable & proper-a panna playbook help pannum."
+      },
+      {
+        "heading": "3. Playbook File Extension",
+        "content": ".yml or .yaml extension-ல் save pannuvaanga."
+      },
+      {
+        "heading": "4. Playbook Structure",
+        "content": "Hosts, become, tasks, modules ellam playbook-ல் irukkum."
+      },
+      {
+        "heading": "5. Play na enna?",
+        "content": "Specific server group-க்கு run aagura tasks set."
+      },
+      {
+        "heading": "6. Hosts Usage",
+        "content": "Endha servers-க்கு playbook run aaganum-nu hosts sollum."
+      },
+      {
+        "heading": "7. Task na enna?",
+        "content": "Install, copy, service start panna oru single step dhaan task."
+      },
+      {
+        "heading": "8. Module Use",
+        "content": "apt, service, shell, copy module use pannuvaanga."
+      },
+      {
+        "heading": "9. Simple Playbook Example",
+        "content": "nginx install panna basic playbook structure."
+      },
+      {
+        "heading": "10. Playbook Run",
+        "content": "ansible-playbook playbook.yml nu run pannuvaanga."
+      },
+      {
+        "heading": "11. Become (sudo)",
+        "content": "Root permission theva irundha become use pannuvaanga."
+      },
+      {
+        "heading": "12. Idempotency",
+        "content": "Same playbook rendu thadava run pannalum result change aagathu."
+      },
+      {
+        "heading": "Lesson 8 Summary",
+        "content": "Playbook basics full clear. Next lesson advanced features."
+      }
+    ]
+  }
+}

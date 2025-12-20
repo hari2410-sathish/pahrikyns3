@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadAllLessons } from "./index";
 import LessonSidebar from "../../components/Course/LessonSidebar";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function LessonViewer() {
   const { category, tool, lessonId } = useParams();
@@ -9,6 +10,14 @@ export default function LessonViewer() {
   const [lesson, setLesson] = useState(null);
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
+
+  const { langKey, changeLang } = useLanguage();
+
+  const LANGS = {
+    en: "English",
+    ta: "தமிழ்",
+    tl: "Tanglish",
+  };
 
   // Read progress
   const readProgress = (num) => {
@@ -49,7 +58,8 @@ export default function LessonViewer() {
     init();
   }, [category, tool, lessonId]);
 
-  if (!lesson) return <div style={{ padding: 20, color: "white" }}>Loading lesson...</div>;
+  if (!lesson)
+    return <div style={{ padding: 20, color: "white" }}>Loading lesson...</div>;
 
   const Component = lesson.Component;
 
@@ -88,12 +98,47 @@ export default function LessonViewer() {
         }}
         onScroll={handleScroll}
       >
+        {/* ✅ LANGUAGE BUTTONS */}
+        <div
+  style={{
+    position: "fixed",
+    top: 80,
+    right: 20,
+    zIndex: 2000,
+    display: "flex",
+    gap: 10,
+    background: "#001f29",
+    padding: "8px 12px",
+    borderRadius: 30,
+    boxShadow: "0 0 12px rgba(0,234,255,0.4)"
+  }}
+>
+
+          {Object.entries(LANGS).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => changeLang(key)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 20,
+                border: "1px solid #00eaff",
+                background: langKey === key ? "#00eaff" : "#001f29",
+                color: langKey === key ? "#001" : "#00eaff",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         {/* Progress bar */}
         <div
           style={{
             position: "fixed",
             top: 0,
-            left: 250, // clean fixed position for sidebar width
+            left: 250,
             right: 0,
             height: 6,
             background: "rgba(255,255,255,0.08)",
@@ -126,7 +171,7 @@ export default function LessonViewer() {
           {lesson.meta.updated && <span>🗓 {lesson.meta.updated}</span>}
         </div>
 
-        {/* Tags safe map */}
+        {/* Tags */}
         <div style={{ display: "flex", gap: 8, marginBottom: 25 }}>
           {(lesson.meta.tags || []).map((t) => (
             <span
@@ -146,15 +191,15 @@ export default function LessonViewer() {
 
         {/* LESSON CONTENT */}
         <div
-  style={{
-    marginBottom: 40,
-    color: "hsla(120, 3%, 7%, 1.00)",  // visible neon white-blue
-    fontSize: 17,
-  }}
-  className="lesson-content"
->
-  <Component />
-</div>
+          style={{
+            marginBottom: 40,
+            color: "hsla(120, 3%, 7%, 1.00)",
+            fontSize: 17,
+          }}
+          className="lesson-content"
+        >
+          <Component />
+        </div>
 
         {/* Navigation buttons */}
         <div

@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 11: Roles",
+    "subtitle": "Understanding what roles are, why they are used, and how to structure projects using roles",
+    "sections": [
+      {
+        "heading": "1. What is a Role in Ansible?",
+        "content": "A role is a structured way of organizing playbooks, tasks, variables, files and templates to make automation reusable and clean."
+      },
+      {
+        "heading": "2. Why Use Roles?",
+        "content": "Roles help in reusing code, improving readability, maintaining large projects easily and following best practices."
+      },
+      {
+        "heading": "3. When to Use Roles?",
+        "content": "Roles are used when your playbooks become large, complex and need reusability across multiple projects."
+      },
+      {
+        "heading": "4. Default Role Directory Structure",
+        "content": "Each role has directories like tasks, handlers, files, templates, vars, defaults, meta."
+      },
+      {
+        "heading": "5. Main Files Inside Roles",
+        "content": "Important files are: tasks/main.yml, handlers/main.yml, vars/main.yml, defaults/main.yml."
+      },
+      {
+        "heading": "6. tasks/main.yml",
+        "content": "This file contains the main set of tasks that the role will execute."
+      },
+      {
+        "heading": "7. vars vs defaults",
+        "content": "Vars have higher priority than defaults. Defaults are used to provide basic values that users can override."
+      },
+      {
+        "heading": "8. files & templates Folder",
+        "content": "Files folder holds static files. Templates folder holds Jinja2 template files."
+      },
+      {
+        "heading": "9. Including a Role in Playbook",
+        "content": "Roles are included using the roles keyword inside a playbook."
+      },
+      {
+        "heading": "10. Example Role Usage",
+        "content": "Example: roles: - nginx - docker"
+      },
+      {
+        "heading": "11. Advantages of Roles",
+        "content": "Better organization, easy reuse, cleaner playbooks, team collaboration support."
+      },
+      {
+        "heading": "12. Real-Time Use Case",
+        "content": "In real projects, each service like nginx, mysql, java, docker is maintained as a separate role."
+      },
+      {
+        "heading": "Lesson 11 Summary",
+        "content": "You learned what roles are, their structure, how to use them and why they are important in large Ansible projects."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 11: Roles",
+    "subtitle": "Roles என்றால் என்ன, ஏன் பயன்படுத்த வேண்டும் மற்றும் project structure",
+    "sections": [
+      {
+        "heading": "1. Ansible-ல் Role என்றால் என்ன?",
+        "content": "Automation code-ஐ proper-ஆ organize செய்து reuse செய்ய பயன்படும் structure தான் Role."
+      },
+      {
+        "heading": "2. Roles ஏன் பயன்படுத்த வேண்டும்?",
+        "content": "Code reuse, readability, large project maintenance-க்கு roles மிகவும் உதவுகின்றன."
+      },
+      {
+        "heading": "3. எப்போது Roles பயன்படுத்த வேண்டும்?",
+        "content": "Playbooks பெரியதாகவும் complex-ஆவும் ஆகும் போது roles பயன்படுத்த வேண்டும்."
+      },
+      {
+        "heading": "4. Default Role Folder Structure",
+        "content": "tasks, handlers, files, templates, vars, defaults, meta என folders இருக்கும்."
+      },
+      {
+        "heading": "5. முக்கிய Main Files",
+        "content": "tasks/main.yml, handlers/main.yml, vars/main.yml, defaults/main.yml."
+      },
+      {
+        "heading": "6. tasks/main.yml",
+        "content": "Role execute ஆகும் அனைத்து main tasks-ம் இந்த file-ல் இருக்கும்."
+      },
+      {
+        "heading": "7. vars vs defaults",
+        "content": "Vars-க்கு அதிக priority, defaults-ஐ user override செய்யலாம்."
+      },
+      {
+        "heading": "8. files & templates Folder",
+        "content": "files-ல் static files, templates-ல் Jinja2 template files இருக்கும்."
+      },
+      {
+        "heading": "9. Playbook-ல் Role Include செய்வது",
+        "content": "roles keyword மூலம் playbook-ல் role add செய்யப்படுகிறது."
+      },
+      {
+        "heading": "10. Role Usage Example",
+        "content": "roles: - nginx - docker"
+      },
+      {
+        "heading": "11. Roles Advantages",
+        "content": "Clean code, reuse, teamwork support மற்றும் easy maintenance."
+      },
+      {
+        "heading": "12. Real-Time Use Case",
+        "content": "Real projects-ல் nginx, mysql, docker போன்ற ஒவ்வொரு service-க்கும் தனித்தனி role இருக்கும்."
+      },
+      {
+        "heading": "Lesson 11 Summary",
+        "content": "Roles structure, usage மற்றும் importance பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 11: Roles",
+    "subtitle": "Roles structure, usage & project organization",
+    "sections": [
+      {
+        "heading": "1. Role na enna?",
+        "content": "Automation code-a proper-aa organize panni reuse panna use pannradhu dhaan Role."
+      },
+      {
+        "heading": "2. Yen Roles Use Pannanum?",
+        "content": "Code clean-a irukka, reuse panna, big project manage panna roles help pannum."
+      },
+      {
+        "heading": "3. Eppo Roles Thevai?",
+        "content": "Playbooks periya size aagumbodhu roles use pannuvaanga."
+      },
+      {
+        "heading": "4. Default Role Structure",
+        "content": "tasks, handlers, files, templates, vars, defaults, meta folders irukkum."
+      },
+      {
+        "heading": "5. Important Main Files",
+        "content": "tasks/main.yml, handlers/main.yml, vars/main.yml, defaults/main.yml."
+      },
+      {
+        "heading": "6. tasks/main.yml",
+        "content": "Role run aagura main tasks ellam indha file-ல் irukkum."
+      },
+      {
+        "heading": "7. vars vs defaults",
+        "content": "Vars high priority, defaults override panna mudiyum."
+      },
+      {
+        "heading": "8. files & templates",
+        "content": "Static files files folder-la, template files templates folder-la irukkum."
+      },
+      {
+        "heading": "9. Playbook-ல Role Add Pannradhu",
+        "content": "roles keyword use panni role add pannuvaanga."
+      },
+      {
+        "heading": "10. Role Example",
+        "content": "roles: - nginx - docker"
+      },
+      {
+        "heading": "11. Roles Advantages",
+        "content": "Clean structure, reuse, teamwork & easy maintenance."
+      },
+      {
+        "heading": "12. Real-Time Use Case",
+        "content": "Production-la ovvoru service-kum separate role irukkum."
+      },
+      {
+        "heading": "Lesson 11 Summary",
+        "content": "Roles full-a clear aagiduchu. Ippo neenga real project ready."
+      }
+    ]
+  }
+}

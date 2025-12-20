@@ -17,6 +17,9 @@ import K8sImg from "../../../../assets/projects/kubernetes.png";
 import SwarmImg from "../../../../assets/projects/swarm.png";
 
 export default function Lesson15AllProjects() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.7, fontSize: 16 }}>
       <h1 style={{ fontSize: 36, fontWeight: 800, marginBottom: 8 }}>

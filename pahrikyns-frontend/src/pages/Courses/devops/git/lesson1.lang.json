@@ -1,0 +1,128 @@
+{
+  "en": {
+    "title": "Lesson 1 - Introduction to Git",
+    "subtitle": "Understand Git from Zero with Real World Examples",
+    "sections": [
+      {
+        "title": "Problem Without Git",
+        "points": [
+          "We create multiple copies like final.zip, final2.zip",
+          "No proper version history",
+          "Impossible to track who changed what",
+          "Undoing mistakes is very difficult",
+          "Team members overwrite each other's work"
+        ],
+        "table": {
+          "headers": ["Without Git", "With Git"],
+          "rows": [
+            ["Manual backup", "Automatic history"],
+            ["File confusion", "Clean versions"],
+            ["No rollback", "Easy rollback"],
+            ["No collaboration", "Team collaboration"]
+          ]
+        },
+        "note": "This is the biggest reason why Git was created."
+      },
+      {
+        "title": "What is Git?",
+        "points": [
+          "Git is a Distributed Version Control System",
+          "It tracks changes in source code",
+          "It maintains full history of the project",
+          "It works locally and with cloud platforms"
+        ],
+        "table": {
+          "headers": ["Term", "Meaning"],
+          "rows": [
+            ["Version", "Saved copy"],
+            ["Control", "Manage"],
+            ["System", "Software"],
+            ["Git", "Version Control System"]
+          ]
+        }
+      },
+      {
+        "title": "Why We Use Git",
+        "points": [
+          "Secure code backup",
+          "Safe undo option",
+          "Collaboration with developers",
+          "Branching for experiments",
+          "Tracking complete history"
+        ],
+        "table": {
+          "headers": ["Feature", "Benefit"],
+          "rows": [
+            ["Branching", "Safe experimentation"],
+            ["Commit history", "Audit tracking"],
+            ["Remote repo", "Cloud backup"],
+            ["Merge", "Team integration"]
+          ]
+        }
+      },
+      {
+        "title": "Git Architecture",
+        "points": [
+          "Working Directory – where you write code",
+          "Staging Area – where changes are prepared",
+          "Local Repository – where commits are stored",
+          "Remote Repository – cloud backup"
+        ],
+        "table": {
+          "headers": ["Layer", "Purpose"],
+          "rows": [
+            ["Working Directory", "Edit files"],
+            ["Staging Area", "Select changes"],
+            ["Local Repo", "Save commit history"],
+            ["Remote Repo", "Share to team"]
+          ]
+        }
+      },
+      {
+        "title": "Git File States",
+        "points": [
+          "Untracked – new file",
+          "Modified – file changed",
+          "Staged – ready for commit",
+          "Committed – saved permanently"
+        ],
+        "table": {
+          "headers": ["State", "Meaning"],
+          "rows": [
+            ["Untracked", "Git does not know this file"],
+            ["Modified", "File is changed"],
+            ["Staged", "Ready to commit"],
+            ["Committed", "Saved in history"]
+          ]
+        }
+      },
+      {
+        "title": "Real World Example",
+        "commands": [
+          "Create index.html",
+          "Edit index.html",
+          "Add to staging",
+          "Commit to repository"
+        ],
+        "note": "Every professional project follows this exact flow."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "பாடம் 1 - Git அறிமுகம்",
+    "subtitle": "Git அடிப்படைகளை எளிய முறையில் கற்றுக்கொள்ளுங்கள்",
+    "sections": [
+      {
+        "title": "Git இல்லாத பிரச்சனைகள்",
+        "points": [
+          "பல version file confusion",
+          "Undo செய்ய முடியாத நிலை",
+          "Team வேலை conflict",
+          "Backup பிரச்சனை"
+        ],
+        "note": "இந்த பிரச்சனைகளுக்கான தீர்வே Git."
+      }
+    ]
+  }
+}

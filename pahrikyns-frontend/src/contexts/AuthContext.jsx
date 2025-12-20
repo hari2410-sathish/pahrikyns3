@@ -1,51 +1,91 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentUser } from "../api/auth";
+import { registerFCMToken } from "../utils/fcm";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  // ✅ USE ONLY USER TOKEN
+  const [token, setToken] = useState(
+    localStorage.getItem("USER_TOKEN")
+  );
+
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
-  // Load actual user from backend using token
+  // ================================
+  // ✅ LOAD USER (SKIP ADMIN ROUTES)
+  // ================================
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        if (!token) {
-          setLoading(false);
-          return;
-        }
+  if (window.location.pathname.startsWith("/admin")) {
+    setLoading(false);
+    return;
+  }
 
-        const res = await getCurrentUser(token);
-        setUser(res.data);
-      } catch (err) {
-        console.log("Auth load error:", err);
-        localStorage.removeItem("token");
+  const loadUser = async () => {
+    try {
+      if (!token) {
+        setLoading(false);
+        return;
       }
+
+      const res = await getCurrentUser();
+      const loggedUser = res.data;
+
+      setUser(loggedUser);
+
+      if (loggedUser?.id) {
+        registerFCMToken(loggedUser.id);
+      }
+    } catch (err) {
+      console.error("❌ Auth load error:", err);
+      localStorage.removeItem("USER_TOKEN");
+      setToken(null);
+      setUser(null);
+    } finally {
       setLoading(false);
-    };
-
-    loadUser();
-  }, [token]);
-
-  const login = (data) => {
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
-
-    setUser(data.user);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    }
   };
 
+  loadUser();
+}, [token]); // ✅ correct
+
+  // ================================
+  // ✅ LOGIN
+  // ================================
+  const login = (data) => {
+    if (!data?.token || !data?.user) return;
+
+    localStorage.setItem("USER_TOKEN", data.token);
+    setToken(data.token);
+    setUser(data.user);
+
+    if (data.user?.id) {
+      registerFCMToken(data.user.id);
+    }
+  };
+
+  // ================================
+  // ✅ LOGOUT
+  // ================================
   const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
+    localStorage.removeItem("USER_TOKEN");
     localStorage.removeItem("user");
+
+    setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

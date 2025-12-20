@@ -1,38 +1,40 @@
-// src/ThemeContext.jsx
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-export const AppThemeContext = createContext();
+export const AppThemeContext = createContext();   // ✅ ADD THIS LINE
 
-export default function AppThemeProvider({ children }) {
-  // load saved theme from browser or fallback to "dark"
-  const [theme, setTheme] = useState(
-    localStorage.getItem("site-theme") || "dark"
-  );
+export const useThemeMode = () => useContext(AppThemeContext);
 
-  // your existing futuristic variant
-  const [variant, setVariant] = useState("futuristic");
+export default function ThemeModeProvider({ children }) {
+  const [mode, setMode] = useState("light");
 
-  // apply theme to body + save to localStorage
-  useEffect(() => {
-    document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("site-theme", theme);
-  }, [theme]);
-
-  // toggle function
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    setMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          primary: { main: "#2563eb" },
+          secondary: { main: "#facc15" },
+        },
+        shape: { borderRadius: 12 },
+        typography: {
+          fontFamily: "Inter, system-ui, Avenir, Helvetica, Arial, sans-serif",
+        },
+      }),
+    [mode]
+  );
+
   return (
-    <AppThemeContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-        variant,
-        setVariant,
-      }}
-    >
-      {children}
+    <AppThemeContext.Provider value={{ theme: mode, toggleTheme }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
     </AppThemeContext.Provider>
   );
 }

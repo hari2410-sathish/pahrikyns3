@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 9: Variables in Ansible",
+    "subtitle": "Understanding vars, register, facts and variable precedence",
+    "sections": [
+      {
+        "heading": "1. What is a Variable in Ansible?",
+        "content": "A variable in Ansible is used to store a value that can change and be reused across playbooks and tasks."
+      },
+      {
+        "heading": "2. Why Variables are Important?",
+        "content": "Variables make playbooks dynamic, reusable and easy to manage instead of hardcoding values."
+      },
+      {
+        "heading": "3. Defining Variables in Playbook",
+        "content": "You can define variables using 'vars' inside the playbook."
+      },
+      {
+        "heading": "4. Variable Example",
+        "content": "Example: vars: app_name: nginx app_port: 80"
+      },
+      {
+        "heading": "5. Using Variables in Tasks",
+        "content": "Use double curly braces to access variables: {{ app_name }}"
+      },
+      {
+        "heading": "6. Variables from Inventory",
+        "content": "Variables can also be declared inside the inventory file for each host or group."
+      },
+      {
+        "heading": "7. Register Variables",
+        "content": "Register is used to store the output of a task into a variable for later use."
+      },
+      {
+        "heading": "8. Register Example",
+        "content": "Example: register: result — result.stdout can be used later."
+      },
+      {
+        "heading": "9. Ansible Facts",
+        "content": "Facts are system information automatically collected by Ansible such as OS, IP, memory and CPU."
+      },
+      {
+        "heading": "10. Accessing Facts",
+        "content": "Example: {{ ansible_hostname }}, {{ ansible_os_family }}"
+      },
+      {
+        "heading": "11. Variable Precedence",
+        "content": "If the same variable is defined in multiple places, Ansible follows a priority order to decide which value to use."
+      },
+      {
+        "heading": "12. Common Variable Precedence Order",
+        "content": "Extra vars > Play vars > Inventory vars > Facts > Role defaults"
+      },
+      {
+        "heading": "Lesson 9 Summary",
+        "content": "You learned what variables are, how to define and use them, register outputs, facts and precedence."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 9: Variables",
+    "subtitle": "vars, register, facts மற்றும் variable precedence பற்றி",
+    "sections": [
+      {
+        "heading": "1. Ansible-ல் Variable என்றால் என்ன?",
+        "content": "Value store செய்து பல இடங்களில் பயன்படுத்தப்படும் பெயரே variable ஆகும்."
+      },
+      {
+        "heading": "2. Variables ஏன் முக்கியம்?",
+        "content": "Playbook-ஐ dynamic, reusable மற்றும் flexible ஆக்க variables உதவுகின்றன."
+      },
+      {
+        "heading": "3. Playbook-ல் Variables Define செய்வது",
+        "content": "vars keyword மூலம் variables define செய்யலாம்."
+      },
+      {
+        "heading": "4. Variable Example",
+        "content": "vars: app_name: nginx app_port: 80"
+      },
+      {
+        "heading": "5. Task-ல் Variables Use செய்வது",
+        "content": "{{ app_name }} போன்ற format-ல் variable use செய்ய வேண்டும்."
+      },
+      {
+        "heading": "6. Inventory Variables",
+        "content": "Inventory file-ல் host அல்லது group-க்கு variables set செய்யலாம்."
+      },
+      {
+        "heading": "7. Register Variable",
+        "content": "Task output-ஐ variable-ஆக store செய்ய register பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "8. Register Example",
+        "content": "register: result — result.stdout மூலம் output access செய்யலாம்."
+      },
+      {
+        "heading": "9. Ansible Facts",
+        "content": "System information-களை Ansible automatic-ஆ collect பண்ணும்."
+      },
+      {
+        "heading": "10. Facts Access செய்வது",
+        "content": "{{ ansible_hostname }}, {{ ansible_os_family }} போன்றவை examples."
+      },
+      {
+        "heading": "11. Variable Precedence",
+        "content": "ஒரே variable பல இடங்களில் இருந்தால் priority order மூலம் final value decide செய்யப்படும்."
+      },
+      {
+        "heading": "12. Common Precedence Order",
+        "content": "Extra vars > Play vars > Inventory vars > Facts > Role defaults"
+      },
+      {
+        "heading": "Lesson 9 Summary",
+        "content": "Variables, register, facts மற்றும் precedence பற்றி நீங்கள் முழுவதுமாக கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 9: Variables",
+    "subtitle": "vars, register, facts & variable priority",
+    "sections": [
+      {
+        "heading": "1. Variable na enna?",
+        "content": "Value store panni reuse panna use pannradhu dhaan variable."
+      },
+      {
+        "heading": "2. Yen Variables Important?",
+        "content": "Hardcoding avoid panna, playbook flexible-a panna variables use pannuvaanga."
+      },
+      {
+        "heading": "3. Playbook-ல் Variable Define Pannradhu",
+        "content": "vars keyword use panni variable define pannalaam."
+      },
+      {
+        "heading": "4. Variable Example",
+        "content": "app_name: nginx app_port: 80"
+      },
+      {
+        "heading": "5. Variable Use Pannradhu",
+        "content": "{{ app_name }} nu double curly braces use panni access pannuvaanga."
+      },
+      {
+        "heading": "6. Inventory Variables",
+        "content": "Inventory file-laye variables set pannalaam."
+      },
+      {
+        "heading": "7. Register na enna?",
+        "content": "Task output-ai variable-la store panna register use pannuvaanga."
+      },
+      {
+        "heading": "8. Register Example",
+        "content": "register: result nu use panni result.stdout use pannalaam."
+      },
+      {
+        "heading": "9. Ansible Facts",
+        "content": "System details automatic-aa Ansible collect pannum."
+      },
+      {
+        "heading": "10. Facts Access",
+        "content": "{{ ansible_hostname }}, {{ ansible_os_family }} use pannuvaanga."
+      },
+      {
+        "heading": "11. Variable Precedence",
+        "content": "Same variable multiple idathula irundhaa priority order follow pannum."
+      },
+      {
+        "heading": "12. Precedence Order",
+        "content": "Extra vars > Play vars > Inventory vars > Facts > Role defaults"
+      },
+      {
+        "heading": "Lesson 9 Summary",
+        "content": "Variables use, register, facts & priority full clear aagiduchu."
+      }
+    ]
+  }
+}

@@ -18,6 +18,9 @@ import GitRebaseAutosquashImg from "../../../../assets/git/git-autosquash.png";
 import GitRebaseDangerImg from "../../../../assets/git/git-danger.png";
 
 export default function Lesson6() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div
       style={{

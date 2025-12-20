@@ -21,6 +21,9 @@ import ImgBuildkit from "../../../../assets/docker/docker-buildkit.png";
 import ImgSlimImages from "../../../../assets/docker/docker-image-slim.png";
 
 export default function Lesson3() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.8, fontSize: 17 }}>
       <h1 style={{ fontSize: 36, fontWeight: 800 }}>Docker – Lesson 3: Images Deep Dive</h1>

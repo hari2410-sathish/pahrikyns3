@@ -5,8 +5,18 @@ import {
   Typography,
   Button,
   Paper,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
 import { useNavigate, useParams } from "react-router-dom";
+import api from "../../api/axios"; // ✅ adjust if your axios path is different
 
 export default function AdminResetPassword() {
   const navigate = useNavigate();
@@ -14,23 +24,52 @@ export default function AdminResetPassword() {
 
   const [pass, setPass] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [toast, setToast] = useState({
+    open: false,
+    msg: "",
+    type: "error",
+  });
+
+  const showToast = (msg, type = "error") =>
+    setToast({ open: true, msg, type });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!pass.trim() || !confirm.trim()) {
-      alert("Please fill all fields.");
+      showToast("Please fill all fields");
       return;
     }
 
     if (pass !== confirm) {
-      alert("Passwords do not match!");
+      showToast("Passwords do not match!");
       return;
     }
 
-    // Fake backend success
-    alert("Password reset successful!");
-    navigate("/admin/login");
+    try {
+      setLoading(true);
+
+      // ✅ REAL BACKEND CALL
+      await api.post("/admin/reset-password", {
+        token,
+        newPassword: pass,
+      });
+
+      showToast("Password reset successful!", "success");
+
+      setTimeout(() => {
+        navigate("/admin/login");
+      }, 1200);
+    } catch (err) {
+      showToast(
+        err.response?.data?.message || "Password reset failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -108,9 +147,21 @@ export default function AdminResetPassword() {
           <TextField
             fullWidth
             label="New Password"
-            type="password"
+            type={showPass ? "text" : "password"}
             value={pass}
             onChange={(e) => setPass(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPass(!showPass)}
+                    sx={{ color: "#00eaff" }}
+                  >
+                    {showPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             sx={{
               mb: 3,
               "& .MuiOutlinedInput-root": {
@@ -140,6 +191,7 @@ export default function AdminResetPassword() {
           <Button
             fullWidth
             type="submit"
+            disabled={loading}
             sx={{
               py: 1.2,
               borderRadius: "999px",
@@ -154,7 +206,7 @@ export default function AdminResetPassword() {
               },
             }}
           >
-            Reset Password
+            {loading ? <CircularProgress size={26} /> : "Reset Password"}
           </Button>
         </form>
 
@@ -162,12 +214,25 @@ export default function AdminResetPassword() {
           Back to{" "}
           <span
             onClick={() => navigate("/admin/login")}
-            style={{ cursor: "pointer", color: "#00eaff" }}
+            style={{
+              cursor: "pointer",
+              color: "#00eaff",
+              fontWeight: 700,
+            }}
           >
             Login
           </span>
         </Typography>
       </Paper>
+
+      {/* TOAST */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={3000}
+        onClose={() => setToast({ ...toast, open: false })}
+      >
+        <Alert severity={toast.type}>{toast.msg}</Alert>
+      </Snackbar>
     </Box>
   );
 }

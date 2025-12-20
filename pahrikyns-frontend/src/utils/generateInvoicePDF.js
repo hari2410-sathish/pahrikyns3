@@ -2,52 +2,124 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import QRCode from "qrcode";
 
-export async function generateInvoicePDF(payment) {
+/**
+ * ✅ Generate Invoice PDF (Orders + Payments compatible)
+ */
+export async function generateInvoicePDF(order) {
   const pdf = new jsPDF();
 
-  // Header
-  pdf.setFontSize(22);
-  pdf.setTextColor(0, 255, 255);
-  pdf.text("PAHRIKYNS - PAYMENT INVOICE", 14, 18);
+  const {
+    id,
+    customer,
+    items = [],
+    totalAmount,
+    status,
+    paymentStatus,
+    paymentMethod,
+    razorpayPaymentId,
+    createdAt,
+  } = order;
+
+  const invoiceDate = createdAt
+    ? new Date(createdAt).toLocaleDateString()
+    : new Date().toLocaleDateString();
+
+  /* =========================
+     HEADER
+  ========================= */
+  pdf.setFontSize(20);
+  pdf.setTextColor(40, 199, 255);
+  pdf.text("PAHRIKYNS", 14, 18);
 
   pdf.setFontSize(12);
-  pdf.setTextColor(120);
-  pdf.text(`Invoice ID: INV-${payment.id}`, 14, 30);
-  pdf.text(`Date: ${payment.date}`, 14, 38);
+  pdf.setTextColor(150);
+  pdf.text("INVOICE", 14, 26);
 
-  // QR Code (Transaction ID)
-  const qr = await QRCode.toDataURL(payment.transactionId);
-  pdf.addImage(qr, "PNG", 150, 10, 45, 45);
+  pdf.setDrawColor(40, 199, 255);
+  pdf.line(14, 30, 196, 30);
 
-  // Student Info
+  pdf.setTextColor(80);
+  pdf.text(`Invoice ID : INV-${id.slice(0, 8)}`, 14, 40);
+  pdf.text(`Order ID : ${id}`, 14, 48);
+  pdf.text(`Date : ${invoiceDate}`, 14, 56);
+
+  /* =========================
+     QR CODE (Order ID)
+  ========================= */
+  const qr = await QRCode.toDataURL(id);
+  pdf.addImage(qr, "PNG", 155, 38, 35, 35);
+
+  /* =========================
+     CUSTOMER INFO
+  ========================= */
   autoTable(pdf, {
-    startY: 50,
-    head: [["STUDENT INFORMATION", ""]],
+    startY: 80,
+    head: [["CUSTOMER INFORMATION", ""]],
     body: [
-      ["Name", payment.studentName],
-      ["Email", payment.email],
-      ["Course", payment.course],
+      ["Customer", customer || "N/A"],
+      ["Payment Method", paymentMethod || "N/A"],
+      ["Payment Status", paymentStatus || "N/A"],
     ],
     theme: "grid",
+    headStyles: {
+      fillColor: [15, 23, 42],
+      textColor: 255,
+    },
   });
 
-  // Payment Info
+  /* =========================
+     ORDER ITEMS
+  ========================= */
   autoTable(pdf, {
     startY: pdf.lastAutoTable.finalY + 10,
-    head: [["PAYMENT DETAILS", ""]],
-    body: [
-      ["Amount", `₹${payment.amount}`],
-      ["Status", payment.status.toUpperCase()],
-      ["Transaction ID", payment.transactionId],
-      ["Mode", payment.mode],
-    ],
-    theme: "grid",
+    head: [["Item", "Qty", "Price", "Total"]],
+    body:
+      items.length > 0
+        ? items.map((i) => [
+            i.product,
+            i.quantity,
+            `₹${i.price}`,
+            `₹${i.quantity * i.price}`,
+          ])
+        : [["N/A", "-", "-", "-"]],
+    theme: "striped",
+    headStyles: {
+      fillColor: [15, 23, 42],
+      textColor: 255,
+    },
   });
 
-  // Footer
-  pdf.setFontSize(10);
-  pdf.setTextColor(150);
-  pdf.text("Thank you for learning with Pahrikyns!", 14, pdf.internal.pageSize.height - 10);
+  /* =========================
+     PAYMENT SUMMARY
+  ========================= */
+  autoTable(pdf, {
+    startY: pdf.lastAutoTable.finalY + 10,
+    body: [
+      ["Sub Total", `₹${totalAmount}`],
+      ["GST (0%)", "₹0"],
+      ["TOTAL PAID", `₹${totalAmount}`],
+      ["Transaction ID", razorpayPaymentId || "N/A"],
+      ["Order Status", status || "N/A"],
+    ],
+    theme: "grid",
+    styles: { fontStyle: "bold" },
+  });
 
-  pdf.save(`Invoice-${payment.id}.pdf`);
+  /* =========================
+     FOOTER
+  ========================= */
+  pdf.setFontSize(10);
+  pdf.setTextColor(120);
+  pdf.text(
+    "Thank you for choosing PAHRIKYNS.",
+    14,
+    pdf.internal.pageSize.height - 20
+  );
+  pdf.text(
+    "This is a system generated invoice.",
+    14,
+    pdf.internal.pageSize.height - 14
+  );
+
+  pdf.save(`Invoice-${id}.pdf`);
 }

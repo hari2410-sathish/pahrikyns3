@@ -14,6 +14,9 @@ import Overlay2Img from "../../../../assets/docker/overlay2.png";
 import VolumesImg from "../../../../assets/docker/volumes.png";
 
 export default function Lesson9() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.8, fontSize: 17 }}>
 

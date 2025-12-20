@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 12: Ansible Galaxy",
+    "subtitle": "Using community roles, downloading roles and reusing automation with Ansible Galaxy",
+    "sections": [
+      {
+        "heading": "1. What is Ansible Galaxy?",
+        "content": "Ansible Galaxy is a public repository where developers share Ansible roles for reuse."
+      },
+      {
+        "heading": "2. Why Use Ansible Galaxy?",
+        "content": "It saves time, avoids rewriting code and provides tested, community-maintained roles."
+      },
+      {
+        "heading": "3. Galaxy Website",
+        "content": "Roles are available at the official site: galaxy.ansible.com"
+      },
+      {
+        "heading": "4. Searching for a Role",
+        "content": "You can search for roles on the Galaxy website by keyword like nginx, docker, mysql."
+      },
+      {
+        "heading": "5. Installing a Role",
+        "content": "Use command: ansible-galaxy install geerlingguy.nginx"
+      },
+      {
+        "heading": "6. Default Role Install Location",
+        "content": "Roles are installed in ~/.ansible/roles or /etc/ansible/roles by default."
+      },
+      {
+        "heading": "7. Listing Installed Roles",
+        "content": "Use: ansible-galaxy list to see installed roles."
+      },
+      {
+        "heading": "8. Using Galaxy Role in Playbook",
+        "content": "Include the role using the roles keyword inside the playbook."
+      },
+      {
+        "heading": "9. Role Version Management",
+        "content": "You can install specific versions of roles to avoid breaking changes."
+      },
+      {
+        "heading": "10. requirements.yml File",
+        "content": "Multiple roles can be listed and installed using a requirements.yml file."
+      },
+      {
+        "heading": "11. Installing Roles from requirements.yml",
+        "content": "Use: ansible-galaxy install -r requirements.yml"
+      },
+      {
+        "heading": "12. Best Practices with Galaxy",
+        "content": "Always read documentation, pin versions, test in staging before production use."
+      },
+      {
+        "heading": "Lesson 12 Summary",
+        "content": "You learned what Ansible Galaxy is, how to install and use community roles and best practices."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 12: Ansible Galaxy",
+    "subtitle": "Community roles பயன்படுத்துதல், roles download & reuse செய்வது",
+    "sections": [
+      {
+        "heading": "1. Ansible Galaxy என்றால் என்ன?",
+        "content": "Community users share செய்யும் Ansible roles repository தான் Ansible Galaxy."
+      },
+      {
+        "heading": "2. Ansible Galaxy ஏன் பயன்படும்?",
+        "content": "Time save ஆகும், tested roles கிடைக்கும், code rewrite தேவையில்லை."
+      },
+      {
+        "heading": "3. Galaxy Website",
+        "content": "Official site: galaxy.ansible.com"
+      },
+      {
+        "heading": "4. Role Search செய்வது",
+        "content": "nginx, docker, mysql போன்ற keyword கொண்டு roles search செய்யலாம்."
+      },
+      {
+        "heading": "5. Role Install செய்வது",
+        "content": "ansible-galaxy install geerlingguy.nginx"
+      },
+      {
+        "heading": "6. Default Role Install Location",
+        "content": "~/.ansible/roles அல்லது /etc/ansible/roles-ல் install ஆகும்."
+      },
+      {
+        "heading": "7. Installed Roles List பார்ப்பது",
+        "content": "ansible-galaxy list command பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "8. Playbook-ல் Galaxy Role பயன்படுத்துவது",
+        "content": "roles keyword மூலம் playbook-ல் include செய்யலாம்."
+      },
+      {
+        "heading": "9. Role Version Management",
+        "content": "Specific version install பண்ணலாம் to avoid breaking changes."
+      },
+      {
+        "heading": "10. requirements.yml File",
+        "content": "Multiple roles list போட ஒரு requirements.yml file பயன்படும்."
+      },
+      {
+        "heading": "11. requirements.yml மூலம் Install",
+        "content": "ansible-galaxy install -r requirements.yml"
+      },
+      {
+        "heading": "12. Galaxy Best Practices",
+        "content": "Documentation படிக்க வேண்டும், versions lock செய்ய வேண்டும், production-க்கு முன் test செய்ய வேண்டும்."
+      },
+      {
+        "heading": "Lesson 12 Summary",
+        "content": "Ansible Galaxy, role install, usage மற்றும் best practices பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 12: Ansible Galaxy",
+    "subtitle": "Community roles download panni reuse pannradhu",
+    "sections": [
+      {
+        "heading": "1. Ansible Galaxy na enna?",
+        "content": "Community share panna roles repository dhaan Ansible Galaxy."
+      },
+      {
+        "heading": "2. Yen Galaxy Use Pannanum?",
+        "content": "Time save, tested roles, code rewrite thevai illa."
+      },
+      {
+        "heading": "3. Galaxy Website",
+        "content": "galaxy.ansible.com"
+      },
+      {
+        "heading": "4. Role Search",
+        "content": "nginx, docker, mysql keywords use panni search pannalaam."
+      },
+      {
+        "heading": "5. Role Install",
+        "content": "ansible-galaxy install geerlingguy.nginx"
+      },
+      {
+        "heading": "6. Install Location",
+        "content": "~/.ansible/roles or /etc/ansible/roles-ல் install aagum."
+      },
+      {
+        "heading": "7. Installed Roles List",
+        "content": "ansible-galaxy list use pannalaam."
+      },
+      {
+        "heading": "8. Playbook-ல Galaxy Role",
+        "content": "roles keyword use panni playbook-ல் add pannuvaanga."
+      },
+      {
+        "heading": "9. Role Version Control",
+        "content": "Specific version lock panna mudiyum."
+      },
+      {
+        "heading": "10. requirements.yml File",
+        "content": "Multiple roles ku requirements.yml file use pannuvaanga."
+      },
+      {
+        "heading": "11. Install from requirements.yml",
+        "content": "ansible-galaxy install -r requirements.yml"
+      },
+      {
+        "heading": "12. Best Practices",
+        "content": "Docs padikka, version lock panna, staging-la test panna best."
+      },
+      {
+        "heading": "Lesson 12 Summary",
+        "content": "Ansible Galaxy full clear. Community power ippo un kaiyila."
+      }
+    ]
+  }
+}

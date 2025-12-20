@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 import LeftSidebar from "../../components/dashboard/LeftSidebar";
@@ -10,6 +11,7 @@ import LearningChart from "../../components/dashboard/LearningChart";
 
 export default function ProgressDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -26,13 +28,24 @@ export default function ProgressDashboard() {
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <TopBar />
 
-        <Grid container spacing={3}>
+        {/* GREETING */}
+        <Typography
+          sx={{
+            fontSize: 22,
+            fontWeight: 700,
+            mb: 3,
+            color: "#fff",
+          }}
+        >
+          Welcome back, {user?.name || "Learner"} 👋
+        </Typography>
 
+        <Grid container spacing={3}>
           {/* ---------------- STAT CARDS ---------------- */}
           <Grid item xs={12} md={4}>
             <StatCard
               title="Courses Enrolled"
-              value="12"
+              value={user?.courses?.length || 12}
               color="#00eaff"
               delay={0.1}
             />
@@ -41,7 +54,7 @@ export default function ProgressDashboard() {
           <Grid item xs={12} md={4}>
             <StatCard
               title="Hours Learned"
-              value="56 hrs"
+              value={`${user?.hours || 56} hrs`}
               color="#7b3fe4"
               delay={0.2}
             />
@@ -50,10 +63,50 @@ export default function ProgressDashboard() {
           <Grid item xs={12} md={4}>
             <StatCard
               title="Learning Streak"
-              value="9 days 🔥"
+              value={`${user?.streak || 9} days 🔥`}
               color="#00ff95"
               delay={0.3}
             />
+          </Grid>
+
+          {/* ---------------- CONTINUE LEARNING ---------------- */}
+          <Grid item xs={12} md={6}>
+            <GlassPanel title="Continue Learning">
+              <Typography sx={{ mb: 1 }}>
+                You were last watching:
+              </Typography>
+
+              <Typography sx={{ fontWeight: 700, color: "#00eaff" }}>
+                Docker & Kubernetes - Lesson 7
+              </Typography>
+
+              <Button
+                sx={{
+                  mt: 2,
+                  background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
+                  color: "#000",
+                  fontWeight: 700,
+                }}
+                onClick={() => navigate("/my-courses")}
+              >
+                Resume
+              </Button>
+            </GlassPanel>
+          </Grid>
+
+          {/* ---------------- RECENT ACTIVITY ---------------- */}
+          <Grid item xs={12} md={6}>
+            <GlassPanel title="Recent Activity">
+              <Typography sx={{ opacity: 0.8 }}>
+                ✅ Watched: Git Branching – 1 hour ago
+              </Typography>
+              <Typography sx={{ opacity: 0.8 }}>
+                ✅ Completed: Linux Basics – Yesterday
+              </Typography>
+              <Typography sx={{ opacity: 0.8 }}>
+                ✅ Attempted Quiz: AWS EC2 – 2 days ago
+              </Typography>
+            </GlassPanel>
           </Grid>
 
           {/* ---------------- CHART SECTION ---------------- */}
@@ -69,7 +122,6 @@ export default function ProgressDashboard() {
               <CourseProgressList />
             </GlassPanel>
           </Grid>
-
         </Grid>
       </Box>
     </Box>

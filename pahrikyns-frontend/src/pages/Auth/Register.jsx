@@ -1,6 +1,4 @@
-// FINAL FIXED REGISTER COMPONENT
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -12,19 +10,28 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  Divider,
 } from "@mui/material";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { registerUser, verifyOTP, resendOTP } from "../../api/auth";
+import {
+  registerUser,
+  verifyOTP,
+  resendOTP,
+  googleLogin,
+} from "../../api/auth";
+
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Register() {
   const [step, setStep] = useState(1);
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -44,9 +51,16 @@ export default function Register() {
     setToast({ open: true, msg, type });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
-  // STEP 1 — REGISTER
+  // ✅ Already logged-in user redirect
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
+
+  // ================= EMAIL REGISTER =================
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -55,57 +69,87 @@ export default function Register() {
       return;
     }
 
-    setLoading(true);
+    if (form.password.length < 6) {
+      showToast("Password must be at least 6 characters");
+      return;
+    }
 
+    setLoading(true);
     try {
       const res = await registerUser(form);
 
-      if (res.data.requiresOTP) {
+      if (res.data?.requiresOTP) {
         showToast("OTP sent to your email", "success");
         setStep(2);
       } else {
-        login(res.data);
-        navigate("/dashboard");
+        login({
+          token: res.data.token,
+          user: res.data.user,
+        });
+        navigate("/dashboard", { replace: true });
       }
     } catch (err) {
-      showToast("Registration failed");
+      showToast(err.response?.data?.error || "Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // STEP 2 — VERIFY OTP
+  // ================= OTP VERIFY =================
   const handleVerifyOTP = async () => {
-    if (otp.length !== 6) {
+    if (otp.length !== 6 || !/^\d+$/.test(otp)) {
       showToast("Enter valid 6-digit OTP");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await verifyOTP({ email: form.email, otp });
+      const res = await verifyOTP({
+        email: form.email,
+        otp,
+      });
 
-      login(res.data);
+      login({
+        token: res.data.token,
+        user: res.data.user,
+      });
 
-      setStep(3);
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
-      showToast("Invalid OTP");
+      showToast(err.response?.data?.error || "Invalid OTP");
     } finally {
       setLoading(false);
     }
   };
 
-  // RESEND OTP
   const handleResend = async () => {
     try {
       await resendOTP({ email: form.email });
-      showToast("OTP resent!", "success");
+      showToast("OTP resent successfully!", "success");
     } catch {
       showToast("Failed to resend OTP");
+    }
+  };
+
+  // ================= GOOGLE SIGNUP =================
+  const handleGoogleSignup = async (credentialResponse) => {
+    try {
+      setGoogleLoading(true);
+
+      const res = await googleLogin(
+        credentialResponse.credential // ✅ ID TOKEN
+      );
+
+      login({
+        token: res.data.token,
+        user: res.data.user,
+      });
+
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      showToast("Google Signup Failed");
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -116,200 +160,230 @@ export default function Register() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "radial-gradient(circle, #020617, #000)",
-        p: 3,
-        position: "relative",
-        overflow: "hidden",
+        backgroundImage: "url('/bg-login.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        p: 2,
       }}
     >
-      {/* Floating lights */}
-      {[...Array(28)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: "absolute",
-            width: `${10 + Math.random() * 20}px`,
-            height: `${10 + Math.random() * 20}px`,
-            borderRadius: "50%",
-            background: "rgba(0,234,255,0.7)",
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            filter: "blur(12px)",
-            opacity: 0.3,
-            animation: `float ${4 + Math.random() * 6}s infinite ease-in-out`,
-          }}
-        />
-      ))}
-
-      <style>{`
-        @keyframes float {
-          0%,100% { transform: translateY(0); opacity: 0.3; }
-          50% { transform: translateY(-20px); opacity: 0.8; }
-        }
-      `}</style>
-
       <Paper
         elevation={12}
         sx={{
           width: "100%",
-          maxWidth: 420,
-          p: 4,
+          maxWidth: 900,
+          height: 560,
+          display: "flex",
           borderRadius: 4,
-          textAlign: "center",
-          background: "rgba(10,20,40,0.85)",
-          border: "1px solid rgba(0,255,255,0.25)",
-          boxShadow: "0 0 40px rgba(0,255,255,0.25)",
-          backdropFilter: "blur(12px)",
+          overflow: "hidden",
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(6px)",
         }}
       >
-        {/* STEP 1 FORM */}
-        {step === 1 && (
-          <>
-            <Typography
-              sx={{
-                fontSize: 26,
-                fontWeight: 800,
-                mb: 3,
-                background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-                WebkitBackgroundClip: "text",
-                color: "transparent",
-              }}
-            >
-              CREATE ACCOUNT
-            </Typography>
+        {/* LEFT */}
+        <Box
+          sx={{
+            flex: 1,
+            background: "#f8fbff",
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            p: 4,
+          }}
+        >
+          <img
+            src="/assets/login-security.png"
+            alt="register"
+            style={{ width: "75%", maxWidth: 320 }}
+          />
+          <Typography sx={{ mt: 3, color: "#2563eb", fontWeight: 800 }}>
+            Secure Registration System
+          </Typography>
+        </Box>
 
-            <form onSubmit={handleRegister}>
-              <TextField
-                fullWidth
-                label="Full Name"
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-                sx={{ mb: 2.3 }}
-              />
+        {/* RIGHT FORM */}
+        <Box
+          sx={{
+            flex: 1,
+            background: "linear-gradient(180deg,#2563eb,#1e3a8a)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: 5,
+          }}
+        >
+          {/* ================= STEP 1 ================= */}
+          {step === 1 && (
+            <>
+              <Typography
+                sx={{ fontSize: 32, fontWeight: 800, color: "#fff", mb: 1 }}
+              >
+                Create Account
+              </Typography>
 
-              <TextField
-                fullWidth
-                label="Email Address"
-                type="email"
-                value={form.email}
-                onChange={(e) =>
-                  setForm({ ...form, email: e.target.value })
-                }
-                sx={{ mb: 2.3 }}
-              />
+              <Typography
+                sx={{ color: "rgba(255,255,255,0.8)", mb: 3 }}
+              >
+                Register to continue
+              </Typography>
 
-              <TextField
-                fullWidth
-                label="Password"
-                type={showPass ? "text" : "password"}
-                value={form.password}
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPass(!showPass)}
-                        sx={{ color: "#00eaff" }}
-                      >
-                        {showPass ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+              {/* ✅ GOOGLE SIGNUP */}
+              <Box sx={{ mb: 2, pointerEvents: googleLoading ? "none" : "auto" }}>
+                <GoogleLogin
+                  onSuccess={handleGoogleSignup}
+                  onError={() => showToast("Google Signup Failed")}
+                />
+                {googleLoading && (
+                  <Typography sx={{ mt: 1, color: "#fff", fontSize: 12 }}>
+                    Signing in with Google…
+                  </Typography>
+                )}
+              </Box>
+
+              <Divider
+                sx={{
+                  mb: 3,
+                  borderColor: "rgba(255,255,255,0.4)",
                 }}
-                sx={{ mb: 3 }}
+              />
+
+              {/* EMAIL REGISTER FORM */}
+              <form onSubmit={handleRegister}>
+                <TextField
+                  fullWidth
+                  placeholder="Full Name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm({ ...form, name: e.target.value })
+                  }
+                  sx={{ mb: 2.5, background: "#fff", borderRadius: 1 }}
+                />
+
+                <TextField
+                  fullWidth
+                  placeholder="Email Address"
+                  type="email"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm({ ...form, email: e.target.value })
+                  }
+                  sx={{ mb: 2.5, background: "#fff", borderRadius: 1 }}
+                />
+
+                <TextField
+                  fullWidth
+                  placeholder="Password"
+                  type={showPass ? "text" : "password"}
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ mb: 3, background: "#fff", borderRadius: 1 }}
+                />
+
+                <Button
+                  fullWidth
+                  type="submit"
+                  disabled={loading}
+                  sx={{
+                    py: 1.4,
+                    borderRadius: 2,
+                    fontWeight: 800,
+                    background: "#facc15",
+                    color: "#000",
+                    textTransform: "none",
+                    "&:hover": { background: "#fde047" },
+                  }}
+                >
+                  {loading ? <CircularProgress size={24} /> : "NEXT →"}
+                </Button>
+              </form>
+
+              <Typography
+                sx={{
+                  mt: 3,
+                  color: "rgba(255,255,255,0.85)",
+                  fontSize: 14,
+                  textAlign: "center",
+                }}
+              >
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  style={{ color: "#fde047", fontWeight: 700 }}
+                >
+                  Login
+                </Link>
+              </Typography>
+            </>
+          )}
+
+          {/* ================= STEP 2 ================= */}
+          {step === 2 && (
+            <>
+              <Typography
+                sx={{ fontSize: 30, fontWeight: 800, color: "#fff", mb: 1 }}
+              >
+                Verify OTP
+              </Typography>
+
+              <Typography
+                sx={{ color: "rgba(255,255,255,0.8)", mb: 4 }}
+              >
+                OTP sent to <b>{form.email}</b>
+              </Typography>
+
+              <TextField
+                fullWidth
+                placeholder="Enter 6-digit OTP"
+                value={otp}
+                onChange={(e) =>
+                  setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+                sx={{ mb: 3, background: "#fff", borderRadius: 1 }}
               />
 
               <Button
                 fullWidth
-                type="submit"
+                onClick={handleVerifyOTP}
                 disabled={loading}
                 sx={{
-                  mt: 1,
-                  py: 1.2,
-                  borderRadius: "999px",
+                  py: 1.4,
+                  borderRadius: 2,
                   fontWeight: 800,
-                  fontSize: 16,
-                  background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-                  color: "#020617",
+                  background: "#facc15",
+                  color: "#000",
                 }}
               >
-                {loading ? <CircularProgress size={26} /> : "Next →"}
+                {loading ? <CircularProgress size={24} /> : "VERIFY OTP"}
               </Button>
-            </form>
-          </>
-        )}
 
-        {/* STEP 2 OTP */}
-        {step === 2 && (
-          <>
-            <Typography
-              sx={{
-                fontSize: 26,
-                fontWeight: 800,
-                mb: 2,
-                color: "#00eaff",
-              }}
-            >
-              Verify OTP
-            </Typography>
+              <Button
+                fullWidth
+                onClick={handleResend}
+                sx={{ mt: 2, color: "#fff", textTransform: "none" }}
+              >
+                Resend OTP
+              </Button>
+            </>
+          )}
 
-            <Typography sx={{ mb: 3 }}>
-              OTP sent to <b>{form.email}</b>
-            </Typography>
-
-            <TextField
-              fullWidth
-              label="Enter 6-digit OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{ mb: 3 }}
-            />
-
-            <Button
-              fullWidth
-              onClick={handleVerifyOTP}
-              disabled={loading}
-              sx={{
-                py: 1.2,
-                borderRadius: "999px",
-                background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-              }}
-            >
-              {loading ? <CircularProgress size={26} /> : "Verify OTP"}
-            </Button>
-
-            <Button
-              fullWidth
-              onClick={handleResend}
-              sx={{ mt: 2, color: "#00eaff" }}
-            >
-              Resend OTP
-            </Button>
-          </>
-        )}
-
-        {/* STEP 3 SUCCESS */}
-        {step === 3 && (
-          <>
-            <Typography sx={{ fontSize: 28, mb: 2, color: "#00ffb3" }}>
-              🎉 Account Created!
-            </Typography>
-
-            <Typography sx={{ mb: 3 }}>
-              Redirecting to dashboard...
-            </Typography>
-
-            <CircularProgress />
-          </>
-        )}
-
-        <Typography sx={{ mt: 2, opacity: 0.6 }}>
-          © 2025 PAHRIKYNS • Secure Registration
-        </Typography>
+          <Typography
+            sx={{ mt: 3, color: "rgba(255,255,255,0.7)", fontSize: 13 }}
+          >
+            © 2025 PAHRIKYNS
+          </Typography>
+        </Box>
       </Paper>
 
       <Snackbar

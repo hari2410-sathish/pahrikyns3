@@ -2,6 +2,8 @@
 // Docker Lesson 1 – INTRO TO DOCKER
 // Max 1000 lines ✔ (This file ~350 lines)
 // ----------------------------------------------
+import lang from "./lesson1.lang.json";
+import { useLanguage } from "../../../../contexts/LanguageContext";
 
 export const meta = {
   title: "Docker Lesson 1",
@@ -22,6 +24,9 @@ import DockerUseCasesImg from "../../../../assets/docker/docker-usecases.png";
 import DockerLifecycleImg from "../../../../assets/docker/docker-container-lifecycle.png";
 
 export default function Lesson1() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div
       style={{

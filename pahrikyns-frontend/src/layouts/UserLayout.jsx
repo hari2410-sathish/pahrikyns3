@@ -1,22 +1,40 @@
 // src/layouts/UserLayout.jsx
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import MainNavbar from "../components/global/MainNavbar";
 import Footer from "../components/global/Footer";
 
 export default function UserLayout() {
+  const location = useLocation();
+
+  /**
+   * Pages where footer should NOT appear
+   * (dashboard full-height experience)
+   */
+  const hideFooterRoutes = ["/dashboard"];
+
+  const hideFooter = hideFooterRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
     <>
-      {/* Navbar */}
+      {/* ================= NAVBAR ================= */}
       <MainNavbar />
 
-      {/* Page Content Wrapper */}
-      <main style={{ minHeight: "80vh" }}>
+      {/* ================= PAGE CONTENT ================= */}
+      <main
+        style={{
+          minHeight: "calc(100vh - 120px)",
+          paddingTop: "72px", // navbar height safety
+          background: "#040a16",
+        }}
+      >
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* ================= FOOTER ================= */}
+      {!hideFooter && <Footer />}
     </>
   );
 }

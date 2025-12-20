@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 2: Architecture & Working",
+    "subtitle": "Understanding Control Node, Managed Node, Inventory, SSH and Working Flow",
+    "sections": [
+      {
+        "heading": "1. Ansible Architecture Overview",
+        "content": "Ansible follows a simple client-server architecture where one system controls multiple target systems using SSH."
+      },
+      {
+        "heading": "2. What is Control Node?",
+        "content": "The Control Node is the machine where Ansible is installed. It is used to run playbooks and send commands to other servers."
+      },
+      {
+        "heading": "3. What are Managed Nodes?",
+        "content": "Managed Nodes are the target servers that Ansible manages. These servers do not need Ansible installed on them."
+      },
+      {
+        "heading": "4. What is Inventory?",
+        "content": "Inventory is a file where the list of all managed nodes (IP address or hostnames) is stored. It tells Ansible which servers to manage."
+      },
+      {
+        "heading": "5. Static and Dynamic Inventory",
+        "content": "Static inventory is a simple text file. Dynamic inventory is generated automatically from cloud providers like AWS and Azure."
+      },
+      {
+        "heading": "6. What is SSH in Ansible?",
+        "content": "Ansible uses SSH to connect from control node to managed nodes securely without installing an agent."
+      },
+      {
+        "heading": "7. Agentless Architecture",
+        "content": "Ansible is agentless, which means no software needs to be installed on managed nodes. Only SSH access is required."
+      },
+      {
+        "heading": "8. How Ansible Works (Working Flow)",
+        "content": "User writes a playbook → Ansible reads the inventory → Connects to nodes via SSH → Executes tasks → Returns output."
+      },
+      {
+        "heading": "9. Push Based Model",
+        "content": "Ansible follows a push-based model where the control node pushes configurations to target servers."
+      },
+      {
+        "heading": "10. Ports Used by Ansible",
+        "content": "Ansible mainly uses port 22 for SSH. For Windows, it uses WinRM on ports 5985 and 5986."
+      },
+      {
+        "heading": "11. Real-Time Example",
+        "content": "If you want to install nginx on 10 servers, you write one playbook and Ansible installs it on all servers at the same time."
+      },
+      {
+        "heading": "Lesson 2 Summary",
+        "content": "You learned Ansible architecture, control node, managed node, inventory, SSH and working flow."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 2: Architecture & Working",
+    "subtitle": "Control Node, Managed Node, Inventory, SSH மற்றும் Working Flow விளக்கம்",
+    "sections": [
+      {
+        "heading": "1. Ansible Architecture Overview",
+        "content": "Ansible ஒரு simple client-server architecture-ஐ பயன்படுத்துகிறது."
+      },
+      {
+        "heading": "2. Control Node என்றால் என்ன?",
+        "content": "Ansible install செய்யப்பட்ட machine தான் Control Node. இதிலிருந்து playbooks run செய்யப்படும்."
+      },
+      {
+        "heading": "3. Managed Nodes என்றால் என்ன?",
+        "content": "Ansible manage செய்யப்படும் target servers தான் Managed Nodes."
+      },
+      {
+        "heading": "4. Inventory என்றால் என்ன?",
+        "content": "Inventory file-ல் எல்லா target servers-ன் IP address அல்லது hostname இருக்கும்."
+      },
+      {
+        "heading": "5. Static & Dynamic Inventory",
+        "content": "Static inventory text file. Dynamic inventory cloud-ல இருந்து auto generate ஆகும்."
+      },
+      {
+        "heading": "6. SSH in Ansible",
+        "content": "Control node-லிருந்து managed nodes-க்கு SSH மூலமாக connection உண்டாகும்."
+      },
+      {
+        "heading": "7. Agentless Architecture",
+        "content": "Managed nodes-ல் Ansible install செய்ய தேவையில்லை."
+      },
+      {
+        "heading": "8. Ansible எப்படி வேலை செய்கிறது?",
+        "content": "Playbook எழுதுதல் → Inventory வாசித்தல் → SSH மூலம் server-க்கு connect ஆகுதல் → Task run ஆகுதல்."
+      },
+      {
+        "heading": "9. Push Based Model",
+        "content": "Control node-லிருந்து servers-க்கு configuration push செய்யப்படும்."
+      },
+      {
+        "heading": "10. பயன்படுத்தப்படும் Ports",
+        "content": "Linux-க்கு port 22, Windows-க்கு 5985, 5986 ports பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "11. Real Example",
+        "content": "ஒரே playbook கொண்டு 10 servers-ல் nginx install செய்யலாம்."
+      },
+      {
+        "heading": "Lesson 2 Summary",
+        "content": "Ansible architecture மற்றும் working flow பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 2: Architecture & Working",
+    "subtitle": "Control node, Managed node, Inventory, SSH & Working flow",
+    "sections": [
+      {
+        "heading": "1. Ansible Architecture Overview",
+        "content": "Ansible simple client-server architecture use pannum."
+      },
+      {
+        "heading": "2. Control Node na enna?",
+        "content": "Ansible install pannina machine than Control Node."
+      },
+      {
+        "heading": "3. Managed Nodes na enna?",
+        "content": "Ansible manage pannra target servers than Managed Nodes."
+      },
+      {
+        "heading": "4. Inventory na enna?",
+        "content": "Inventory file-la ellaa servers list irukkum."
+      },
+      {
+        "heading": "5. Static & Dynamic Inventory",
+        "content": "Static inventory manual file. Dynamic inventory cloud-la irundhu auto varum."
+      },
+      {
+        "heading": "6. SSH in Ansible",
+        "content": "Control node SSH use panni managed nodes connect aagum."
+      },
+      {
+        "heading": "7. Agentless Architecture",
+        "content": "Managed nodes-la Ansible install panna thevai illa."
+      },
+      {
+        "heading": "8. Ansible Working Flow",
+        "content": "Playbook → Inventory → SSH → Task execution."
+      },
+      {
+        "heading": "9. Push Based Model",
+        "content": "Control node-lirundhu servers-kku config push pannuvaanga."
+      },
+      {
+        "heading": "10. Ports Used",
+        "content": "Linux port 22, Windows port 5985 & 5986."
+      },
+      {
+        "heading": "11. Real Example",
+        "content": "Ore playbook panni 10 server-la nginx install pannalaam."
+      },
+      {
+        "heading": "Lesson 2 Summary",
+        "content": "Ippo unakku Ansible architecture & working clear aagiduchu."
+      }
+    ]
+  }
+}

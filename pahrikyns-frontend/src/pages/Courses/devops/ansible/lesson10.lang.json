@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 10: Conditionals & Loops",
+    "subtitle": "Using when conditions and loops to control task execution in Ansible",
+    "sections": [
+      {
+        "heading": "1. What are Conditionals in Ansible?",
+        "content": "Conditionals allow tasks to run only when a specific condition is true using the 'when' keyword."
+      },
+      {
+        "heading": "2. Why Use Conditionals?",
+        "content": "They help you run tasks based on OS type, variable values, command results or environment."
+      },
+      {
+        "heading": "3. Basic when Condition Example",
+        "content": "when: ansible_os_family == \"Debian\""
+      },
+      {
+        "heading": "4. Conditional with Variables",
+        "content": "when: app_port == 80"
+      },
+      {
+        "heading": "5. Using Multiple Conditions",
+        "content": "You can combine conditions using and/or operators."
+      },
+      {
+        "heading": "6. What are Loops in Ansible?",
+        "content": "Loops allow you to repeat the same task multiple times with different values."
+      },
+      {
+        "heading": "7. Old Loop Method (with_items)",
+        "content": "with_items was the old way to loop over a list of items."
+      },
+      {
+        "heading": "8. New Loop Method (loop)",
+        "content": "The modern loop method uses the 'loop' keyword."
+      },
+      {
+        "heading": "9. Loop Example",
+        "content": "loop: - nginx - git - docker"
+      },
+      {
+        "heading": "10. Using Loop with Variables",
+        "content": "You can loop through variable lists as well."
+      },
+      {
+        "heading": "11. Loop with Dictionaries",
+        "content": "Loops can also iterate over dictionaries using key-value pairs."
+      },
+      {
+        "heading": "12. Practical Use Case of Conditionals & Loops",
+        "content": "Install packages only on required OS and multiple software using a single task."
+      },
+      {
+        "heading": "Lesson 10 Summary",
+        "content": "You learned how to control task execution using conditionals and repeat tasks using loops."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 10: Conditionals & Loops",
+    "subtitle": "when condition மற்றும் loops பயன்படுத்தி tasks control செய்வது",
+    "sections": [
+      {
+        "heading": "1. Conditionals என்றால் என்ன?",
+        "content": "Task ஒரு specific condition true என்றால் மட்டும் run ஆக when keyword பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "2. Conditionals ஏன் அவசியம்?",
+        "content": "OS type, variable value அல்லது result base-ஆ task run செய்ய conditionals உதவுகின்றன."
+      },
+      {
+        "heading": "3. Basic when Example",
+        "content": "when: ansible_os_family == \"Debian\""
+      },
+      {
+        "heading": "4. Variable Condition",
+        "content": "when: app_port == 80"
+      },
+      {
+        "heading": "5. Multiple Conditions",
+        "content": "and / or operators பயன்படுத்தி multiple conditions set செய்யலாம்."
+      },
+      {
+        "heading": "6. Loops என்றால் என்ன?",
+        "content": "ஒரே task பல முறை run செய்ய loops பயன்படுத்தப்படுகின்றன."
+      },
+      {
+        "heading": "7. with_items (Old Method)",
+        "content": "with_items என்பது older loop method."
+      },
+      {
+        "heading": "8. loop (New Method)",
+        "content": "loop என்பது modern looping method."
+      },
+      {
+        "heading": "9. Loop Example",
+        "content": "- nginx - git - docker"
+      },
+      {
+        "heading": "10. Variable List Loop",
+        "content": "Variables list-ஐயும் loop மூலம் iterate செய்யலாம்."
+      },
+      {
+        "heading": "11. Dictionary Loop",
+        "content": "Key-value dictionary loop செய்து values பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "12. Practical Use Case",
+        "content": "OS based software install & multiple package install inside one task."
+      },
+      {
+        "heading": "Lesson 10 Summary",
+        "content": "Conditionals மற்றும் loops மூலம் task execution full control கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 10: Conditionals & Loops",
+    "subtitle": "when condition & loops use panni task control pannradhu",
+    "sections": [
+      {
+        "heading": "1. Conditionals na enna?",
+        "content": "Certain condition true aanaal dhaan task run aagum using when keyword."
+      },
+      {
+        "heading": "2. Yen Conditionals Thevai?",
+        "content": "OS, variable value, result base panni task run panna help pannum."
+      },
+      {
+        "heading": "3. Basic when Example",
+        "content": "when: ansible_os_family == \"Debian\""
+      },
+      {
+        "heading": "4. Variable Condition",
+        "content": "when: app_port == 80"
+      },
+      {
+        "heading": "5. Multiple Conditions",
+        "content": "and / or use panni multiple conditions add pannalaam."
+      },
+      {
+        "heading": "6. Loops na enna?",
+        "content": "Same task-a multiple times run panna loops use pannuvaanga."
+      },
+      {
+        "heading": "7. with_items (Old)",
+        "content": "with_items older loop method."
+      },
+      {
+        "heading": "8. loop (New)",
+        "content": "loop dhaan ippo recommended method."
+      },
+      {
+        "heading": "9. Loop Example",
+        "content": "nginx, git, docker install panna single loop."
+      },
+      {
+        "heading": "10. Variable Loop",
+        "content": "Variable list-um loop-la use pannalaam."
+      },
+      {
+        "heading": "11. Dictionary Loop",
+        "content": "Key-value dictionary-um loop panna mudiyum."
+      },
+      {
+        "heading": "12. Practical Example",
+        "content": "OS based install & multiple app install in one task."
+      },
+      {
+        "heading": "Lesson 10 Summary",
+        "content": "Conditionals & loops full control clear aagiduchu."
+      }
+    ]
+  }
+}

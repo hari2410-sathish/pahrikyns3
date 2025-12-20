@@ -15,6 +15,9 @@ import PromGraf from "../../../../assets/docker/prom-graf.png";
 import LokiImg from "../../../../assets/docker/loki.png";
 
 export default function Lesson11() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.75, fontSize: 17 }}>
       <h1 style={{ fontSize: 36, fontWeight: 800 }}>Docker Lesson 11 — Observability: Monitoring, Logging & Tracing</h1>

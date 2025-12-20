@@ -1,0 +1,178 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 6: Inventory & Hosts File",
+    "subtitle": "Understanding Inventory, hosts file, grouping servers and connection methods",
+    "sections": [
+      {
+        "heading": "1. What is Inventory in Ansible?",
+        "content": "Inventory is a file that contains the list of servers (managed nodes) that Ansible controls."
+      },
+      {
+        "heading": "2. What is Hosts File?",
+        "content": "The hosts file is the default inventory file used by Ansible. It contains IP addresses or domain names of target machines."
+      },
+      {
+        "heading": "3. Default Inventory Location",
+        "content": "The default inventory file is located at /etc/ansible/hosts in Linux systems."
+      },
+      {
+        "heading": "4. Simple Inventory Example",
+        "content": "Example: 192.168.1.10 192.168.1.11 These are two managed servers."
+      },
+      {
+        "heading": "5. Grouping Servers",
+        "content": "Servers can be grouped using square brackets. Example: [web] for web servers and [db] for database servers."
+      },
+      {
+        "heading": "6. Inventory with Groups Example",
+        "content": "Example: [web] 192.168.1.10 [db] 192.168.1.20"
+      },
+      {
+        "heading": "7. Group of Groups",
+        "content": "You can combine groups using children. Example: [production:children] web db"
+      },
+      {
+        "heading": "8. Using Hostnames Instead of IP",
+        "content": "You can use server hostnames instead of IP addresses in inventory."
+      },
+      {
+        "heading": "9. Ansible Connection Method",
+        "content": "Ansible uses SSH to connect to Linux servers and WinRM to connect to Windows servers."
+      },
+      {
+        "heading": "10. Testing Inventory Connection",
+        "content": "Use 'ansible all -m ping' to test connectivity with all servers."
+      },
+      {
+        "heading": "11. Custom Inventory File",
+        "content": "You can create your own inventory file and use it with -i option."
+      },
+      {
+        "heading": "12. Static vs Dynamic Inventory",
+        "content": "Static inventory is a fixed file. Dynamic inventory is generated automatically from cloud platforms."
+      },
+      {
+        "heading": "Lesson 6 Summary",
+        "content": "You learned about Ansible inventory, hosts file, grouping servers, and how Ansible connects to managed nodes."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 6: Inventory & Hosts File",
+    "subtitle": "Inventory, hosts file, server grouping & connection முறைகள்",
+    "sections": [
+      {
+        "heading": "1. Ansible-ல் Inventory என்றால் என்ன?",
+        "content": "Ansible control செய்கிற அனைத்து server-களின் பட்டியல் தான் Inventory."
+      },
+      {
+        "heading": "2. Hosts File என்றால் என்ன?",
+        "content": "Hosts file என்பது Ansible default inventory file ஆகும். இது server IP address அல்லது domain பெயர்களை கொண்டிருக்கும்."
+      },
+      {
+        "heading": "3. Default Inventory Location",
+        "content": "Linux systems-ல் default inventory file /etc/ansible/hosts இடத்தில் இருக்கும்."
+      },
+      {
+        "heading": "4. Simple Inventory Example",
+        "content": "192.168.1.10 192.168.1.11 போன்றவை இரண்டு managed servers ஆகும்."
+      },
+      {
+        "heading": "5. Servers-ஐ Group செய்வது",
+        "content": "[web], [db] போன்ற group-களாக server-களை பிரிக்கலாம்."
+      },
+      {
+        "heading": "6. Group Inventory Example",
+        "content": "[web] 192.168.1.10 [db] 192.168.1.20"
+      },
+      {
+        "heading": "7. Group of Groups",
+        "content": "Children group பயன்படுத்தி groups-ஐ combine செய்யலாம்."
+      },
+      {
+        "heading": "8. IP-க்கு பதிலாக Hostname",
+        "content": "Inventory file-ல் IP-க்கு பதிலாக hostname பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "9. Ansible Connection Method",
+        "content": "Linux servers-க்கு SSH, Windows servers-க்கு WinRM பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "10. Inventory Test Command",
+        "content": "'ansible all -m ping' command பயன்படுத்தி server connectivity test செய்யலாம்."
+      },
+      {
+        "heading": "11. Custom Inventory File",
+        "content": "Custom inventory file உருவாக்கி -i option மூலம் பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "12. Static & Dynamic Inventory",
+        "content": "Static inventory file fixed. Dynamic inventory cloud-இல் இருந்து auto-generate ஆகும்."
+      },
+      {
+        "heading": "Lesson 6 Summary",
+        "content": "Inventory, hosts file, server grouping மற்றும் connection பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 6: Inventory & Hosts File",
+    "subtitle": "Inventory, hosts file, server grouping & Ansible connection",
+    "sections": [
+      {
+        "heading": "1. Inventory na enna?",
+        "content": "Ansible control pannura ella server list-um dhaan Inventory."
+      },
+      {
+        "heading": "2. Hosts File na enna?",
+        "content": "Hosts file dhaan Ansible default inventory file. Idhula IP or hostname irukkum."
+      },
+      {
+        "heading": "3. Default Inventory Location",
+        "content": "/etc/ansible/hosts location-ல் default inventory irukkum."
+      },
+      {
+        "heading": "4. Simple Inventory Example",
+        "content": "192.168.1.10, 192.168.1.11 nu rendu servers."
+      },
+      {
+        "heading": "5. Server Grouping",
+        "content": "[web], [db] nu group panni servers-a divide pannalaam."
+      },
+      {
+        "heading": "6. Group Example",
+        "content": "[web] 192.168.1.10 [db] 192.168.1.20"
+      },
+      {
+        "heading": "7. Group of Groups",
+        "content": "Production:children use panni multiple groups combine pannalaam."
+      },
+      {
+        "heading": "8. Hostname Use",
+        "content": "IP badhila hostname use panna mudiyum."
+      },
+      {
+        "heading": "9. Connection Method",
+        "content": "Linux-க்கு SSH, Windows-க்கு WinRM use pannum."
+      },
+      {
+        "heading": "10. Inventory Test",
+        "content": "ansible all -m ping command use panni test pannalaam."
+      },
+      {
+        "heading": "11. Custom Inventory File",
+        "content": "-i option use panni custom inventory file use pannalaam."
+      },
+      {
+        "heading": "12. Static vs Dynamic Inventory",
+        "content": "Static file fixed. Dynamic inventory cloud-la irundhu auto generate aagum."
+      },
+      {
+        "heading": "Lesson 6 Summary",
+        "content": "Inventory, hosts file, grouping & connection full clear aagiduchu."
+      }
+    ]
+  }
+}

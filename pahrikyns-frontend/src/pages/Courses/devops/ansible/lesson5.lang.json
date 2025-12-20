@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 5: YAML Basics",
+    "subtitle": "Understanding YAML syntax, indentation, lists, dictionaries and Ansible usage",
+    "sections": [
+      {
+        "heading": "1. What is YAML?",
+        "content": "YAML stands for 'Yet Another Markup Language'. It is a human-readable data format used by Ansible to write playbooks."
+      },
+      {
+        "heading": "2. Why Ansible Uses YAML?",
+        "content": "YAML is simple, easy to read, easy to write and perfect for automation configuration files."
+      },
+      {
+        "heading": "3. Basic YAML Rules",
+        "content": "YAML is case-sensitive, uses indentation instead of brackets, and does not allow tab spacing."
+      },
+      {
+        "heading": "4. Indentation in YAML",
+        "content": "Indentation defines the structure. Use only spaces. Wrong indentation will break playbooks."
+      },
+      {
+        "heading": "5. Key-Value Pairs",
+        "content": "Key-value format is the basic structure: name: Ansible"
+      },
+      {
+        "heading": "6. YAML Lists",
+        "content": "Lists are created using hyphen (-). Example: - nginx - docker - git"
+      },
+      {
+        "heading": "7. YAML Dictionaries",
+        "content": "Dictionaries store multiple key-value pairs under one variable."
+      },
+      {
+        "heading": "8. Comments in YAML",
+        "content": "Use # to write comments. Ansible ignores commented lines."
+      },
+      {
+        "heading": "9. Strings & Quotes",
+        "content": "Strings can be written with or without quotes. Quotes are required for special characters."
+      },
+      {
+        "heading": "10. Boolean & Numbers",
+        "content": "Boolean values are true/false. Numbers are written normally without quotes."
+      },
+      {
+        "heading": "11. YAML Example for Ansible",
+        "content": "Example: --- name: Install nginx hosts: web tasks: - name: Install nginx apt: name=nginx state=present"
+      },
+      {
+        "heading": "Lesson 5 Summary",
+        "content": "You learned YAML basics including syntax, indentation, lists, dictionaries and how YAML is used in Ansible."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 5: YAML அடிப்படைகள்",
+    "subtitle": "YAML syntax, indentation, lists, dictionaries மற்றும் Ansible பயன்பாடு",
+    "sections": [
+      {
+        "heading": "1. YAML என்றால் என்ன?",
+        "content": "YAML என்பது மனிதர்களுக்கு எளிதாக படிக்கக்கூடிய data format ஆகும். Ansible இதைப் playbook எழுத பயன்படுத்துகிறது."
+      },
+      {
+        "heading": "2. Ansible ஏன் YAML பயன்படுத்துகிறது?",
+        "content": "YAML எளிதாக படிக்கவும், எழுதவும் முடியும் மற்றும் automation-க்கு சிறந்தது."
+      },
+      {
+        "heading": "3. YAML அடிப்படை விதிகள்",
+        "content": "YAML case-sensitive, indentation பயன்படுத்தும், tab spacing அனுமதிக்கப்படாது."
+      },
+      {
+        "heading": "4. Indentation முக்கியத்துவம்",
+        "content": "Indentation மூலம் structure அமைக்கப்படும். தவறான indentation playbook-ஐ break செய்யும்."
+      },
+      {
+        "heading": "5. Key-Value Pair",
+        "content": "name: Ansible போன்ற அமைப்பே அடிப்படை key-value."
+      },
+      {
+        "heading": "6. YAML Lists",
+        "content": "Hyphen (-) வைத்து list உருவாக்கப்படுகிறது."
+      },
+      {
+        "heading": "7. YAML Dictionaries",
+        "content": "ஒரே variable-க்குள் multiple key-value pair storage dictionary ஆகும்."
+      },
+      {
+        "heading": "8. YAML Comments",
+        "content": "# symbol comment எழுத பயன்படுத்தப்படுகிறது."
+      },
+      {
+        "heading": "9. Strings & Quotes",
+        "content": "Special characters இருந்தால் quotes பயன்படுத்த வேண்டும்."
+      },
+      {
+        "heading": "10. Boolean & Numbers",
+        "content": "true/false boolean. Number normal-aa எழுதப்படும்."
+      },
+      {
+        "heading": "11. YAML Example",
+        "content": "Install nginx example YAML structure."
+      },
+      {
+        "heading": "Lesson 5 Summary",
+        "content": "YAML syntax, indentation, lists, dictionaries பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 5: YAML Basics",
+    "subtitle": "YAML syntax, indentation, lists, dictionaries & Ansible usage",
+    "sections": [
+      {
+        "heading": "1. YAML na enna?",
+        "content": "YAML nu solradhu human-readable data format. Ansible playbook idhule dhaan ezhudhuvom."
+      },
+      {
+        "heading": "2. Yen Ansible YAML use pannum?",
+        "content": "YAML easy-aa read & write panna mudiyum and automation-ku best."
+      },
+      {
+        "heading": "3. YAML Basic Rules",
+        "content": "YAML case-sensitive, indentation important, tab use panna koodaadhu."
+      },
+      {
+        "heading": "4. Indentation Importance",
+        "content": "Wrong indentation na playbook break aagum."
+      },
+      {
+        "heading": "5. Key-Value Pair",
+        "content": "name: Ansible nu ezhudhuradhukku key-value pair solluvaanga."
+      },
+      {
+        "heading": "6. YAML Lists",
+        "content": "- nginx - docker - git nu dash use panni list create pannuvaanga."
+      },
+      {
+        "heading": "7. YAML Dictionaries",
+        "content": "Multiple key-value store pannrathu dictionary."
+      },
+      {
+        "heading": "8. YAML Comments",
+        "content": "# symbol use panni comment ezhudhalaam."
+      },
+      {
+        "heading": "9. Strings & Quotes",
+        "content": "Special character irundha quotes use pannalaam."
+      },
+      {
+        "heading": "10. Boolean & Numbers",
+        "content": "true/false boolean. Numbers normal-aa ezhudhalaam."
+      },
+      {
+        "heading": "11. YAML Example",
+        "content": "Nginx install pandra example YAML structure."
+      },
+      {
+        "heading": "Lesson 5 Summary",
+        "content": "YAML basics clear aagiduchu. Next playbooks-kku ready."
+      }
+    ]
+  }
+}

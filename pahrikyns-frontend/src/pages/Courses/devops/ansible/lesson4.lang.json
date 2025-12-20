@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 4: Inventory & Hosts File",
+    "subtitle": "Understanding static inventory, groups, host patterns and variables",
+    "sections": [
+      {
+        "heading": "1. What is Ansible Inventory?",
+        "content": "Inventory is a file that contains the list of target servers (managed nodes) that Ansible will manage."
+      },
+      {
+        "heading": "2. Default Inventory File Location",
+        "content": "The default inventory file is located at /etc/ansible/hosts."
+      },
+      {
+        "heading": "3. Static Inventory",
+        "content": "Static inventory is a simple text file where servers are manually added with IP addresses or hostnames."
+      },
+      {
+        "heading": "4. Sample Inventory File",
+        "content": "Example: [web] 192.168.1.10 192.168.1.11 [db] 192.168.1.20"
+      },
+      {
+        "heading": "5. Inventory Groups",
+        "content": "Servers can be grouped like web, db, app to run tasks on specific server types."
+      },
+      {
+        "heading": "6. Running Commands on Groups",
+        "content": "You can run Ansible commands on group: ansible web -m ping"
+      },
+      {
+        "heading": "7. Host Patterns",
+        "content": "Host patterns are used to target specific hosts or groups such as all, web, db, or combinations."
+      },
+      {
+        "heading": "8. Inventory with Ports & Users",
+        "content": "You can define custom SSH port and user in inventory like: 192.168.1.10 ansible_user=root ansible_port=22"
+      },
+      {
+        "heading": "9. Inventory Variables",
+        "content": "Variables can be defined in inventory for each host or group to reuse values."
+      },
+      {
+        "heading": "10. Group Variables",
+        "content": "Group variables apply common variables to all hosts in a group."
+      },
+      {
+        "heading": "11. Test Inventory Connectivity",
+        "content": "Use command: ansible all -m ping to test connectivity."
+      },
+      {
+        "heading": "Lesson 4 Summary",
+        "content": "You learned about inventory file, host groups, patterns and inventory variables."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 4: Inventory & Hosts File",
+    "subtitle": "Static inventory, server groups, host patterns மற்றும் variables",
+    "sections": [
+      {
+        "heading": "1. Ansible Inventory என்றால் என்ன?",
+        "content": "Ansible manage செய்யும் servers-ன் பட்டியலே inventory file ஆகும்."
+      },
+      {
+        "heading": "2. Default Inventory File Path",
+        "content": "Inventory file default path /etc/ansible/hosts."
+      },
+      {
+        "heading": "3. Static Inventory",
+        "content": "IP address அல்லது hostname கொண்டு manually servers add செய்வதே static inventory."
+      },
+      {
+        "heading": "4. Sample Inventory File",
+        "content": "[web] 192.168.1.10 192.168.1.11 [db] 192.168.1.20"
+      },
+      {
+        "heading": "5. Inventory Groups",
+        "content": "web, db, app போன்ற groups-ஆக servers-ஐ categorize செய்யலாம்."
+      },
+      {
+        "heading": "6. Group-ல் Command Run செய்வது",
+        "content": "ansible web -m ping என்ற command பயன்படுத்தலாம்."
+      },
+      {
+        "heading": "7. Host Patterns",
+        "content": "Specific host அல்லது group-ஐ target செய்ய host patterns பயன்படும்."
+      },
+      {
+        "heading": "8. Inventory-ல் User & Port",
+        "content": "Inventory-ல் custom SSH user மற்றும் port define செய்யலாம்."
+      },
+      {
+        "heading": "9. Inventory Variables",
+        "content": "Inventory-ல் variables define செய்து reuse செய்யலாம்."
+      },
+      {
+        "heading": "10. Group Variables",
+        "content": "ஒரே group-க்கு shared variables group variables ஆகும்."
+      },
+      {
+        "heading": "11. Inventory Test செய்வது",
+        "content": "ansible all -m ping command மூலம் test செய்யலாம்."
+      },
+      {
+        "heading": "Lesson 4 Summary",
+        "content": "Inventory file, groups, patterns மற்றும் variables பற்றி நீங்கள் கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 4: Inventory & Hosts File",
+    "subtitle": "Static inventory, server groups, host patterns & variables",
+    "sections": [
+      {
+        "heading": "1. Ansible Inventory na enna?",
+        "content": "Ansible manage pannra servers list-than inventory file."
+      },
+      {
+        "heading": "2. Default Inventory Path",
+        "content": "Inventory default path: /etc/ansible/hosts"
+      },
+      {
+        "heading": "3. Static Inventory",
+        "content": "Manual-aa IP address potttu servers add pannradhu static inventory."
+      },
+      {
+        "heading": "4. Sample Inventory",
+        "content": "[web] 192.168.1.10 192.168.1.11 [db] 192.168.1.20"
+      },
+      {
+        "heading": "5. Inventory Groups",
+        "content": "web, db, app nu servers-ஐ group pannalaam."
+      },
+      {
+        "heading": "6. Group-la Command Run",
+        "content": "ansible web -m ping use pannalaam."
+      },
+      {
+        "heading": "7. Host Patterns",
+        "content": "Specific host / group-a target panna host patterns use pannuvaanga."
+      },
+      {
+        "heading": "8. Inventory-la User & Port",
+        "content": "Custom user & SSH port inventory-la define pannalaam."
+      },
+      {
+        "heading": "9. Inventory Variables",
+        "content": "Inventory-la variables use panni reuse pannalaam."
+      },
+      {
+        "heading": "10. Group Variables",
+        "content": "Group-க்கு common-a irukkura variables group variables."
+      },
+      {
+        "heading": "11. Inventory Test",
+        "content": "ansible all -m ping run panni test pannalaam."
+      },
+      {
+        "heading": "Lesson 4 Summary",
+        "content": "Inventory, groups, patterns & variables clear aagiduchu."
+      }
+    ]
+  }
+}

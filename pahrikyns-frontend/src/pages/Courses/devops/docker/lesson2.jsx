@@ -20,6 +20,9 @@ import DockerInstallWindows from "../../../../assets/docker/docker-install-windo
 import DockerPostInstall from "../../../../assets/docker/docker-post-install.png";
 
 export default function Lesson2() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div
       style={{

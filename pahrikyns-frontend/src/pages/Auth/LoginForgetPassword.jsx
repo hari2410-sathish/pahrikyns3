@@ -71,7 +71,7 @@ export default function ForgotPassword() {
             width: `${10 + Math.random() * 18}px`,
             height: `${10 + Math.random() * 18}px`,
             borderRadius: "50%",
-            background: "rgba(0,234,255,0.7)`,
+            background: "rgba(0,234,255,0.7)",  // ✅ FIXED
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
             filter: "blur(12px)",
@@ -140,8 +140,6 @@ export default function ForgotPassword() {
               fontSize: 16,
               background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
               color: "#020617",
-              textTransform: "none",
-              boxShadow: "0 0 20px rgba(0,234,255,0.45)",
             }}
           >
             {loading ? <CircularProgress size={26} /> : "Send OTP"}

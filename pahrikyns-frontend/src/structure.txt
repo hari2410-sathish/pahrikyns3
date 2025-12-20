@@ -16,6 +16,7 @@ D:.
 ³       course.js
 ³       fakeAdminAPI.js
 ³       otp.js
+³       resume.js
 ³       
 ÃÄÄÄassets
 ³   ³   react.svg
@@ -25,11 +26,96 @@ D:.
 ³   ³       seal.png
 ³   ³       signature.png
 ³   ³       
+³   ÃÄÄÄdocker
+³   ³       apparmor.png
+³   ³       capabilities.png
+³   ³       cicd.png
+³   ³       csi-architecture.png
+³   ³       docker-architecture.png
+³   ³       docker-buildkit.png
+³   ³       docker-container-lifecycle.png
+³   ³       docker-engine.png
+³   ³       docker-image-slim.png
+³   ³       docker-images-layers.png
+³   ³       docker-install-ubuntu.png
+³   ³       docker-install-windows.png
+³   ³       docker-load-balancing.png
+³   ³       docker-manager-worker.png
+³   ³       docker-overlay-network.png
+³   ³       docker-post-install.png
+³   ³       docker-raft.png
+³   ³       docker-security.png
+³   ³       docker-services.png
+³   ³       docker-swarm-architecture.png
+³   ³       docker-usecases.png
+³   ³       docker-vs-vm.png
+³   ³       dockerfile-best-practices.png
+³   ³       ecr-logo.png
+³   ³       fullstack.png
+³   ³       grafana.png
+³   ³       harbor-logo.png
+³   ³       harbor.png
+³   ³       kubernetes.png
+³   ³       logging.png
+³   ³       loki.png
+³   ³       microservices.png
+³   ³       namespaces.png
+³   ³       network-security.png
+³   ³       nfs-storage.png
+³   ³       notary.png
+³   ³       observability-architecture.png
+³   ³       overlay2.png
+³   ³       prom-graf.png
+³   ³       registry-architecture.png
+³   ³       seccomp.png
+³   ³       swarm-canary.png
+³   ³       swarm-monitoring.png
+³   ³       swarm-security.png
+³   ³       swarm.png
+³   ³       traefik.png
+³   ³       volumes.png
+³   ³       
 ³   ÀÄÄÄgit
+³           git-add.png
+³           git-annotated-tag.png
 ³           git-architecture.png
+³           git-autosquash.png
+³           git-bare.png
+³           git-branch.png
+³           git-clone.png
+³           git-commit.png
+³           git-conflict.png
+³           git-danger.png
 ³           git-distributed.png
+³           git-fetch-pull.png
 ³           git-file-states.png
 ³           git-flow.png
+³           git-init.png
+³           git-linear.png
+³           git-merge.png
+³           git-mirror.png
+³           git-prune.png
+³           git-rebase-conflict.png
+³           git-rebase-i.png
+³           git-rebase.png
+³           git-reflog.png
+³           git-remote-errors.png
+³           git-remote.png
+³           git-reset-levels.png
+³           git-reset.png
+³           git-restore.png
+³           git-semver.png
+³           git-ssh-http.png
+³           git-stash-branch.png
+³           git-stash-conflict.png
+³           git-stash-patch.png
+³           git-stash-workflow.png
+³           git-stash.png
+³           git-status.png
+³           git-submodule.png
+³           git-switch.png
+³           git-tag.png
+³           git-undo-flow.png
 ³           git-what-is.png
 ³           git-why-use.png
 ³           
@@ -68,7 +154,6 @@ D:.
 ³   ³       CourseProgressList.jsx
 ³   ³       LearningChart.jsx
 ³   ³       LeftSidebar.jsx
-³   ³       ResumeBuild.jsx
 ³   ³       TopBar.jsx
 ³   ³       UserDetails.jsx
 ³   ³       
@@ -82,8 +167,6 @@ D:.
 ³   ³       ThemeToggle.jsx
 ³   ³       
 ³   ÀÄÄÄresume
-³           TemplatePreview.jsx
-³           
 ÃÄÄÄcontexts
 ³       AdminAuthContext.jsx
 ³       AuthContext.jsx
@@ -101,21 +184,58 @@ D:.
 ³       
 ÃÄÄÄpages
 ³   ÃÄÄÄAdmin
-³   ³       AddCourse.jsx
-³   ³       AddLesson.jsx
-³   ³       AdminDashboard.jsx
-³   ³       AdminSettings.jsx
-³   ³       CertificatesPro.jsx
-³   ³       CourseDetails.jsx
-³   ³       Dashboard.jsx
-³   ³       EditCourse.jsx
-³   ³       ManageCourses.jsx
-³   ³       ManageStudents.jsx
-³   ³       Notification.jsx
-³   ³       SearchBox.jsx
-³   ³       StudentDetails.jsx
-³   ³       StudentPayments.jsx
-³   ³       
+³   ³   ³   AddCourse.jsx
+³   ³   ³   AddLesson.jsx
+³   ³   ³   AdminDashboard.jsx
+³   ³   ³   AdminSettings.jsx
+³   ³   ³   CertificatesPro.jsx
+³   ³   ³   CourseDetails.jsx
+³   ³   ³   Dashboard.jsx
+³   ³   ³   EditCourse.jsx
+³   ³   ³   ManageCourses.jsx
+³   ³   ³   ManageStudents.jsx
+³   ³   ³   Notification.jsx
+³   ³   ³   SearchBox.jsx
+³   ³   ³   StudentDetails.jsx
+³   ³   ³   StudentPayments.jsx
+³   ³   ³   
+³   ³   ÀÄÄÄResume
+³   ³       ³   ResumeBuilder.jsx
+³   ³       ³   ResumeContext.jsx
+³   ³       ³   ResumeHome.jsx
+³   ³       ³   ResumeMaster.jsx
+³   ³       ³   ResumeMedium.jsx
+³   ³       ³   ResumePro.jsx
+³   ³       ³   ResumeSimple.jsx
+³   ³       ³   ResumeUltraPro.jsx
+³   ³       ³   
+³   ³       ÃÄÄÄcomponents
+³   ³       ³       AISummary.jsx
+³   ³       ³       DragList.jsx
+³   ³       ³       EditModal.jsx
+³   ³       ³       PhotoUpload.jsx
+³   ³       ³       ResumeForm.jsx
+³   ³       ³       ResumePreview.jsx
+³   ³       ³       SectionControls.jsx
+³   ³       ³       ThemeSwatches.jsx
+³   ³       ³       
+³   ³       ÃÄÄÄpremium
+³   ³       ³       PremiumPreviewFrame.jsx
+³   ³       ³       PremiumSidebar.jsx
+³   ³       ³       PremiumTemplateGrid.jsx
+³   ³       ³       PremiumThemePicker.jsx
+³   ³       ³       PremiumToolbar.jsx
+³   ³       ³       PremiumZoomControls.jsx
+³   ³       ³       
+³   ³       ÀÄÄÄtemplates
+³   ³               index.js
+³   ³               TemplateATS.jsx
+³   ³               TemplateMaster.jsx
+³   ³               TemplateMedium.jsx
+³   ³               TemplatePro.jsx
+³   ³               TemplateSimple.jsx
+³   ³               TemplateUltraPro.jsx
+³   ³               
 ³   ÃÄÄÄAuth
 ³   ³       AdminForgotPassword.jsx
 ³   ³       AdminLogin.jsx
@@ -802,13 +922,13 @@ D:.
 ³   ³       HomePage.jsx
 ³   ³       
 ³   ÃÄÄÄPublic
+³   ³       ResumePublic.jsx
 ³   ³       VerifyCertificate.jsx
 ³   ³       
 ³   ÀÄÄÄUser
 ³           ChangePassword.jsx
 ³           MyCourses.jsx
 ³           ProgressDashboard.jsx
-³           ResumeBuilder.jsx
 ³           UserProfile.jsx
 ³           
 ÃÄÄÄroutes

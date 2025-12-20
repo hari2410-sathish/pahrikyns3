@@ -1,0 +1,129 @@
+{
+  "en": {
+    "title": "Lesson 3 - git status, git add & git commit (Deep Understanding)",
+    "subtitle": "In this lesson you will completely understand how Git tracks changes internally.",
+    "sections": [
+      {
+        "title": "Why This Lesson Is Extremely Important",
+        "description": "Most developers use git status, git add and git commit every single day. If you fully understand only these three commands, you can already work on real projects confidently.",
+        "points": [
+          "git status shows the current state of your project.",
+          "git add decides what will go into the next commit.",
+          "git commit permanently stores your changes into Git history.",
+          "These three commands control the entire Git workflow."
+        ],
+        "table": {
+          "headers": ["Command", "Role"],
+          "rows": [
+            ["git status", "Shows what Git is tracking right now"],
+            ["git add", "Moves changes to staging area"],
+            ["git commit", "Saves snapshot into history"]
+          ]
+        }
+      },
+      {
+        "title": "git status – The Most Important Command",
+        "description": "git status tells you everything about your working directory and staging area.",
+        "points": [
+          "Shows untracked files",
+          "Shows modified but unstaged files",
+          "Shows staged files",
+          "Shows current branch name"
+        ],
+        "commands": [
+          "git status"
+        ],
+        "table": {
+          "headers": ["Section in Output", "Meaning"],
+          "rows": [
+            ["Untracked files", "Git does not know these files yet"],
+            ["Changes not staged for commit", "Files are modified but not staged"],
+            ["Changes to be committed", "Files are ready for commit"],
+            ["On branch main", "Current active branch"]
+          ]
+        },
+        "note": "Professional developers run git status multiple times while working.",
+        "warning": "Never commit without checking git status first."
+      },
+      {
+        "title": "git add – Moving Changes to Staging Area",
+        "description": "git add does not commit your file. It only prepares the file for commit.",
+        "points": [
+          "git add tracks new files",
+          "git add updates modified files",
+          "Only staged files will be committed"
+        ],
+        "commands": [
+          "git add index.html",
+          "git add .",
+          "git add -A"
+        ],
+        "table": {
+          "headers": ["Command", "Effect"],
+          "rows": [
+            ["git add file", "Stages only one file"],
+            ["git add .", "Stages all files in current directory"],
+            ["git add -A", "Stages everything in repo"]
+          ]
+        },
+        "note": "Staging area is like a selection basket for your commit."
+      },
+      {
+        "title": "git commit – Saving a Permanent Snapshot",
+        "description": "git commit takes whatever is in the staging area and saves it permanently into the Git history.",
+        "points": [
+          "Each commit has a unique hash ID",
+          "Each commit has a message",
+          "Commits are immutable (cannot be changed easily)"
+        ],
+        "commands": [
+          "git commit -m \"Initial project commit\"",
+          "git commit -am \"Auto stage & commit\""
+        ],
+        "table": {
+          "headers": ["Option", "Purpose"],
+          "rows": [
+            ["-m", "Add commit message"],
+            ["-a", "Automatically stage tracked files"],
+            ["--amend", "Modify last commit"]
+          ]
+        },
+        "note": "Never write useless commit messages like 'update' or 'changes'."
+      },
+      {
+        "title": "Common Beginner Mistakes",
+        "points": [
+          "Forgetting to run git add",
+          "Committing wrong files",
+          "Writing poor commit messages",
+          "Not checking git status before commit"
+        ],
+        "table": {
+          "headers": ["Mistake", "Problem Created"],
+          "rows": [
+            ["Skip git add", "Nothing gets committed"],
+            ["git add . blindly", "Unwanted files get committed"],
+            ["Bad messages", "History becomes unreadable"],
+            ["No status check", "Wrong snapshot saved"]
+          ]
+        },
+        "warning": "Bad commits in production projects can cause serious issues."
+      }
+    ]
+  },
+  "ta": {
+    "title": "பாடம் 3 - git status, git add, git commit",
+    "subtitle": "இந்த பாடத்தில் Git வேலை செய்யும் முறையை முழுமையாக புரிந்து கொள்வீர்கள்.",
+    "sections": [
+      {
+        "title": "இந்த மூன்று command-கள் ஏன் முக்கியம்?",
+        "points": [
+          "git status – project-ன் தற்போதைய நிலை காட்டும்",
+          "git add – commit-க்கு file-ஐ தயார்படுத்தும்",
+          "git commit – permanent history-ல save பண்ணும்"
+        ],
+        "note": "இந்த மூன்று command-களை சரியாக தெரிந்தால் Git-ல் நீங்க strong."
+      }
+    ]
+  }
+}

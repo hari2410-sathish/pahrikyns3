@@ -11,7 +11,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-import { useAdminAuth } from "../../contexts/AdminAuthContext";
+import { useAdminAuth } from "../context/AdminAuthContext";
 
 export default function AdminRegister() {
   const [showPass, setShowPass] = useState(false);

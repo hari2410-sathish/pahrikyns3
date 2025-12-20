@@ -21,6 +21,9 @@ import GitPruneImg from "../../../../assets/git/git-prune.png";
 import GitErrorsImg from "../../../../assets/git/git-remote-errors.png";
 
 export default function Lesson7() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div
       style={{

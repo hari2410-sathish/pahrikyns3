@@ -19,6 +19,9 @@ import GitReflogImg from "../../../../assets/git/git-reflog.png";
 import GitUndoFlowImg from "../../../../assets/git/git-undo-flow.png";
 
 export default function Lesson9() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, lineHeight: 1.8, fontSize: 17, maxWidth: 1100, margin: "auto", color: "#222" }}>
       {/* TITLE */}

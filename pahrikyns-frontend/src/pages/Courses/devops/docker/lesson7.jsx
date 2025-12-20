@@ -20,6 +20,9 @@ import HarborLogo from "../../../../assets/docker/harbor-logo.png";
 import ECRLogo from "../../../../assets/docker/ecr-logo.png";
 
 export default function Lesson7() {
+  const { langKey } = useLanguage();
+  const data = lang[langKey] || lang.en;
+
   return (
     <div style={{ padding: 28, maxWidth: 1100, margin: "auto", lineHeight: 1.8, fontSize: 17 }}>
       <h1 style={{ fontSize: 34, fontWeight: 800 }}>Docker – Lesson 7: Registry & Private Registry Masterclass</h1>

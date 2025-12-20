@@ -1,0 +1,166 @@
+{
+  "en": {
+    "title": "Ansible – Lesson 3: Installation & Setup",
+    "subtitle": "Installing Ansible on Linux, setting up SSH, Windows support and verification",
+    "sections": [
+      {
+        "heading": "1. Prerequisites for Ansible",
+        "content": "To install Ansible, you need a Linux system as a control node, Python installed and SSH access to target servers."
+      },
+      {
+        "heading": "2. Installing Ansible on Ubuntu",
+        "content": "Run: sudo apt update && sudo apt install ansible -y"
+      },
+      {
+        "heading": "3. Installing Ansible on CentOS / RHEL",
+        "content": "Run: sudo yum install epel-release -y && sudo yum install ansible -y"
+      },
+      {
+        "heading": "4. Verify Ansible Installation",
+        "content": "Use the command: ansible --version to verify installation."
+      },
+      {
+        "heading": "5. Control Node Requirement",
+        "content": "Ansible control node must be Linux. Windows cannot be a control node."
+      },
+      {
+        "heading": "6. Windows as Managed Node",
+        "content": "Windows machines can be managed using WinRM instead of SSH."
+      },
+      {
+        "heading": "7. Setting up SSH Key-based Authentication",
+        "content": "Generate SSH keys using ssh-keygen and copy them to managed nodes using ssh-copy-id."
+      },
+      {
+        "heading": "8. Testing SSH Connectivity",
+        "content": "Test connection using: ssh user@server_ip"
+      },
+      {
+        "heading": "9. Passwordless Authentication",
+        "content": "Ansible works best with passwordless SSH authentication for automation."
+      },
+      {
+        "heading": "10. Ansible Configuration File (ansible.cfg)",
+        "content": "The ansible.cfg file is used to configure Ansible settings such as inventory path and default user."
+      },
+      {
+        "heading": "11. Default Paths in Ansible",
+        "content": "Inventory file default path is /etc/ansible/hosts and config file path is /etc/ansible/ansible.cfg."
+      },
+      {
+        "heading": "Lesson 3 Summary",
+        "content": "You learned how to install Ansible on Linux, configure SSH, verify setup and understand Windows support."
+      }
+    ]
+  },
+
+  "ta": {
+    "title": "Ansible – பாடம் 3: Installation & Setup",
+    "subtitle": "Linux-லில் Ansible நிறுவல், SSH அமைப்பு, Windows support மற்றும் verification",
+    "sections": [
+      {
+        "heading": "1. Ansible-க்கு தேவையானவை",
+        "content": "Control node Linux ஆக இருக்க வேண்டும், Python மற்றும் SSH access தேவை."
+      },
+      {
+        "heading": "2. Ubuntu-வில் Ansible நிறுவுதல்",
+        "content": "Command: sudo apt update && sudo apt install ansible -y"
+      },
+      {
+        "heading": "3. CentOS / RHEL-ல் நிறுவுதல்",
+        "content": "Command: sudo yum install epel-release -y && sudo yum install ansible -y"
+      },
+      {
+        "heading": "4. Ansible Installation Verify செய்வது",
+        "content": "ansible --version என்ற command பயன்படுத்தி verify செய்யலாம்."
+      },
+      {
+        "heading": "5. Control Node Requirement",
+        "content": "Control node கட்டாயம் Linux ஆக இருக்க வேண்டும்."
+      },
+      {
+        "heading": "6. Windows Managed Node",
+        "content": "Windows machines-ஐ WinRM மூலம் manage செய்யலாம்."
+      },
+      {
+        "heading": "7. SSH Key-based Authentication அமைத்தல்",
+        "content": "ssh-keygen மற்றும் ssh-copy-id மூலம் SSH authentication அமைக்கலாம்."
+      },
+      {
+        "heading": "8. SSH Connection Test செய்வது",
+        "content": "ssh user@server_ip என்ற command மூலம் test செய்யலாம்."
+      },
+      {
+        "heading": "9. Passwordless Authentication",
+        "content": "Automation-க்கு password வேண்டாத SSH authentication சிறந்தது."
+      },
+      {
+        "heading": "10. Ansible Configuration File",
+        "content": "ansible.cfg file மூலம் Ansible full configuration செய்யலாம்."
+      },
+      {
+        "heading": "11. Default File Paths",
+        "content": "Inventory: /etc/ansible/hosts, Config: /etc/ansible/ansible.cfg"
+      },
+      {
+        "heading": "Lesson 3 Summary",
+        "content": "Ansible install, SSH setup மற்றும் Windows support பற்றி கற்றுக்கொண்டீர்கள்."
+      }
+    ]
+  },
+
+  "tl": {
+    "title": "Ansible – Lesson 3: Installation & Setup",
+    "subtitle": "Linux-la Ansible install pannradhu, SSH setup, Windows support & verification",
+    "sections": [
+      {
+        "heading": "1. Ansible Prerequisites",
+        "content": "Control node Linux irukkanum, Python & SSH access thevai."
+      },
+      {
+        "heading": "2. Ubuntu-la Ansible Install",
+        "content": "Command: sudo apt update && sudo apt install ansible -y"
+      },
+      {
+        "heading": "3. CentOS / RHEL-la Install",
+        "content": "Command: sudo yum install epel-release -y && sudo yum install ansible -y"
+      },
+      {
+        "heading": "4. Installation Verify Pannradhu",
+        "content": "ansible --version use panni verify pannalaam."
+      },
+      {
+        "heading": "5. Control Node Rule",
+        "content": "Control node Windows-a irukka koodaadhu."
+      },
+      {
+        "heading": "6. Windows Managed Node",
+        "content": "Windows machines-ஐ WinRM use panni manage pannalaam."
+      },
+      {
+        "heading": "7. SSH Key Setup",
+        "content": "ssh-keygen create panni ssh-copy-id use pannalaam."
+      },
+      {
+        "heading": "8. SSH Test",
+        "content": "ssh user@server_ip command-la test pannalaam."
+      },
+      {
+        "heading": "9. Passwordless Login",
+        "content": "Automation-ku password thevai illaadha SSH best."
+      },
+      {
+        "heading": "10. ansible.cfg File",
+        "content": "ansible settings ellam ansible.cfg file-la irukkum."
+      },
+      {
+        "heading": "11. Default Paths",
+        "content": "Inventory path: /etc/ansible/hosts, Config path: /etc/ansible/ansible.cfg"
+      },
+      {
+        "heading": "Lesson 3 Summary",
+        "content": "Ansible install, SSH setup, Windows support ellam clear aagiduchu."
+      }
+    ]
+  }
+}
