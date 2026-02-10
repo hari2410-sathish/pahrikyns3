@@ -23,6 +23,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import SearchIcon from "@mui/icons-material/Search";
 import ReplayIcon from "@mui/icons-material/Replay";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 import { useNavigate } from "react-router-dom";
 import { fetchAllPayments } from "../../Adminapi/paymentsAdmin";
@@ -37,10 +38,10 @@ export default function Refunds() {
   const [refunds, setRefunds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [q, setQ] = useState("");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-
+  /* FILTER STATES */
+  const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -54,19 +55,20 @@ export default function Refunds() {
     setToast({ open: true, msg, type });
 
   /* ================= LOAD REFUNDS ================= */
-  const loadRefunds = async (params = {}) => {
+  const loadRefunds = async () => {
     try {
       setLoading(true);
 
       const res = await fetchAllPayments({
-        status: "REFUNDED", // ✅ backend aligned
-        search: params.search ?? q,
-        fromDate: params.fromDate ?? fromDate,
-        toDate: params.toDate ?? toDate,
-        page: params.page ?? page,
+        status: "REFUNDED",
+        search,
+        startDate,
+        endDate,
+        page,
+        limit: 10,
       });
 
-      setRefunds(res.payments || res || []);
+      setRefunds(res.payments || []);
       setTotalPages(res.totalPages || 1);
     } catch (err) {
       console.error(err);
@@ -81,31 +83,25 @@ export default function Refunds() {
     // eslint-disable-next-line
   }, [page]);
 
-  /* ================= SEARCH ================= */
-  const handleSearch = (e) => {
+  /* ================= HANDLERS ================= */
+  const handleFilterSubmit = (e) => {
     e.preventDefault();
     setPage(1);
-    loadRefunds({ search: q, page: 1 });
+    loadRefunds();
   };
 
-  /* ================= DATE FILTER ================= */
-  const handleDateFilter = () => {
+  const handleClearFilters = () => {
+    setSearch("");
+    setStartDate("");
+    setEndDate("");
     setPage(1);
-    loadRefunds({ fromDate, toDate, page: 1 });
+    setTimeout(loadRefunds, 100);
   };
 
   return (
     <Box>
       {/* ================= HEADER ================= */}
-      <Box
-        sx={{
-          mb: 3,
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 2,
-        }}
-      >
+      <Box mb={3} display="flex" justifyContent="space-between" flexWrap="wrap">
         <Box>
           <Typography variant="h5" fontWeight={800}>
             Refunds
@@ -114,50 +110,55 @@ export default function Refunds() {
             Refunded payments overview
           </Typography>
         </Box>
-
-        <Box component="form" onSubmit={handleSearch} display="flex" gap={1}>
-          <SearchIcon sx={{ opacity: 0.6 }} />
-          <TextField
-            size="small"
-            placeholder="Search order / id"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            sx={{ minWidth: 260 }}
-          />
-        </Box>
       </Box>
 
-      {/* ================= DATE FILTER ================= */}
+      {/* ================= FILTERS ================= */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Stack direction="row" spacing={2} flexWrap="wrap" alignItems="center">
-          <CalendarMonthIcon sx={{ opacity: 0.6 }} />
-
+        <Stack
+          direction="row"
+          component="form"
+          onSubmit={handleFilterSubmit}
+          spacing={2}
+          flexWrap="wrap"
+          alignItems="center"
+        >
           <TextField
-            label="From"
-            type="date"
             size="small"
-            InputLabelProps={{ shrink: true }}
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
+            placeholder="Search Order / ID / User..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            InputProps={{ startAdornment: <SearchIcon sx={{ mr: 1, opacity: 0.5 }} /> }}
+            sx={{ flex: 1, minWidth: 200 }}
           />
 
           <TextField
-            label="To"
             type="date"
             size="small"
+            label="Start Date"
             InputLabelProps={{ shrink: true }}
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <TextField
+            type="date"
+            size="small"
+            label="End Date"
+            InputLabelProps={{ shrink: true }}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
           />
 
           <Tooltip title="Apply filter">
-            <IconButton
-              onClick={handleDateFilter}
-              sx={{ bgcolor: "#22d3ee", color: "#020617" }}
-            >
-              <SearchIcon />
+            <IconButton type="submit" sx={{ bgcolor: "primary.main", color: "white", "&:hover": { bgcolor: "primary.dark" } }}>
+              <FilterListIcon />
             </IconButton>
           </Tooltip>
+
+          {(search || startDate || endDate) && (
+            <IconButton onClick={handleClearFilters} size="small">
+              <Typography fontSize={12}>Clear</Typography>
+            </IconButton>
+          )}
         </Stack>
       </Paper>
 
@@ -171,7 +172,8 @@ export default function Refunds() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Order / Payment ID</TableCell>
+                <TableCell>Payment ID</TableCell>
+                <TableCell>Order / User</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Refunded</TableCell>
                 <TableCell>Date</TableCell>
@@ -182,25 +184,30 @@ export default function Refunds() {
             <TableBody>
               {refunds.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                     No refunds found
                   </TableCell>
                 </TableRow>
               )}
 
               {refunds.map((p) => {
-                const id = p.id || p._id;
+                const id = p.id;
 
                 return (
                   <TableRow key={id}>
-                    <TableCell
-                      sx={{
-                        fontFamily: "monospace",
-                        fontSize: 12,
-                        wordBreak: "break-all",
-                      }}
-                    >
-                      {p.orderId || id}
+                    <TableCell sx={{ fontFamily: 'monospace', fontSize: 13 }}>
+                      {id.slice(0, 8)}...
+                    </TableCell>
+
+                    <TableCell>
+                      <Box>
+                        <Typography fontSize={13} fontWeight={600}>
+                          {p.order?.invoiceNumber || p.orderId || "-"}
+                        </Typography>
+                        <Typography fontSize={11} sx={{ opacity: 0.7 }}>
+                          {p.user?.email}
+                        </Typography>
+                      </Box>
                     </TableCell>
 
                     <TableCell>{formatCurrency(p.amount)}</TableCell>
@@ -208,7 +215,8 @@ export default function Refunds() {
                     <TableCell>
                       <Chip
                         size="small"
-                        label={formatCurrency(p.amount)}
+                        icon={<ReplayIcon />}
+                        label="REFUNDED"
                         color="warning"
                         variant="outlined"
                       />
@@ -231,12 +239,6 @@ export default function Refunds() {
                           <VisibilityIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-
-                      <Tooltip title="Refunded">
-                        <IconButton size="small" disabled>
-                          <ReplayIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 );
@@ -244,18 +246,19 @@ export default function Refunds() {
             </TableBody>
           </Table>
         )}
-      </Paper>
 
-      {/* ================= PAGINATION ================= */}
-      {totalPages > 1 && (
-        <Stack alignItems="center" mt={3}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(e, val) => setPage(val)}
-          />
-        </Stack>
-      )}
+        {/* ================= PAGINATION ================= */}
+        {totalPages > 1 && (
+          <Box p={2} display="flex" justifyContent="center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(e, val) => setPage(val)}
+              color="primary"
+            />
+          </Box>
+        )}
+      </Paper>
 
       {/* ================= TOAST ================= */}
       <Snackbar

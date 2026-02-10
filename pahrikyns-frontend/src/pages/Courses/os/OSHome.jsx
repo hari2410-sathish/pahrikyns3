@@ -4,9 +4,13 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const osTools = [
-  "Linux Basics", "Ubuntu", "CentOS",
-  "Red Hat", "Windows Shell Script",
-  "Ubuntu Shell Script"
+  "OS Intro", "Kernel & Shell", "Process Management", 
+  "Memory Management", "File Systems", "User Management", 
+  "Permissions", "Package Management", "Networking Basics", 
+  "System Security", "Shell Basics", "Advanced Bash", 
+  "PowerShell Basics", "PowerShell Automation", "Systemd", 
+  "Storage Management", "Virtualization", "Logs & Troubleshooting", 
+  "Ubuntu Server", "Red Hat Enterprise"
 ];
 
 export default function OSHome() {

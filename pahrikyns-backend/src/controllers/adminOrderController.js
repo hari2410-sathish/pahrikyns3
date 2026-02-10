@@ -64,15 +64,72 @@ exports.createOrder = async (req, res) => {
 /* ================================
    FETCH ALL ORDERS
 ================================ */
+/* ================================
+   FETCH ALL ORDERS (WITH FILTER & PAGINATION)
+================================ */
 exports.getOrders = async (req, res) => {
   try {
-    const orders = await prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { items: true },
-    });
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      status, // CREATED, PAID, FAILED, etc.
+      paymentStatus, // PENDING, PAID, REFUNDED
+      hasInvoice, // "true" or "false"
+      startDate,
+      endDate,
+    } = req.query;
 
-    res.json({ orders });
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const take = parseInt(limit);
+
+    // 1️⃣ Build Where Clause
+    const where = {};
+
+    if (status) where.status = status;
+    if (paymentStatus) where.paymentStatus = paymentStatus;
+
+    if (hasInvoice === "true") {
+      where.invoiceNumber = { not: null };
+    }
+
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = new Date(startDate);
+      if (endDate) where.createdAt.lte = new Date(endDate);
+    }
+
+    if (search) {
+      where.OR = [
+        { id: { contains: search, mode: "insensitive" } },
+        { invoiceNumber: { contains: search, mode: "insensitive" } },
+        { customer: { contains: search, mode: "insensitive" } },
+        { customerEmail: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    // 2️⃣ Fetch Data
+    const [orders, total] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        take,
+        skip,
+        include: { items: true },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.order.count({ where }),
+    ]);
+
+    // 3️⃣ Return
+    res.json({
+      success: true,
+      orders,
+      total,
+      totalPages: Math.ceil(total / take),
+      currentPage: parseInt(page),
+    });
   } catch (err) {
+    console.error("getOrders error:", err);
     res.status(500).json({ message: "Failed to fetch orders" });
   }
 };
@@ -107,10 +164,48 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await prisma.order.update({
       where: { id: req.params.id },
       data: { status },
+      include: { items: true }, // Needed for unlocking
     });
+
+    // ✅ AUTO-UNLOCK COURSES ON APPROVAL
+    if (status === "COMPLETED") {
+      // 1. Find User
+      const user = await prisma.user.findUnique({
+        where: { email: order.customerEmail },
+      });
+
+      if (user) {
+        // 2. Unlock each item
+        for (const item of order.items) {
+          // Fuzzy match course by title
+          const course = await prisma.course.findFirst({
+            where: { title: { equals: item.product, mode: "insensitive" } },
+          });
+
+          if (course) {
+            await prisma.userCourse.upsert({
+              where: {
+                userId_courseId: {
+                  userId: user.id,
+                  courseId: course.id,
+                },
+              },
+              update: { paid: true },
+              create: {
+                userId: user.id,
+                courseId: course.id,
+                paid: true,
+              },
+            });
+            console.log(`✅ Unlocked ${course.title} for ${user.email}`);
+          }
+        }
+      }
+    }
 
     res.json({ success: true, order });
   } catch (err) {
+    console.error("Update Status Error:", err);
     res.status(500).json({ message: "Failed to update status" });
   }
 };

@@ -4,6 +4,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import UserLayout from "../layouts/UserLayout";
 import UserDashboardLayout from "../layouts/UserDashboard";
 import AdminLayout from "../layouts/AdminLayout";
+import ChatRoutes from "../modules/Pahrikynschat/routes/ChatRoutes";
+
 
 /* ================= PUBLIC ================= */
 import HomePage from "../pages/Home/HomePage";
@@ -80,20 +82,20 @@ import TemplateMaster from "../pages/Admin/Resume/templates/TemplateMaster";
 import TemplateUltraPro from "../pages/Admin/Resume/templates/TemplateUltraPro";
 
 /* ================= ADMIN – ORDERS (🔥 MASTER ROUTER) ================= */
-import AdminOrdersRoutes from "../adminmodules/routes/AdminOrdersRoutes";
+import AdminOrdersRoutes from "../modules/adminmodules/routes/AdminOrdersRoutes";
 
 /* ================= ADMIN – PRODUCTS ================= */
-import AllProducts from "../adminmodules/pages/Products/AllProducts";
-import AddProduct from "../adminmodules/pages/Products/AddProduct";
-import Categories from "../adminmodules/pages/Products/Categories";
-import Brands from "../adminmodules/pages/Products/Brands";
-import Reviews from "../adminmodules/pages/Products/Reviews";
-import ImportProducts from "../adminmodules/pages/Products/ImportProducts";
-import ExportProducts from "../adminmodules/pages/Products/ExportProducts";
-import ProductOptions from "../adminmodules/pages/Products/ProductOptions";
-import ProductFiltering from "../adminmodules/pages/Products/ProductFiltering";
-import ImportSKUs from "../adminmodules/pages/Products/ImportSKUs";
-import ExportSKUs from "../adminmodules/pages/Products/ExportSKUs";
+import AllProducts from "../modules/adminmodules/pages/Products/AllProducts";
+import AddProduct from "../modules/adminmodules/pages/Products/AddProduct";
+import Categories from "../modules/adminmodules/pages/Products/Categories";
+import Brands from "../modules/adminmodules/pages/Products/Brands";
+import Reviews from "../modules/adminmodules/pages/Products/Reviews";
+import ImportProducts from "../modules/adminmodules/pages/Products/ImportProducts";
+import ExportProducts from "../modules/adminmodules/pages/Products/ExportProducts";
+import ProductOptions from "../modules/adminmodules/pages/Products/ProductOptions";
+import ProductFiltering from "../modules/adminmodules/pages/Products/ProductFiltering";
+import ImportSKUs from "../modules/adminmodules/pages/Products/ImportSKUs";
+import ExportSKUs from "../modules/adminmodules/pages/Products/ExportSKUs";
 
 /* ================= PROTECTION ================= */
 import AdminProtectedRoute from "../utils/AdminProtectedRoute";
@@ -121,18 +123,27 @@ export default function AppRoutes() {
 
       {/* ===== USER DASHBOARD ===== */}
       <Route
-  path="/dashboard"
-  element={
-    <UserProtectedRoute>
-      <UserDashboardLayout />
-    </UserProtectedRoute>
-  }
->
-  <Route index element={<ProgressDashboard />} />
-  <Route path="my-courses" element={<MyCourses />} />
-  <Route path="profile" element={<UserProfile />} />
-  <Route path="settings" element={<ChangePassword />} />
-</Route>
+        path="/dashboard"
+        element={
+          <UserProtectedRoute>
+            <UserDashboardLayout />
+          </UserProtectedRoute>
+        }
+      >
+        <Route index element={<ProgressDashboard />} />
+        <Route path="my-courses" element={<MyCourses />} />
+        <Route path="profile" element={<UserProfile />} />
+        <Route path="settings" element={<ChangePassword />} />
+      </Route>
+      <Route
+        path="/chat/*"
+        element={
+          <UserProtectedRoute>
+            <ChatRoutes />
+          </UserProtectedRoute>
+        }
+      />
+
 
       {/* ===== ADMIN AUTH ===== */}
       <Route path="/admin/login" element={<AdminLogin />} />

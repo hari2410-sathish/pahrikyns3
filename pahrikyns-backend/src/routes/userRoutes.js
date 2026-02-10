@@ -62,6 +62,10 @@ router.post("/google-login", googleLogin);
 // ✅ CURRENT USER
 router.get("/me", auth, getCurrentUser);
 
+// ✅ ALL USERS (For Chat)
+const { getAllUsers } = require("../controllers/userProfileController");
+router.get("/users", auth, getAllUsers);
+
 // ✅ PROFILE
 router.put("/update-profile", auth, updateProfile);
 router.put("/change-password", auth, changePassword);

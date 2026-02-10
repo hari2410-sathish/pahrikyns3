@@ -8,27 +8,27 @@ const { adminLogin } = require("../controllers/adminController");
 const { sendOtp, verifyOtp } = require("../controllers/otpController");
 
 const {
-  listNotifications,
-  createNotification,
-  deleteNotification,
+   listNotifications,
+   createNotification,
+   deleteNotification,
 } = require("../controllers/notificationController");
 
 const {
-  getAdminSummary,
-  getMonthlyEnrollments,
-  getUserActivity,
-  getCompletionStats,
-  getAdminTransactions,
-  getMonthlyRevenue,
+   getAdminSummary,
+   getMonthlyEnrollments,
+   getUserActivity,
+   getCompletionStats,
+   getAdminTransactions,
+   getMonthlyRevenue,
 } = require("../controllers/adminDashboardController");
 
 const {
-  getCourses,
-  createCourse,
-  updateCourse,
-  deleteCourse,
-  bulkDeleteCourses,
-  toggleStatus,
+   getCourses,
+   createCourse,
+   updateCourse,
+   deleteCourse,
+   bulkDeleteCourses,
+   toggleStatus,
 } = require("../controllers/adminCourseController");
 
 /* ===============================
@@ -42,6 +42,8 @@ const upload = require("../middlewares/upload");
    ADMIN ORDER ROUTES
 ================================ */
 const adminOrderRoutes = require("./adminOrderRoutes");
+const adminUserRoutes = require("./adminUserRoutes");
+
 
 /* ===============================
    AUTH ROUTES (NO AUTH HERE)
@@ -72,17 +74,17 @@ router.get("/dashboard/revenue", adminAuth, getMonthlyRevenue);
 router.get("/courses", adminAuth, getCourses);
 
 router.post(
-  "/courses",
-  adminAuth,
-  upload.single("thumbnail"),
-  createCourse
+   "/courses",
+   adminAuth,
+   upload.single("thumbnail"),
+   createCourse
 );
 
 router.put(
-  "/courses/:id",
-  adminAuth,
-  upload.single("thumbnail"),
-  updateCourse
+   "/courses/:id",
+   adminAuth,
+   upload.single("thumbnail"),
+   updateCourse
 );
 
 router.delete("/courses/:id", adminAuth, deleteCourse);
@@ -102,6 +104,8 @@ router.delete("/notifications/:id", adminAuth, deleteNotification);
 ================================ */
 
 router.use("/orders", adminAuth, adminOrderRoutes);
+router.use("/users", adminAuth, adminUserRoutes);
+
 
 /* ===============================
    EXPORT

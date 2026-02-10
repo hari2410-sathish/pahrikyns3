@@ -12,6 +12,8 @@ import {
   Chip,
 } from "@mui/material";
 
+// TODO: Replace this mock data with real API call to /api/admin/products
+// See AllOrders.jsx for reference on how to fetch data.
 const products = [
   {
     id: 1,

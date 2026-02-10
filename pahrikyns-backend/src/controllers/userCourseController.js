@@ -6,19 +6,16 @@ const prisma = require("../config/prismaClient");
 ======================================================== */
 exports.subscriptionStatus = async (req, res) => {
   try {
-    const lastSuccessPayment = await prisma.payment.findFirst({
-      where: {
-        userId: req.user.id,
-        status: "SUCCESS",
-      },
-      orderBy: { createdAt: "desc" },
+    const subscription = await prisma.subscription.findUnique({
+      where: { userId: req.user.id },
     });
 
     res.json({
-      active: !!lastSuccessPayment,
-      plan: lastSuccessPayment ? "DEFAULT" : null,
-      expiresAt: null, // No subscription table in schema
+      active: subscription?.status === "ACTIVE",
+      plan: subscription?.plan || null,
+      expiresAt: subscription?.expiresAt || null,
     });
+
   } catch (err) {
     console.error("subscriptionStatus error:", err);
     res.status(500).json({ error: "Failed to fetch subscription status" });
@@ -28,14 +25,49 @@ exports.subscriptionStatus = async (req, res) => {
 /* ================= MY COURSES ================= */
 exports.getMyCourses = async (req, res) => {
   try {
-    const courses = await prisma.course.findMany({
-      where: {
-        status: "Published", // ✅ Matches your schema
-      },
+    const userId = req.user.id; // User ID from auth middleware
+
+    // 1. Fetch all published courses
+    const allCourses = await prisma.course.findMany({
+      where: { status: "Published" },
       orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { lessons: true } } // Get total lessons count
+      }
     });
 
-    res.json({ courses });
+    // 2. Fetch User's Ownership (Enrolled Courses)
+    const userCourses = await prisma.userCourse.findMany({
+      where: { userId },
+    });
+
+    // 3. Fetch User's Progress
+    const userProgress = await prisma.userProgress.findMany({
+      where: { userId },
+    });
+
+    // 4. Map & Format Response
+    // Structure expected by Frontend: { course: {...}, isPaid: boolean, progress: number }
+    const formattedCourses = allCourses.map((course) => {
+      const enrollment = userCourses.find((uc) => uc.courseId === course.id);
+      const isPaid = enrollment?.paid || false;
+
+      // Calculate Progress
+      const totalLessons = course.lessons || 1; // Avoid division by zero
+      const completedLessons = userProgress.filter(
+        (p) => p.courseId === course.id && p.completed
+      ).length;
+      const progress = Math.round((completedLessons / totalLessons) * 100);
+
+      return {
+        course,
+        isPaid,
+        progress,
+      };
+    });
+
+    // Return ARRAY directly (matches setCourses(res.data))
+    res.json(formattedCourses);
   } catch (err) {
     console.error("getMyCourses error:", err);
     res.status(500).json({ error: "Failed to fetch courses" });

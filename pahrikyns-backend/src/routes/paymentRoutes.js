@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
+
 const auth = require("../middlewares/authMiddleware");
+// const adminAuth = require("../middlewares/adminAuthMiddleware"); 
+// ↑ irundha use pannu, illa na auth use pannalam
 
 const {
   createPayment,
@@ -8,31 +11,33 @@ const {
   getMyPayments,
   getAllPayments,
   refundPayment,
+  getPaymentById,
 } = require("../controllers/paymentController");
 
-/* ================================
+/* =====================================================
    USER ROUTES
-================================ */
+===================================================== */
 
-// ✅ Create Razorpay Order + DB Entry
-router.post("/create", auth, createPayment);
+// 🔹 Create course payment + Razorpay order
+router.post("/course/create", auth, createPayment);
 
-// ✅ Verify Razorpay Payment (Client Side Success)
-router.post("/verify", auth, verifyPayment);
+// 🔹 Verify Razorpay payment (after success)
+router.post("/course/verify", auth, verifyPayment);
 
-// ✅ Get Logged-in User Payments
+// 🔹 Get logged-in user's payments
 router.get("/my", auth, getMyPayments);
 
-/* ================================
+/* =====================================================
    ADMIN ROUTES
-================================ */
+===================================================== */
 
-// ✅ Get All Payments (Admin Dashboard)
+// 🔹 Get all payments (admin dashboard)
 router.get("/admin", auth, getAllPayments);
+
+// 🔹 Get single payment details
 router.get("/admin/:id", auth, getPaymentById);
 
-
-// ✅ Refund Payment (Admin)
-router.post("/refund/:id", auth, refundPayment);
+// 🔹 Refund a payment
+router.post("/admin/refund/:id", auth, refundPayment);
 
 module.exports = router;

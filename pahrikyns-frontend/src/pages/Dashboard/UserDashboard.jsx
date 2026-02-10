@@ -1,17 +1,41 @@
-import React from "react";
-import { Box, Grid, Paper, Typography, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Grid, Typography, Paper, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
-import LeftSidebar from "../../components/dashboard/LeftSidebar";
-import TopBar from "../../components/dashboard/TopBar";
-import CourseProgressList from "../../components/dashboard/CourseProgressList";
-import LearningChart from "../../components/dashboard/LearningChart";
+/* --------- CORE COMPONENTS --------- */
+import LeftSidebar from "../../components/Userdashboard/LeftSidebar";
+import TopBar from "../../components/Userdashboard/TopBar";
+import CourseProgressList from "../../components/Userdashboard/CourseProgressList";
+import LearningChart from "../../components/Userdashboard/LearningChart";
+import ActivityChart from "../../components/Userdashboard/chart/ActivityChart";
+
+/* --------- CARDS & WIDGETS --------- */
+import StatCard from "../../components/Userdashboard/chart/StatCard";
+import CourseCard from "../../components/Userdashboard/CourseCard";
+import CourseGridCard from "../../components/Userdashboard/CourseGridCard";
+import AchievementCard from "../../components/Userdashboard/AchievementCard";
+import CertificateCard from "../../components/Userdashboard/CertificateCard";
+import WelcomeBanner from "../../components/Userdashboard/WelcomeBanner";
+import StreakWidget from "../../components/Userdashboard/StreakWidget";
+import AIRecommendation from "../../components/Userdashboard/AIRecommendation";
+import ProfileQuickCard from "../../components/Userdashboard/ProfileQuickCard";
+import LearningPath from "../../components/Userdashboard/LearningPath";
+import UpcomingTasks from "../../components/Userdashboard/UpcomingTasks";
+import Leaderboard from "../../components/Userdashboard/Leaderboard";
+import MiniCalendar from "../../components/Userdashboard/MiniCalendar";
+import CourseCategoryFilter from "../../components/Userdashboard/CourseCategoryFilter";
+import QuickLinks from "../../components/Userdashboard/QuickLinks";
+
+/* -------------------------------------- */
+/* ----------- MAIN COMPONENT ------------ */
+/* -------------------------------------- */
 
 export default function ProgressDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   return (
     <Box
@@ -21,176 +45,272 @@ export default function ProgressDashboard() {
         background: "radial-gradient(circle at top, #0a0f24, #000)",
       }}
     >
-      {/* SIDEBAR */}
+      {/* ---------- SIDEBAR ---------- */}
       <LeftSidebar />
 
-      {/* MAIN AREA */}
+      {/* ---------- MAIN CONTENT ---------- */}
       <Box sx={{ flexGrow: 1, p: 3 }}>
         <TopBar />
 
-        {/* GREETING */}
-        <Typography
+        {/* ---------- WELCOME BANNER ---------- */}
+        <WelcomeBanner
+          name={user?.name || "User"}
+          level={6}
+          streak={14}
+        />
+
+        {/* ---------- QUICK STATS (A+B+C style) ---------- */}
+        <Box
           sx={{
-            fontSize: 22,
-            fontWeight: 700,
-            mb: 3,
-            color: "#fff",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))",
+            gap: 3,
+            mt: 4,
+            mb: 4,
           }}
         >
-          Welcome back, {user?.name || "Learner"} 👋
-        </Typography>
+          <StatCard label="Courses Enrolled" value="12" color="#00eaff" />
+          <StatCard label="Completed" value="5" color="#7b3fe4" />
+          <StatCard label="Learning Hours" value="42 hrs" color="#06f9a5" />
+          <StatCard label="Progress" value="68%" color="#ff7de9" />
+        </Box>
 
-        <Grid container spacing={3}>
-          {/* ---------------- STAT CARDS ---------------- */}
-          <Grid item xs={12} md={4}>
-            <StatCard
-              title="Courses Enrolled"
-              value={user?.courses?.length || 12}
-              color="#00eaff"
-              delay={0.1}
-            />
-          </Grid>
+        {/* ---------- STREAK PANEL ---------- */}
+        <StreakWidget streak={14} xp={320} />
 
-          <Grid item xs={12} md={4}>
-            <StatCard
-              title="Hours Learned"
-              value={`${user?.hours || 56} hrs`}
-              color="#7b3fe4"
-              delay={0.2}
-            />
-          </Grid>
+        {/* ---------- AI RECOMMENDATION ---------- */}
+        <Box sx={{ mt: 4 }}>
+          <AIRecommendation />
+        </Box>
 
-          <Grid item xs={12} md={4}>
-            <StatCard
-              title="Learning Streak"
-              value={`${user?.streak || 9} days 🔥`}
-              color="#00ff95"
-              delay={0.3}
-            />
-          </Grid>
+        {/* ---------- CONTINUE LEARNING (D style) ---------- */}
+        <SectionTitle title="Continue Learning" />
 
-          {/* ---------------- CONTINUE LEARNING ---------------- */}
-          <Grid item xs={12} md={6}>
-            <GlassPanel title="Continue Learning">
-              <Typography sx={{ mb: 1 }}>
-                You were last watching:
-              </Typography>
+        <HorizontalScroll>
+          <CourseCard
+            title="React Crash Course"
+            progress={65}
+            image="https://picsum.photos/400/200?random=1"
+          />
+          <CourseCard
+            title="JavaScript Mastery"
+            progress={40}
+            image="https://picsum.photos/400/200?random=2"
+          />
+          <CourseCard
+            title="Python Zero to Hero"
+            progress={85}
+            image="https://picsum.photos/400/200?random=3"
+          />
+          <CourseCard
+            title="UI/UX Design Basics"
+            progress={20}
+            image="https://picsum.photos/400/200?random=4"
+          />
+        </HorizontalScroll>
 
-              <Typography sx={{ fontWeight: 700, color: "#00eaff" }}>
-                Docker & Kubernetes - Lesson 7
-              </Typography>
+        {/* ---------- CATEGORY FILTER ---------- */}
+        <Box sx={{ mt: 5 }}>
+          <CourseCategoryFilter onChange={(cat) => setSelectedCategory(cat)} />
+        </Box>
 
-              <Button
-                sx={{
-                  mt: 2,
-                  background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-                  color: "#000",
-                  fontWeight: 700,
-                }}
-                onClick={() => navigate("/my-courses")}
-              >
-                Resume
-              </Button>
-            </GlassPanel>
-          </Grid>
+        {/* ---------- MY COURSES GRID ---------- */}
+        <SectionTitle title="My Courses" />
 
-          {/* ---------------- RECENT ACTIVITY ---------------- */}
-          <Grid item xs={12} md={6}>
-            <GlassPanel title="Recent Activity">
-              <Typography sx={{ opacity: 0.8 }}>
-                ✅ Watched: Git Branching – 1 hour ago
-              </Typography>
-              <Typography sx={{ opacity: 0.8 }}>
-                ✅ Completed: Linux Basics – Yesterday
-              </Typography>
-              <Typography sx={{ opacity: 0.8 }}>
-                ✅ Attempted Quiz: AWS EC2 – 2 days ago
-              </Typography>
-            </GlassPanel>
-          </Grid>
+        <GridLayout>
+          <CourseGridCard
+            title="Front-End Development Mastery"
+            category="Web Dev"
+            progress={72}
+            image="https://picsum.photos/600/400?random=10"
+          />
+          <CourseGridCard
+            title="Mastering Python"
+            category="Programming"
+            progress={45}
+            image="https://picsum.photos/600/400?random=11"
+          />
+          <CourseGridCard
+            title="UI/UX Complete Guide"
+            category="Design"
+            progress={20}
+            image="https://picsum.photos/600/400?random=12"
+          />
+          <CourseGridCard
+            title="React + Firebase Pro"
+            category="Fullstack"
+            progress={90}
+            image="https://picsum.photos/600/400?random=13"
+          />
+        </GridLayout>
 
-          {/* ---------------- CHART SECTION ---------------- */}
-          <Grid item xs={12}>
-            <GlassPanel title="Weekly Learning Activity">
-              <LearningChart />
-            </GlassPanel>
-          </Grid>
+        {/* ---------- ACTIVITY ---------- */}
+        <SectionTitle title="Weekly Activity" />
+        <GlassPanel>
+          <ActivityChart />
+        </GlassPanel>
 
-          {/* ---------------- PROGRESS LIST ---------------- */}
-          <Grid item xs={12}>
-            <GlassPanel title="Your Course Progress">
-              <CourseProgressList />
-            </GlassPanel>
-          </Grid>
-        </Grid>
+        {/* ---------- LEARNING CHART ---------- */}
+        <SectionTitle title="Learning Progress" />
+        <GlassPanel>
+          <LearningChart />
+        </GlassPanel>
+
+        {/* ---------- PROGRESS LIST ---------- */}
+        <SectionTitle title="Your Course Progress" />
+        <GlassPanel>
+          <CourseProgressList />
+        </GlassPanel>
+
+        {/* ---------- ACHIEVEMENTS ---------- */}
+        <SectionTitle title="Achievements" />
+        <FlexWrap>
+          <AchievementCard title="Course Champion" level={3} />
+          <AchievementCard title="Star Learner" level={5} />
+          <AchievementCard title="Premium Badge" level={1} />
+          <AchievementCard title="Active Streak" level={7} />
+        </FlexWrap>
+
+        {/* ---------- CERTIFICATES ---------- */}
+        <SectionTitleGradient title="Certificates" />
+        <FlexWrap>
+          <CertificateCard
+            title="React Development Masterclass"
+            issuedBy="Pahrikyns Academy"
+            date="Oct 12, 2025"
+          />
+          <CertificateCard
+            title="Python Zero to Hero"
+            issuedBy="Pahrikyns Academy"
+            date="Sep 28, 2025"
+          />
+          <CertificateCard
+            title="UI/UX Design Essentials"
+            issuedBy="Pahrikyns Studio"
+            date="Aug 15, 2025"
+          />
+        </FlexWrap>
+
+        {/* ---------- LEARNING PATH ---------- */}
+        <SectionTitle title="Learning Path" />
+        <LearningPath />
+
+        {/* ---------- UPCOMING TASKS ---------- */}
+        <SectionTitle title="Upcoming Tasks" />
+        <UpcomingTasks />
+
+        {/* ---------- LEADERBOARD ---------- */}
+        <SectionTitle title="Leaderboard" />
+        <Leaderboard />
+
+        {/* ---------- CALENDAR ---------- */}
+        <SectionTitle title="Mini Calendar" />
+        <MiniCalendar />
+
+        {/* ---------- QUICK LINKS ---------- */}
+        <Box sx={{ mt: 5 }}>
+          <QuickLinks navigate={navigate} />
+        </Box>
       </Box>
     </Box>
   );
 }
 
-/* ---------------- REUSABLE COMPONENTS ---------------- */
+/* -------------------------------------------------------- */
+/* ------------------ SHARED COMPONENTS ------------------- */
+/* -------------------------------------------------------- */
 
-function StatCard({ title, value, color, delay }) {
+function SectionTitle({ title }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, type: "spring", stiffness: 80 }}
+    <Typography
+      sx={{
+        mb: 2,
+        fontSize: 20,
+        fontWeight: 700,
+        background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+        mt: 5,
+      }}
     >
-      <Paper
-        sx={{
-          p: 3,
-          borderRadius: 3,
-          background: "rgba(255,255,255,0.06)",
-          backdropFilter: "blur(14px)",
-          border: `1px solid ${color}55`,
-          color: "#e0f7ff",
-          minHeight: 120,
-          boxShadow: "0 0 12px rgba(0,0,0,0.3)",
-        }}
-      >
-        <Typography sx={{ fontSize: 14, opacity: 0.7 }}>{title}</Typography>
-        <Typography sx={{ fontSize: 30, fontWeight: 700, mt: 1 }}>
-          {value}
-        </Typography>
-      </Paper>
-    </motion.div>
+      {title}
+    </Typography>
   );
 }
 
-function GlassPanel({ title, children }) {
+function SectionTitleGradient({ title }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 80 }}
+    <Typography
+      sx={{
+        mb: 2,
+        fontSize: 20,
+        fontWeight: 700,
+        background: "linear-gradient(90deg,#ffd700,#ff8800)",
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+        mt: 5,
+      }}
     >
-      <Paper
-        sx={{
-          p: 3,
-          borderRadius: 3,
-          background: "rgba(255,255,255,0.07)",
-          backdropFilter: "blur(12px)",
-          border: "1px solid rgba(0,255,255,0.12)",
-          boxShadow: "0 0 12px rgba(0,0,0,0.35)",
-          color: "#fff",
-        }}
-      >
-        <Typography
-          sx={{
-            mb: 2,
-            fontSize: 20,
-            fontWeight: 700,
-            background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          {title}
-        </Typography>
+      {title}
+    </Typography>
+  );
+}
 
-        {children}
-      </Paper>
-    </motion.div>
+function GlassPanel({ children }) {
+  return (
+    <Paper
+      sx={{
+        p: 3,
+        mb: 4,
+        borderRadius: 3,
+        background: "rgba(255,255,255,0.06)",
+        backdropFilter: "blur(12px)",
+        border: "1px solid rgba(0,255,255,0.2)",
+      }}
+    >
+      {children}
+    </Paper>
+  );
+}
+
+function HorizontalScroll({ children }) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        gap: 3,
+        overflowX: "auto",
+        pb: 2,
+        "&::-webkit-scrollbar": { height: 6 },
+        "&::-webkit-scrollbar-thumb": {
+          background: "rgba(0,255,255,0.3)",
+          borderRadius: 10,
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function FlexWrap({ children }) {
+  return (
+    <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", mb: 3 }}>
+      {children}
+    </Box>
+  );
+}
+
+function GridLayout({ children }) {
+  return (
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+        gap: 3,
+      }}
+    >
+      {children}
+    </Box>
   );
 }

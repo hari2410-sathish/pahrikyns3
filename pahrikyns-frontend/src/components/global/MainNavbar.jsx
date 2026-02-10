@@ -43,9 +43,11 @@ import StorageIcon from "@mui/icons-material/Storage";
 import CodeIcon from "@mui/icons-material/Code";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LayersIcon from "@mui/icons-material/Layers";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import Tooltip from "@mui/material/Tooltip";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
-
 // ❌ ThemeToggle component remove pannirukken –
 // nested <button> → <button> warning avoid panradhu.
 const NAV_HEIGHT = 60;
@@ -154,14 +156,51 @@ const RESUME_MENU = {
   ],
 };
 
+// 🔍 FLATTEN DATA FOR SEARCH
+const getAllSearchItems = () => {
+  let items = [];
+
+  // 1. Add normal menus
+  Object.values(MENU).forEach((cat) => {
+    if (cat.items) {
+      cat.items.forEach((item) => {
+        items.push({
+          name: item.name,
+          link: item.link,
+          category: cat.title,
+          icon: item.icon,
+        });
+      });
+    }
+  });
+
+  // 2. Add resume menu
+  RESUME_MENU.items.forEach((item) => {
+    items.push({
+      name: item.name,
+      link: item.link,
+      category: RESUME_MENU.title,
+      icon: <DescriptionIcon />, // Resume items don't have icons in the original object, adding a default
+    });
+  });
+
+  return items;
+};
+
+const ALL_SEARCH_ITEMS = getAllSearchItems();
+
 export default function MainNavbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const searchRef = useRef(null); // Ref for click outside search
   const coursesBtnRef = useRef(null);
   const resumeBtnRef = useRef(null);
 
   const [active, setActive] = useState(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]); // 🔍 Search Results
+  const [showResults, setShowResults] = useState(false);  // 🔍 Toggle Results
   const [drawer, setDrawer] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
@@ -186,6 +225,29 @@ export default function MainNavbar() {
   const closeMenu = () => {
     setOpen(false);
     setActive(null);
+  };
+
+  // 🔍 Handle Search Input
+  const handleSearch = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+
+    if (val.trim() === "") {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const filtered = ALL_SEARCH_ITEMS.filter((item) =>
+      item.name.toLowerCase().includes(val.toLowerCase())
+    );
+    setSearchResults(filtered);
+    setShowResults(true);
+  };
+
+  // 🔍 Click Away for Search
+  const closeSearch = () => {
+    setShowResults(false);
   };
 
   const toggleProfile = () => setProfileOpen((p) => !p);
@@ -310,20 +372,20 @@ export default function MainNavbar() {
               Courses ▾
             </Button>
           </Box>
-<Button
-  ref={resumeBtnRef}   // ✅ THIS LINE IMPORTANT
-  sx={navBtn}
-  onMouseEnter={() => {
-    setActive("resume");
-    setOpen(true);
-  }}
-  onClick={() => {
-    setActive("resume");
-    setOpen(true);
-  }}
->
-  Resume ▾
-</Button>
+          <Button
+            ref={resumeBtnRef}   // ✅ THIS LINE IMPORTANT
+            sx={navBtn}
+            onMouseEnter={() => {
+              setActive("resume");
+              setOpen(true);
+            }}
+            onClick={() => {
+              setActive("resume");
+              setOpen(true);
+            }}
+          >
+            Resume ▾
+          </Button>
 
 
           <Box sx={{ flex: 1 }} />
@@ -331,31 +393,96 @@ export default function MainNavbar() {
           {/* RIGHT */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* SEARCH */}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                background: "rgba(68, 31, 201, 0.03)",
-                px: 1,
-                py: 0.45,
-                borderRadius: 1,
-                minWidth: 300,
-                transition: "0.25s",
-                "&:focus-within": {
-                  boxShadow: "0 0 12px rgba(243, 238, 239, 0.28)",
-                  border: "1px solid rgba(252, 253, 253, 0.28)",
-                },
-              }}
-            >
-              
-              <InputBase
-                placeholder="search..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                sx={{ ml: 1, color: "#f1ebebff", flex: 1 }}
-              />
-              <SearchIcon sx={{ color: "#00eaff" }} />
-            </Box>
+            <ClickAwayListener onClickAway={closeSearch}>
+              <Box
+                sx={{
+                  position: "relative", // Needed for absolute positioning of results
+                  display: "flex",
+                  alignItems: "center",
+                  background: "rgba(68, 31, 201, 0.03)",
+                  px: 1,
+                  py: 0.45,
+                  borderRadius: 1,
+                  minWidth: 300,
+                  transition: "0.25s",
+                  "&:focus-within": {
+                    boxShadow: "0 0 12px rgba(243, 238, 239, 0.28)",
+                    border: "1px solid rgba(252, 253, 253, 0.28)",
+                  },
+                }}
+              >
+
+                <InputBase
+                  placeholder="search..."
+                  value={query}
+                  onChange={handleSearch}
+                  onFocus={() => {
+                    if (query.trim() !== "") setShowResults(true);
+                  }}
+                  sx={{ ml: 1, color: "#f1ebebff", flex: 1 }}
+                />
+                <SearchIcon sx={{ color: "#00eaff" }} />
+
+                {/* 🔍 SEARCH RESULTS DROPDOWN */}
+                {showResults && searchResults.length > 0 && (
+                  <Paper
+                    sx={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      right: 0,
+                      mt: 1,
+                      maxHeight: 400,
+                      overflowY: "auto",
+                      background: "rgba(4,16,38,0.98)", // Consistent dark theme
+                      border: "1px solid rgba(0,234,255,0.12)",
+                      backdropFilter: "blur(12px)",
+                      borderRadius: 1,
+                      zIndex: 2500,
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    <List dense sx={{ py: 0 }}>
+                      {searchResults.map((item, idx) => (
+                        <ListItemButton
+                          key={idx}
+                          component={Link}
+                          to={item.link}
+                          onClick={() => {
+                            setQuery("");
+                            setShowResults(false);
+                          }}
+                          sx={{
+                            borderBottom: "1px solid rgba(255,255,255,0.03)",
+                            "&:hover": {
+                              background: "rgba(0,234,255,0.08)",
+                            }
+                          }}
+                        >
+                          {item.icon && (
+                            <ListItemIcon sx={{ minWidth: 36, color: "#00eaff" }}>
+                              {item.icon}
+                            </ListItemIcon>
+                          )}
+                          <ListItemText
+                            primary={
+                              <Typography sx={{ color: "#fff", fontSize: 14, fontWeight: 600 }}>
+                                {item.name}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 11 }}>
+                                {item.category}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Paper>
+                )}
+              </Box>
+            </ClickAwayListener>
 
             {/* NOTIFICATIONS */}
             <IconButton
@@ -375,6 +502,22 @@ export default function MainNavbar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+
+            {/* CHAT ICON */}
+            <Tooltip title="Chat">
+              <IconButton
+                onClick={() => navigate("/chat")}
+                sx={{
+                  color: "#00eaff",
+                  "&:hover": { color: "#5b5fc7" }
+                }}
+              >
+                <Badge color="error" badgeContent={2}>
+                  <ChatBubbleOutlineIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+
 
             {/* THEME TOGGLE – pure IconButton (NO inner button) */}
             <IconButton onClick={toggleTheme} sx={{ color: "#042929ff" }}>
@@ -439,58 +582,58 @@ export default function MainNavbar() {
 
             {/* LOGIN / REGISTER */}
             {!user ? (
-  <>
-    <Button
-      component={Link}
-      to="/login"
-      sx={{ bgcolor: "#1ed86cff", color: "#fff" }}
-    >
-      LOGIN
-    </Button>
-    <Button
-      component={Link}
-      to="/register"
-      sx={{ bgcolor: "#03bd50ff", color: "#001" }}
-    >
-      REGISTER
-    </Button>
-  </>
-) : (
-  <ClickAwayListener onClickAway={closeProfile}>
-    <Box sx={{ position: "relative" }}>
-      <Avatar
-        ref={profileRef}
-        onClick={toggleProfile}
-        sx={{
-          width: 34,
-          height: 34,
-          bgcolor: "#002b36",
-          border: "2px solid rgba(0,234,255,0.35)",
-          cursor: "pointer",
-        }}
-      >
-        {user?.name?.[0]?.toUpperCase() || "U"}
-      </Avatar>
+              <>
+                <Button
+                  component={Link}
+                  to="/login"
+                  sx={{ bgcolor: "#1ed86cff", color: "#fff" }}
+                >
+                  LOGIN
+                </Button>
+                <Button
+                  component={Link}
+                  to="/register"
+                  sx={{ bgcolor: "#03bd50ff", color: "#001" }}
+                >
+                  REGISTER
+                </Button>
+              </>
+            ) : (
+              <ClickAwayListener onClickAway={closeProfile}>
+                <Box sx={{ position: "relative" }}>
+                  <Avatar
+                    ref={profileRef}
+                    onClick={toggleProfile}
+                    sx={{
+                      width: 34,
+                      height: 34,
+                      bgcolor: "#002b36",
+                      border: "2px solid rgba(0,234,255,0.35)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {user?.name?.[0]?.toUpperCase() || "U"}
+                  </Avatar>
 
-      {profileOpen && (
-        <Paper sx={{ position: "absolute", right: 0, top: "46px", p: 1 }}>
-          <Box component={Link} to="/dashboard" sx={profileItemStyle}>
-            Dashboard
-          </Box>
-          <Box
-            onClick={() => {
-              logout();
-              closeProfile();
-            }}
-            sx={profileItemStyle}
-          >
-            Logout
-          </Box>
-        </Paper>
-      )}
-    </Box>
-  </ClickAwayListener>
-)}
+                  {profileOpen && (
+                    <Paper sx={{ position: "absolute", right: 0, top: "46px", p: 1 }}>
+                      <Box component={Link} to="/dashboard" sx={profileItemStyle}>
+                        Dashboard
+                      </Box>
+                      <Box
+                        onClick={() => {
+                          logout();
+                          closeProfile();
+                        }}
+                        sx={profileItemStyle}
+                      >
+                        Logout
+                      </Box>
+                    </Paper>
+                  )}
+                </Box>
+              </ClickAwayListener>
+            )}
 
             <IconButton
               sx={{ display: { md: "none" } }}
@@ -504,16 +647,16 @@ export default function MainNavbar() {
 
       {/* POPPER MEGA MENU */}
       <Popper
-  open={open}
-  anchorEl={
-    active === "resume"
-      ? resumeBtnRef.current
-      : coursesBtnRef.current
-  }
-  placement="bottom-start"
-  modifiers={[{ name: "offset", options: { offset: [0, 15] } }]}
-  onMouseLeave={closeMenu}
->
+        open={open}
+        anchorEl={
+          active === "resume"
+            ? resumeBtnRef.current
+            : coursesBtnRef.current
+        }
+        placement="bottom-start"
+        modifiers={[{ name: "offset", options: { offset: [0, 15] } }]}
+        onMouseLeave={closeMenu}
+      >
 
         <ClickAwayListener onClickAway={closeMenu}>
           <Paper
@@ -587,9 +730,9 @@ export default function MainNavbar() {
               </Typography>
 
               {(active === "resume"
-  ? RESUME_MENU.items
-  : MENU[active]?.items
-)?.map((it, i) => (
+                ? RESUME_MENU.items
+                : MENU[active]?.items
+              )?.map((it, i) => (
 
                 <Box
                   key={i}
@@ -677,6 +820,8 @@ export default function MainNavbar() {
           ))}
         </Box>
       </Drawer>
+
+
     </>
   );
 }

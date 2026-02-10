@@ -81,9 +81,15 @@ app.get("/health", (req, res) => {
 // ============================
 app.use("/auth/user", userRoutes);
 app.use("/admin", adminRoutes);
-app.use("/api/resumes", resumeRoutes);
+const courseAccessRoutes = require("./src/routes/courseAccessRoutes");
 app.use("/api/students", studentRoutes);
+app.use("/courses", courseAccessRoutes); // ✅ Access Check
+app.use("/courses", require("./src/routes/courseRoutes")); // ✅ Public Course Info
 app.use("/api/notifications", notificationRoutes);
+app.use("/payments", require("./src/routes/paymentRoutes")); // ✅ Payments Route
+app.use("/api/chat", require("./src/routes/chatRoutes")); // ✅ Chat Routes
+
+
 
 // ============================
 // GLOBAL ERROR HANDLER
@@ -142,6 +148,45 @@ io.on("connection", (socket) => {
   console.log(`🔌 Socket Connected: ${socket.id} | User: ${userId}`);
 
   if (userId) socket.join(`user:${userId}`);
+
+  // -------------------------
+  // 💬 CHAT EVENTS
+  // -------------------------
+
+  // Join a Room (Channel or DM)
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`User ${userId} joined room: ${room}`);
+  });
+
+  // Leave a Room
+  socket.on("leave_room", (room) => {
+    socket.leave(room);
+    console.log(`User ${userId} left room: ${room}`);
+  });
+
+  // Send Message
+  socket.on("chat_message", ({ room, content, type = "text" }) => {
+    // Ideally save to DB here (omitted for brevity in this session)
+
+    // Broadcast to room (including sender for optimistic UI update confirmation if needed, but usually we exclude sender. 
+    // Actually, usually easier to broadcast to ALL in room so sender gets consistency with server timestamp)
+    io.to(room).emit("receive_message", {
+      id: Date.now().toString(), // Temp ID
+      senderId: userId,
+      senderName: socket.user?.name || "User",
+      content,
+      type,
+      timestamp: new Date(),
+    });
+  });
+
+  // Typing Indicator
+  socket.on("typing", ({ room, isTyping }) => {
+    socket.to(room).emit("user_typing", { userId, isTyping });
+  });
+
+  // -------------------------
 
   socket.on("disconnect", () => {
     if (userId) socket.leave(`user:${userId}`);

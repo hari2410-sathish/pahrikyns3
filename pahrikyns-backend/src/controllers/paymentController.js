@@ -14,59 +14,115 @@ const razorpay = new Razorpay({
 
 /*
 |--------------------------------------------------------------------------
-| CREATE PAYMENT + RAZORPAY ORDER (USER)
+| CREATE PAYMENT + RAZORPAY ORDER (COURSE)
 |--------------------------------------------------------------------------
 */
 exports.createPayment = async (req, res) => {
   try {
-    const { amount } = req.body;
+    const { courseId } = req.body;
     const userId = req.user.id;
 
-    if (!amount) {
-      return res.status(400).json({ error: "Amount is required" });
+    if (!courseId) {
+      return res.status(400).json({ error: "Course ID is required" });
     }
 
-    // ✅ 1) Create DB payment (PENDING)
+    // 1️⃣ Get course & price
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course || course.price <= 0) {
+      return res.status(400).json({ error: "Invalid or free course" });
+    }
+
+    const amount = course.price;
+
+    // 2️⃣ Create payment record (PENDING)
     const payment = await prisma.payment.create({
       data: {
         userId,
-        amount: Number(amount),
+        courseId,
+        amount,
         currency: "INR",
         status: "PENDING",
       },
     });
 
-    // ✅ 2) Create Razorpay order
+    // 3️⃣ Create Razorpay order
     const order = await razorpay.orders.create({
-      amount: Number(amount) * 100, // paise
+      amount: amount * 100, // paise
       currency: "INR",
       receipt: payment.id,
       payment_capture: 1,
     });
 
-    // ✅ 3) Save order id
+    // 4️⃣ Save Razorpay order id
     await prisma.payment.update({
       where: { id: payment.id },
       data: { razorpayOrderId: order.id },
     });
 
-    // ✅ 4) Notify user – Payment Initiated
+    // 5️⃣ Notify user
     await prisma.notification.create({
       data: {
         userId,
         title: "Payment Initiated 💳",
-        message: `Your payment of ₹${amount} has been initiated.`,
+        message: `Payment started for course: ${course.title}`,
         type: "payment",
       },
     });
 
+    // 6️⃣ ✅ AUTO-CREATE ORDER RECORD
+    // so it shows in Admin Panel -> Orders
+    try {
+      const generateInvoiceNumber = require("../helpers/generateInvoiceNumber");
+      const invoiceNumber = await generateInvoiceNumber();
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+
+      const newOrder = await prisma.order.create({
+        data: {
+          customerType: "Student",
+          customer: user?.name || "Unknown",
+          customerEmail: user?.email,
+          fulfillment: "Digital",
+          address: "Online",
+          paymentMethod: "Razorpay",
+          status: "CREATED",
+          paymentStatus: "PENDING",
+          totalAmount: amount,
+          gstAmount: 0,
+          grandTotal: amount,
+          invoiceNumber,
+          items: {
+            create: {
+              product: course.title,
+              quantity: 1,
+              price: course.price,
+            }
+          }
+        }
+      });
+
+      // Link Payment to Order
+      await prisma.payment.update({
+        where: { id: payment.id },
+        data: { orderId: newOrder.id }
+      });
+
+    } catch (ordErr) {
+      console.error("Auto-Order Creation Failed", ordErr);
+    }
+
+    // 6️⃣ Send data to frontend
     res.json({
       success: true,
-      paymentId: payment.id,
-      orderId: order.id,
       key: process.env.RAZORPAY_KEY_ID,
+      orderId: order.id,
       amount: order.amount,
       currency: order.currency,
+      paymentId: payment.id,
+      courseTitle: course.title,
     });
   } catch (err) {
     console.error("createPayment error:", err);
@@ -76,7 +132,7 @@ exports.createPayment = async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
-| VERIFY RAZORPAY PAYMENT + ACTIVATE SUBSCRIPTION
+| VERIFY RAZORPAY PAYMENT + UNLOCK COURSE
 |--------------------------------------------------------------------------
 */
 exports.verifyPayment = async (req, res) => {
@@ -91,6 +147,7 @@ exports.verifyPayment = async (req, res) => {
       return res.status(400).json({ error: "Missing verification data" });
     }
 
+    // 1️⃣ Verify signature
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
@@ -102,7 +159,7 @@ exports.verifyPayment = async (req, res) => {
       return res.status(400).json({ error: "Invalid payment signature" });
     }
 
-    // ✅ 1) Mark payment SUCCESS
+    // 2️⃣ Update payment as SUCCESS
     const payment = await prisma.payment.update({
       where: { razorpayOrderId: razorpay_order_id },
       data: {
@@ -112,34 +169,46 @@ exports.verifyPayment = async (req, res) => {
       },
     });
 
-    // ✅ 2) ACTIVATE / CREATE SUBSCRIPTION
-    await prisma.subscription.upsert({
-      where: { userId: payment.userId },
-      update: {
-        status: "ACTIVE",
-        lastPaymentId: payment.id,
+    // 3️⃣ 🔓 UNLOCK COURSE
+    await prisma.userCourse.upsert({
+      where: {
+        userId_courseId: {
+          userId: payment.userId,
+          courseId: payment.courseId,
+        },
       },
+      update: { paid: true },
       create: {
         userId: payment.userId,
-        status: "ACTIVE",
-        lastPaymentId: payment.id,
-        plan: "DEFAULT",
+        courseId: payment.courseId,
+        paid: true,
       },
     });
 
-    // ✅ 3) Notify user – Payment Successful
+    // 4️⃣ Notify user
     await prisma.notification.create({
       data: {
         userId: payment.userId,
         title: "Payment Successful ✅",
-        message: `Your payment of ₹${payment.amount} was successful.`,
+        message: "Course unlocked successfully. Happy learning! 🚀",
         type: "payment",
       },
     });
 
+    // 5️⃣ ✅ UPDATE LINKED ORDER STATUS
+    if (payment.orderId) {
+      await prisma.order.update({
+        where: { id: payment.orderId },
+        data: {
+          status: "COMPLETED",
+          paymentStatus: "PAID"
+        }
+      });
+    }
+
     res.json({
       success: true,
-      message: "Payment verified & subscription activated",
+      message: "Payment verified & course unlocked",
       payment,
     });
   } catch (err) {
@@ -169,67 +238,75 @@ exports.getMyPayments = async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
-| GET ALL PAYMENTS (ADMIN - SAFE FILTERS ONLY)
+| GET ALL PAYMENTS (ADMIN)
+|--------------------------------------------------------------------------
+*/
+/*
+|--------------------------------------------------------------------------
+| GET ALL PAYMENTS (ADMIN) - WITH FILTERING & PAGINATION
 |--------------------------------------------------------------------------
 */
 exports.getAllPayments = async (req, res) => {
   try {
-    let { status, q, from, to } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      status, // PAID, PENDING, FAILED, REFUNDED
+      startDate,
+      endDate,
+    } = req.query;
 
-    const where = { AND: [] };
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const take = parseInt(limit);
 
-    if (status && status !== "all") {
-      where.AND.push({
-        status: { equals: status.toUpperCase() },
-      });
+    // 1️⃣ Build Where Clause
+    const where = {};
+
+    if (status) {
+      where.status = status;
     }
 
-    if (from) {
-      where.AND.push({
-        createdAt: { gte: new Date(from) },
-      });
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = new Date(startDate);
+      if (endDate) where.createdAt.lte = new Date(endDate);
     }
 
-    if (to) {
-      const toDate = new Date(to);
-      toDate.setHours(23, 59, 59, 999);
-      where.AND.push({
-        createdAt: { lte: toDate },
-      });
+    if (search) {
+      where.OR = [
+        { id: { contains: search, mode: "insensitive" } },
+        { razorpayOrderId: { contains: search, mode: "insensitive" } },
+        { razorpayPaymentId: { contains: search, mode: "insensitive" } },
+        { user: { email: { contains: search, mode: "insensitive" } } },
+        { user: { name: { contains: search, mode: "insensitive" } } },
+      ];
     }
 
-    if (q && q.trim()) {
-      const search = q.trim();
-      where.AND.push({
-        OR: [
-          { id: { contains: search } },
-          { razorpayOrderId: { contains: search } },
-          { razorpayPaymentId: { contains: search } },
-          {
-            user: {
-              name: { contains: search, mode: "insensitive" },
-            },
-          },
-          {
-            user: {
-              email: { contains: search, mode: "insensitive" },
-            },
-          },
-        ],
-      });
-    }
-
-    const payments = await prisma.payment.findMany({
-      where: where.AND.length ? where : undefined,
-      include: {
-        user: {
-          select: { id: true, name: true, email: true },
+    // 2️⃣ Fetch Data
+    const [payments, total] = await Promise.all([
+      prisma.payment.findMany({
+        where,
+        take,
+        skip,
+        include: {
+          user: { select: { id: true, name: true, email: true } },
+          course: { select: { id: true, title: true } },
+          order: { select: { id: true, invoiceNumber: true } },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.payment.count({ where }),
+    ]);
 
-    res.json({ payments });
+    // 3️⃣ Return Response
+    res.json({
+      success: true,
+      payments,
+      total,
+      totalPages: Math.ceil(total / take),
+      currentPage: parseInt(page),
+    });
   } catch (err) {
     console.error("getAllPayments error:", err);
     res.status(500).json({ error: "Failed to load admin payments" });
@@ -245,51 +322,22 @@ exports.refundPayment = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const payment = await prisma.payment.findUnique({
-      where: { id },
-    });
+    const payment = await prisma.payment.findUnique({ where: { id } });
 
-    if (!payment) {
-      return res.status(404).json({ error: "Payment not found" });
+    if (!payment || !payment.razorpayPaymentId) {
+      return res.status(400).json({ error: "Invalid payment" });
     }
 
-    if (payment.status === "REFUNDED") {
-      return res.status(400).json({ error: "Already refunded" });
-    }
-
-    if (!payment.razorpayPaymentId) {
-      return res
-        .status(400)
-        .json({ error: "No Razorpay payment id to refund" });
-    }
-
-    // ✅ Razorpay refund
     await razorpay.payments.refund(payment.razorpayPaymentId, {
       amount: payment.amount * 100,
     });
 
-    const updated = await prisma.payment.update({
+    await prisma.payment.update({
       where: { id },
-      data: {
-        status: "REFUNDED",
-      },
+      data: { status: "REFUNDED" },
     });
 
-    // ✅ Notify user – Payment Refunded
-    await prisma.notification.create({
-      data: {
-        userId: payment.userId,
-        title: "Payment Refunded 💸",
-        message: `₹${payment.amount} refunded to your account.`,
-        type: "payment",
-      },
-    });
-
-    res.json({
-      success: true,
-      message: "Refund successful",
-      payment: updated,
-    });
+    res.json({ success: true });
   } catch (err) {
     console.error("refundPayment error:", err);
     res.status(500).json({ error: "Refund failed" });
@@ -304,10 +352,13 @@ exports.refundPayment = async (req, res) => {
 exports.getPaymentById = async (req, res) => {
   try {
     const { id } = req.params;
-
     const payment = await prisma.payment.findUnique({
       where: { id },
-      include: { user: true },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        course: true,
+        order: true,
+      },
     });
 
     if (!payment) {
@@ -318,25 +369,5 @@ exports.getPaymentById = async (req, res) => {
   } catch (err) {
     console.error("getPaymentById error:", err);
     res.status(500).json({ error: "Failed to fetch payment" });
-  }
-};
-
-/*
-|--------------------------------------------------------------------------
-| GET INVOICES (ADMIN)
-|--------------------------------------------------------------------------
-*/
-exports.getInvoices = async (req, res) => {
-  try {
-    const invoices = await prisma.payment.findMany({
-      where: { status: "SUCCESS" },
-      include: { user: true },
-      orderBy: { createdAt: "desc" },
-    });
-
-    res.json({ invoices });
-  } catch (err) {
-    console.error("getInvoices error:", err);
-    res.status(500).json({ error: "Failed to fetch invoices" });
   }
 };

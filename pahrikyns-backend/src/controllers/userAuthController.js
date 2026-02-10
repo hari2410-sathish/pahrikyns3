@@ -45,6 +45,17 @@ exports.registerUser = async (req, res) => {
       },
     });
 
+    // 🔔 REAL-TIME NOTIFICATION (OTP SENT / PENDING REGISTER)
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("admin_notification", {
+        title: "New Registration Attempt 📝",
+        message: `OTP sent to ${email}`,
+        type: "info",
+        timestamp: new Date(),
+      });
+    }
+
     res.json({ message: "OTP sent", requiresOTP: true, email });
   } catch (err) {
     console.error("registerUser error:", err);
@@ -71,7 +82,7 @@ exports.loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // 🔔 LOGIN NOTIFICATION
+    // 🔔 LOGIN NOTIFICATION (DB)
     await prisma.notification.create({
       data: {
         userId: user.id,
@@ -80,6 +91,31 @@ exports.loginUser = async (req, res) => {
         type: "login",
       },
     });
+
+    // 🔔 REAL-TIME NOTIFICATION (SOCKET)
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("admin_notification", {
+        title: "User Login 🟢",
+        message: `${user.email} just logged in.`,
+        type: "success",
+        timestamp: new Date(),
+      });
+    }
+
+    // ✅ UPDATE LOGIN STATS (Safe Mode)
+    try {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastLoginAt: new Date(),
+          lastLoginIp: req.ip || req.connection.remoteAddress,
+          lastDevice: req.headers["user-agent"] || "Unknown",
+        },
+      });
+    } catch (statsErr) {
+      console.warn("Login stats update failed (Schema mismatch?):", statsErr.message);
+    }
 
     const safeUser = {
       id: user.id,
@@ -143,6 +179,32 @@ exports.verifyOTP = async (req, res) => {
         type: "register",
       },
     });
+
+    // 🔔 REAL-TIME NOTIFICATION (SOCKET)
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("admin_notification", {
+        title: "New User Registered 🚀",
+        message: `${user.email} has joined the platform!`,
+        type: "success",
+        timestamp: new Date(),
+      });
+    }
+
+    // ✅ UPDATE LOGIN STATS (Safe Mode)
+    try {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastLoginAt: new Date(),
+          lastLoginIp: req.ip || req.connection.remoteAddress,
+          lastDevice: req.headers["user-agent"] || "Unknown",
+        },
+      });
+    } catch (statsErr) {
+      console.warn("Login stats update failed (Schema mismatch?):", statsErr.message);
+    }
+
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
@@ -216,17 +278,42 @@ exports.googleLogin = async (req, res) => {
           type: "register",
         },
       });
+
+      // 🔔 REAL-TIME (SOCKET)
+      const io = req.app.get("io");
+      if (io) {
+        io.emit("admin_notification", {
+          title: "New Google User 🚀",
+          message: `${email} registered via Google!`,
+          type: "success",
+          timestamp: new Date(),
+        });
+      }
+    } else {
+      // 🔔 LOGIN NOTIFICATION (EXISTING USER)
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          title: "New Google Login 🔐",
+          message: "You logged in via Google",
+          type: "login",
+        },
+      });
     }
 
-    // 🔔 GOOGLE LOGIN NOTIFICATION
-    await prisma.notification.create({
-      data: {
-        userId: user.id,
-        title: "Google Login ✅",
-        message: "You logged in using Google",
-        type: "login",
-      },
-    });
+    // ✅ UPDATE LOGIN STATS (Safe Mode)
+    try {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastLoginAt: new Date(),
+          lastLoginIp: req.ip || req.connection.remoteAddress,
+          lastDevice: req.headers["user-agent"] || "Unknown",
+        },
+      });
+    } catch (statsErr) {
+      console.warn("Login stats update failed (Schema mismatch?):", statsErr.message);
+    }
 
     const jwtToken = jwt.sign(
       { id: user.id, email: user.email },

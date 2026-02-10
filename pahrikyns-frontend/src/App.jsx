@@ -11,6 +11,7 @@ import HomePage from "./pages/Home/HomePage";
 import CategoryPage from "./pages/Courses/CategoryPage";
 import ToolPage from "./pages/Courses/ToolPage";
 import LessonViewer from "./pages/Courses/LessonViewer";
+import MyCourses from "./pages/User/MyCourses"; // ✅ Added Import
 
 /* ================= USER AUTH ================= */
 import Login from "./pages/Auth/Login";
@@ -45,6 +46,7 @@ import AddUser from "./modules/adminmodules/pages/Users/AddUser";
 import AdminUserProfile from "./modules/adminmodules/pages/Users/UserProfile";
 import UserPayments from "./modules/adminmodules/pages/Users/UserPayments";
 import UserActivity from "./modules/adminmodules/pages/Users/UserActivity";
+import ChatRoutes from "./modules/Pahrikynschat/routes/ChatRoutes";
 
 /* ================= COURSES ================= */
 import AllCourses from "./modules/adminmodules/pages/Courses/AllCourses";
@@ -93,7 +95,7 @@ import ProductOptions from "./modules/adminmodules/pages/Products/ProductOptions
 import ProductFiltering from "./modules/adminmodules/pages/Products/ProductFiltering";
 import ImportSKUs from "./modules/adminmodules/pages/Products/ImportSKUs";
 import ExportSKUs from "./modules/adminmodules/pages/Products/ExportSKUs";
- import AdminOrdersRoutes from "./modules/adminmodules/routes/AdminOrdersRoutes";
+import AdminOrdersRoutes from "./modules/adminmodules/routes/AdminOrdersRoutes";
 
 /* ================= ANALYTICS ================= */
 import AnalyticsOverview from "./modules/adminmodules/pages/Analytics/AnalyticsOverview";
@@ -129,23 +131,27 @@ export default function App() {
         <Route path="/courses/:category" element={<CategoryPage />} />
         <Route path="/courses/:category/:tool" element={<ToolPage />} />
         <Route path="/courses/:category/:tool/:lessonId" element={<LessonViewer />} />
+        <Route path="/my-courses" element={<MyCourses />} /> {/* ✅ New Route */}
       </Route>
-      <Route element={<UserLayout />}>
-  <Route path="/" element={<HomePage />} />
-  <Route path="/courses/:category" element={<CategoryPage />} />
-  <Route path="/courses/:category/:tool" element={<ToolPage />} />
-  <Route path="/courses/:category/:tool/:lessonId" element={<LessonViewer />} />
 
-  {/* ✅ USER DASHBOARD */}
-  <Route
-    path="/dashboard"
-    element={
-      <ProtectedRoute>
-        <UserDashboard />
-      </ProtectedRoute>
-    }
-  />
-</Route>
+      {/* 🔥 CHAT */}
+      <Route
+        path="/chat/*"
+        element={
+          <ProtectedRoute>
+            <ChatRoutes />
+          </ProtectedRoute>
+        }
+      />
+      {/* ✅ USER DASHBOARD */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
 
 
       {/* USER AUTH */}
@@ -194,7 +200,7 @@ export default function App() {
         <Route path="users/:userId/payments" element={<UserPayments />} />
         <Route path="users/:userId/activity" element={<UserActivity />} />
 
-        
+
 
         {/* COURSES */}
         <Route path="courses" element={<AllCourses />} />
@@ -267,31 +273,31 @@ export default function App() {
         <Route path="storefront/blog" element={<Blog />} />
         <Route path="storefront/images" element={<ImageManager />} />
       </Route>
-     
 
-<Route path="/admin" element={<AdminLayout />}>
-  {/* other admin routes */}
 
-  <Route path="orders/*" element={<AdminOrdersRoutes />} />
-</Route>
-{/* ================= RESUME MODULE ================= */}
-<Route
-  path="/resume"
-  element={
-    <ResumeAccessGuard requireAuth>
-      <ResumeLayout />
-    </ResumeAccessGuard>
-  }
->
-  {/* /resume */}
-  <Route index element={<ResumeHome />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        {/* other admin routes */}
 
-  {/* /resume/templates */}
-  <Route path="templates" element={<ResumeTemplates />} />
+        <Route path="orders/*" element={<AdminOrdersRoutes />} />
+      </Route>
+      {/* ================= RESUME MODULE ================= */}
+      <Route
+        path="/resume"
+        element={
+          <ResumeAccessGuard requireAuth>
+            <ResumeLayout />
+          </ResumeAccessGuard>
+        }
+      >
+        {/* /resume */}
+        <Route index element={<ResumeHome />} />
 
-  {/* /resume/builder/... */}
-  <Route path="builder/*" element={<ResumeBuilder />} />
-</Route>
+        {/* /resume/templates */}
+        <Route path="templates" element={<ResumeTemplates />} />
+
+        {/* /resume/builder/... */}
+        <Route path="builder/*" element={<ResumeBuilder />} />
+      </Route>
 
 
       {/* FALLBACK */}

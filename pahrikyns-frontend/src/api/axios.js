@@ -26,7 +26,10 @@ API.interceptors.request.use((config) => {
   // ===============================
   // USER ROUTES → USER TOKEN ONLY
   // ===============================
-  if (url.startsWith("/auth/user")) {
+  // ===============================
+  // USER ROUTES & PAYMENTS → USER TOKEN
+  // ===============================
+  if (url.startsWith("/auth/user") || url.startsWith("/payments") || url.startsWith("/courses") || url.startsWith("/api/notifications")) {
     const userToken = localStorage.getItem("USER_TOKEN");
     if (userToken) {
       config.headers.Authorization = `Bearer ${userToken}`;

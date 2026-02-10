@@ -20,7 +20,7 @@ export const fetchPaymentById = async (paymentId) => {
 // ✅ REFUND PAYMENT (ADMIN)
 // ==========================
 export const refundPayment = async (paymentId) => {
-  const res = await api.post(`/payment/refund/${paymentId}`);
+  const res = await api.post(`/payment/admin/refund/${paymentId}`);
   return res.data;
 };
 
@@ -35,7 +35,9 @@ export const fetchDashboardTransactions = async (params = {}) => {
 // ==========================
 // ✅ INVOICES (ADMIN) ✅✅✅ FIX ADDED
 // ==========================
-export const fetchInvoices = async () => {
-  const res = await api.get("/admin/payments/invoices");
+export const fetchInvoices = async (params = {}) => {
+  const res = await api.get("/admin/orders", {
+    params: { ...params, hasInvoice: true },
+  });
   return res.data;
 };

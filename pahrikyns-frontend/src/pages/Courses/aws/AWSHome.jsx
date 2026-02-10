@@ -4,9 +4,11 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const awsTools = [
-  "EC2", "S3", "IAM", "Lambda", "SQS", "SNS",
-  "VPC", "RDS", "Load Balancer", "Auto Scaling",
-  "Route53", "CI/CD"
+  "AWS Introduction", "IAM", "EC2", "S3", "VPC", "Route53",
+  "RDS", "DynamoDB", "Lambda", "API Gateway", "CloudFront",
+  "Elastic Load Balancing", "Auto Scaling", "CloudWatch",
+  "CloudFormation", "SNS & SQS", "Elastic Beanstalk",
+  "EKS", "AWS Security", "AWS Billing"
 ];
 
 export default function AWSHome() {

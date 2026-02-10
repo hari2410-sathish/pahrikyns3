@@ -19,6 +19,7 @@ D:.
 ³       adminOrderController.js
 ³       adminOrderPaymentController.js
 ³       adminResumeAnalyticsController.js
+³       chatController.js
 ³       notificationController.js
 ³       otpController.js
 ³       paymentController.js
@@ -50,6 +51,7 @@ D:.
 ³       
 ÃÄÄÄmiddlewares
 ³       adminAuthMiddleware.js
+³       adminPreOtpAuth.js
 ³       authMiddleware.js
 ³       otpRateLimit.js
 ³       subscriptionGuard.js
@@ -72,9 +74,6 @@ D:.
 ³       
 ÃÄÄÄuploads
 ³   ÀÄÄÄresumes
-³           123.pdf
-³           456.pdf
-³           
 ÀÄÄÄutils
         generateInvoicePDF.js
         generateResumePDF.js

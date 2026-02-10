@@ -16,13 +16,16 @@ import {
   TextField,
   Stack,
   Tooltip,
+  MenuItem,
+  Pagination,
 } from "@mui/material";
 
 import DownloadIcon from "@mui/icons-material/Download";
 import PrintIcon from "@mui/icons-material/Print";
 import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
-import api from "../../../../api/axios";
+import { fetchInvoices } from "../../Adminapi/paymentsAdmin";
 
 /* ================= UTIL ================= */
 const formatCurrency = (amount = 0) =>
@@ -33,8 +36,15 @@ const API_BASE =
 
 export default function Invoices() {
   const [orders, setOrders] = useState([]);
-  const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
+
+  /* FILTER STATES */
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [toast, setToast] = useState({
     open: false,
@@ -50,15 +60,17 @@ export default function Invoices() {
     try {
       setLoading(true);
 
-      // 🔥 invoices = orders with invoiceNumber
-      const res = await api.get("/admin/orders");
-      const list = res.data?.orders || [];
+      const res = await fetchInvoices({
+        page,
+        limit: 10,
+        search,
+        status, // paymentStatus
+        startDate,
+        endDate,
+      });
 
-      const invoicedOrders = list.filter(
-        (o) => Boolean(o.invoiceNumber)
-      );
-
-      setOrders(invoicedOrders);
+      setOrders(res.orders || []);
+      setTotalPages(res.totalPages || 1);
     } catch (err) {
       console.error(err);
       showToast("Failed to load invoices", "error");
@@ -69,20 +81,24 @@ export default function Invoices() {
 
   useEffect(() => {
     loadInvoices();
-  }, []);
+    // eslint-disable-next-line
+  }, [page]);
 
-  /* ================= SEARCH ================= */
-  const filtered = useMemo(() => {
-    if (!q) return orders;
+  /* ================= HANDLERS ================= */
+  const handleFilterSubmit = (e) => {
+    e.preventDefault();
+    setPage(1);
+    loadInvoices();
+  };
 
-    const query = q.toLowerCase();
-    return orders.filter(
-      (o) =>
-        o.invoiceNumber?.toLowerCase().includes(query) ||
-        o.customer?.toLowerCase().includes(query) ||
-        o.customerEmail?.toLowerCase().includes(query)
-    );
-  }, [q, orders]);
+  const handleClearFilters = () => {
+    setSearch("");
+    setStatus("");
+    setStartDate("");
+    setEndDate("");
+    setPage(1);
+    setTimeout(loadInvoices, 100);
+  };
 
   /* ================= DOWNLOAD ================= */
   const handleDownload = (invoiceNumber) => {
@@ -90,47 +106,33 @@ export default function Invoices() {
       showToast("Invoice not available", "error");
       return;
     }
-
     const url = `${API_BASE}/uploads/invoices/${invoiceNumber}.pdf`;
-
     const link = document.createElement("a");
     link.href = url;
     link.download = `${invoiceNumber}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
     showToast("Invoice downloaded");
   };
 
-  /* ================= PRINT ================= */
   const handlePrint = (invoiceNumber) => {
     if (!invoiceNumber) {
       showToast("Invoice not available", "error");
       return;
     }
-
     const url = `${API_BASE}/uploads/invoices/${invoiceNumber}.pdf`;
     const win = window.open(url, "_blank");
-
-    if (!win) return;
-
-    win.focus();
-    setTimeout(() => win.print(), 800);
+    if (win) {
+      win.focus();
+      setTimeout(() => win.print(), 800);
+    }
   };
 
   return (
     <Box>
       {/* ================= HEADER ================= */}
-      <Box
-        sx={{
-          mb: 3,
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 2,
-        }}
-      >
+      <Box mb={3} display="flex" justifyContent="space-between" flexWrap="wrap">
         <Box>
           <Typography variant="h5" fontWeight={800}>
             Invoices
@@ -139,18 +141,71 @@ export default function Invoices() {
             Generated order invoices
           </Typography>
         </Box>
+      </Box>
 
-        <Stack direction="row" spacing={1} alignItems="center">
-          <SearchIcon sx={{ opacity: 0.7 }} />
+      {/* ================= FILTERS ================= */}
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Stack
+          direction="row"
+          component="form"
+          onSubmit={handleFilterSubmit}
+          spacing={2}
+          flexWrap="wrap"
+          alignItems="center"
+        >
           <TextField
             size="small"
-            placeholder="Search invoice / customer / email"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            sx={{ minWidth: 260 }}
+            placeholder="Search Invoice #, Customer..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            InputProps={{ startAdornment: <SearchIcon sx={{ mr: 1, opacity: 0.5 }} /> }}
+            sx={{ flex: 1, minWidth: 200 }}
           />
+
+          <TextField
+            select
+            size="small"
+            label="Payment Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            sx={{ minWidth: 150 }}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="PAID">Paid</MenuItem>
+            <MenuItem value="PENDING">Pending</MenuItem>
+            <MenuItem value="REFUNDED">Refunded</MenuItem>
+          </TextField>
+
+          <TextField
+            type="date"
+            size="small"
+            label="Start Date"
+            InputLabelProps={{ shrink: true }}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <TextField
+            type="date"
+            size="small"
+            label="End Date"
+            InputLabelProps={{ shrink: true }}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+
+          <Tooltip title="Filter">
+            <IconButton type="submit" sx={{ bgcolor: "primary.main", color: "white", "&:hover": { bgcolor: "primary.dark" } }}>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+
+          {(search || status || startDate || endDate) && (
+            <IconButton onClick={handleClearFilters} size="small">
+              <Typography fontSize={12}>Clear</Typography>
+            </IconButton>
+          )}
         </Stack>
-      </Box>
+      </Paper>
 
       {/* ================= TABLE ================= */}
       <Paper>
@@ -173,7 +228,7 @@ export default function Invoices() {
             </TableHead>
 
             <TableBody>
-              {filtered.length === 0 && (
+              {orders.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                     No invoices found
@@ -181,9 +236,9 @@ export default function Invoices() {
                 </TableRow>
               )}
 
-              {filtered.map((o) => (
+              {orders.map((o) => (
                 <TableRow key={o.id}>
-                  <TableCell>{o.invoiceNumber}</TableCell>
+                  <TableCell sx={{ fontFamily: 'monospace' }}>{o.invoiceNumber}</TableCell>
                   <TableCell>{o.customer}</TableCell>
                   <TableCell>{o.customerEmail || "-"}</TableCell>
                   <TableCell>{formatCurrency(o.grandTotal)}</TableCell>
@@ -196,8 +251,8 @@ export default function Invoices() {
                         o.paymentStatus === "PAID"
                           ? "success"
                           : o.paymentStatus === "REFUNDED"
-                          ? "warning"
-                          : "default"
+                            ? "warning"
+                            : "default"
                       }
                       variant="outlined"
                     />
@@ -232,6 +287,18 @@ export default function Invoices() {
               ))}
             </TableBody>
           </Table>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Box p={2} display="flex" justifyContent="center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(e, v) => setPage(v)}
+              color="primary"
+            />
+          </Box>
         )}
       </Paper>
 

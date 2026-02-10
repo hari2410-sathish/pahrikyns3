@@ -61,11 +61,11 @@ exports.getCourses = async (req, res) => {
 };
 
 /* ===============================
-   ✅ CREATE COURSE (SCHEMA SAFE)
+   CREATE COURSE (LEVEL + PRICE SAFE)
 ================================ */
 exports.createCourse = async (req, res) => {
   try {
-    const {
+    let {
       title,
       description,
       category,
@@ -82,6 +82,18 @@ exports.createCourse = async (req, res) => {
         .json({ message: "title, category and level are required" });
     }
 
+    // 🔐 RULE 1: Beginner is always FREE
+    if (level === "Beginner") {
+      price = 0;
+    }
+
+    // 🔐 RULE 2: Paid courses must have valid price
+    if (level !== "Beginner" && Number(price) < 0) {
+      return res
+        .status(400)
+        .json({ message: "Paid course must have valid price" });
+    }
+
     const course = await prisma.course.create({
       data: {
         title,
@@ -92,7 +104,7 @@ exports.createCourse = async (req, res) => {
         students: Number(students) || 0,
         price: Number(price) || 0,
         status: status || "Draft",
-        lastUpdatedBy: "Admin",
+        lastUpdatedBy: req.user?.id || "admin",
       },
     });
 
@@ -104,30 +116,46 @@ exports.createCourse = async (req, res) => {
 };
 
 /* ===============================
-   ✅ UPDATE COURSE (UUID SAFE)
+   UPDATE COURSE (LEVEL + PRICE SAFE)
 ================================ */
 exports.updateCourse = async (req, res) => {
   try {
     const { id } = req.params;
+    let { level, price } = req.body;
+
+    // 🔐 RULE 1: Beginner → force FREE
+    if (level === "Beginner") {
+      price = 0;
+    }
+
+    // 🔐 RULE 2: Paid courses must have price
+    if (level && level !== "Beginner" && price !== undefined && Number(price) < 0) {
+      return res
+        .status(400)
+        .json({ message: "Paid course must have valid price" });
+    }
 
     const updated = await prisma.course.update({
-      where: { id }, // ✅ UUID SAFE
+      where: { id },
       data: {
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
-        level: req.body.level,
-        lessons: req.body.lessons
-          ? Number(req.body.lessons)
-          : undefined,
-        students: req.body.students
-          ? Number(req.body.students)
-          : undefined,
-        price: req.body.price
-          ? Number(req.body.price)
-          : undefined,
+        level,
+        lessons:
+          req.body.lessons !== undefined
+            ? Number(req.body.lessons)
+            : undefined,
+        students:
+          req.body.students !== undefined
+            ? Number(req.body.students)
+            : undefined,
+        price:
+          price !== undefined
+            ? Number(price)
+            : undefined,
         status: req.body.status,
-        lastUpdatedBy: "Admin",
+        lastUpdatedBy: req.user?.id || "admin",
       },
     });
 
@@ -139,16 +167,12 @@ exports.updateCourse = async (req, res) => {
 };
 
 /* ===============================
-   ✅ DELETE COURSE (UUID SAFE)
+   DELETE COURSE
 ================================ */
 exports.deleteCourse = async (req, res) => {
   try {
     const { id } = req.params;
-
-    await prisma.course.delete({
-      where: { id },
-    });
-
+    await prisma.course.delete({ where: { id } });
     res.json({ ok: true });
   } catch (err) {
     console.error("deleteCourse error:", err);
@@ -157,7 +181,7 @@ exports.deleteCourse = async (req, res) => {
 };
 
 /* ===============================
-   ✅ BULK DELETE (UUID SAFE)
+   BULK DELETE
 ================================ */
 exports.bulkDeleteCourses = async (req, res) => {
   try {
@@ -179,7 +203,7 @@ exports.bulkDeleteCourses = async (req, res) => {
 };
 
 /* ===============================
-   ✅ TOGGLE STATUS (UUID SAFE)
+   TOGGLE STATUS
 ================================ */
 exports.toggleStatus = async (req, res) => {
   try {

@@ -1,17 +1,128 @@
 {
-  "en": {
-    "title": "Lesson 1",
-    "subtitle": "Auto created",
-    "sections": []
+  "meta": {
+    "title": "Cloud Basics – Lesson 1: What is Cloud Computing?",
+    "description": "Learn what cloud computing is, how it works, and why AWS is the most popular cloud platform. This beginner-friendly lesson explains cloud concepts with real-world examples.",
+    "difficulty": "Beginner",
+    "duration": "50 min",
+    "tags": ["aws", "cloud-basics", "cloud-computing"],
+    "updated": "2026-01-06"
   },
-  "ta": {
-    "title": "",
-    "subtitle": "",
-    "sections": []
+
+  "hero": {
+    "heading": "What is Cloud Computing?",
+    "subheading": "Understand the foundation of modern IT using Amazon Web Services",
+    "intro": "Cloud computing allows you to use powerful servers, storage, and software over the internet instead of owning physical hardware."
   },
-  "tl": {
-    "title": "",
-    "subtitle": "",
-    "sections": []
-  }
+
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Understanding Cloud Computing",
+      "content": [
+        "Cloud computing means renting computing power instead of owning it.",
+        "You can create servers, databases, and storage instantly over the internet.",
+        "You pay only for what you use, which reduces costs and increases flexibility."
+      ]
+    },
+    {
+      "id": "example",
+      "title": "Real-World Example",
+      "content": [
+        "If you want to run a website, traditionally you must buy a server and install everything.",
+        "With AWS cloud, you just click Launch Server and your website is live in minutes.",
+        "This saves money, time, and effort."
+      ]
+    },
+    {
+      "id": "traditional-vs-cloud",
+      "title": "Traditional IT vs Cloud Computing",
+      "content": [
+        "Traditional IT requires large upfront investment.",
+        "Cloud uses pay-as-you-go pricing.",
+        "Cloud systems scale automatically when traffic increases.",
+        "Cloud reduces maintenance and hardware risk."
+      ]
+    },
+    {
+      "id": "cloud-types",
+      "title": "Types of Cloud Services",
+      "content": [
+        "IaaS – Infrastructure as a Service: Example Amazon EC2.",
+        "PaaS – Platform as a Service: Example AWS Elastic Beanstalk.",
+        "SaaS – Software as a Service: Example Gmail, Zoom."
+      ]
+    },
+    {
+      "id": "aws",
+      "title": "What is AWS?",
+      "content": [
+        "AWS stands for Amazon Web Services.",
+        "It is the world’s largest cloud platform.",
+        "AWS provides computing, storage, networking, databases, security, and many more services."
+      ]
+    },
+    {
+      "id": "aws-infra",
+      "title": "AWS Global Infrastructure",
+      "content": [
+        "AWS has multiple regions across the world.",
+        "Each region has multiple availability zones.",
+        "This ensures high availability and disaster recovery."
+      ]
+    },
+    {
+      "id": "benefits",
+      "title": "Benefits of Cloud Computing",
+      "content": [
+        "High scalability",
+        "Strong security",
+        "Global access",
+        "Cost efficiency",
+        "High performance"
+      ]
+    },
+    {
+      "id": "daily-life",
+      "title": "Cloud in Daily Life",
+      "content": [
+        "Google Drive, WhatsApp, Netflix, and YouTube all run on cloud infrastructure.",
+        "Every time you upload or watch a video, you are using cloud computing."
+      ]
+    },
+    {
+      "id": "careers",
+      "title": "Cloud Careers",
+      "content": [
+        "Cloud Engineer",
+        "DevOps Engineer",
+        "Solutions Architect",
+        "Site Reliability Engineer",
+        "These roles have high global demand and salaries."
+      ]
+    }
+  ],
+
+  "summary": [
+    "Cloud computing allows you to use IT resources without owning hardware.",
+    "AWS is the most powerful cloud platform in the world.",
+    "Learning AWS gives you strong career opportunities."
+  ],
+
+  "quiz": [
+    {
+      "question": "What does cloud computing mean?",
+      "options": [
+        "Using internet servers",
+        "Using USB storage",
+        "Using a local PC",
+        "Using mobile data"
+      ],
+      "answer": "Using internet servers"
+    },
+    {
+      "question": "Which company provides AWS?",
+      "options": ["Google", "Amazon", "Microsoft", "Facebook"],
+      "answer": "Amazon"
+    }
+  ]
 }

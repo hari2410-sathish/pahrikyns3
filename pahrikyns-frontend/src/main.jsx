@@ -10,55 +10,15 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AdminAuthProvider } from "./modules/adminmodules/context/AdminAuthContext";
 
 import AppThemeProvider from "./ThemeContext";
+import { ThemeProvider } from "@mui/material/styles";
+import { SocketProvider } from "./contexts/SocketContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import theme from "./theme";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { io } from "socket.io-client";
-
-/* ================================
-   ✅ SOCKET CONTEXT
-================================ */
-export const SocketContext = React.createContext(null);
-
-/* ================================
-   ✅ SOCKET PROVIDER
-================================ */
-function SocketProvider({ children }) {
-  const { token } = useAuth();
-  const [socket, setSocket] = React.useState(null);
-
-  React.useEffect(() => {
-    if (!token) return;
-
-    const s = io(import.meta.env.VITE_API_URL || "http://localhost:5000", {
-      auth: { token },
-      transports: ["websocket"],
-      withCredentials: true,
-    });
-
-    s.on("connect", () => console.log("✅ Socket connected:", s.id));
-    s.on("disconnect", () => console.log("❌ Socket disconnected"));
-
-    s.on("notification", (data) => {
-      console.log("🔔 New Notification:", data);
-      const audio = new Audio("/notification.mp3");
-      audio.play().catch(() => {});
-    });
-
-    s.on("notification_read", (data) => {
-      console.log("✅ Notification read sync:", data);
-    });
-
-    setSocket(s);
-    return () => s.disconnect();
-  }, [token]);
-
-  return (
-    <SocketContext.Provider value={socket}>
-      {children}
-    </SocketContext.Provider>
-  );
-}
+import { SnackbarProvider } from "notistack";
+// SocketProvider is now imported from contexts/SocketContext
+// Inline version removed to prevent conflicts
 
 /* ================================
    ✅ ROOT RENDER
@@ -73,7 +33,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <LanguageProvider>
               <AppThemeProvider>
                 <SocketProvider>
-                  <App />
+                  <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+                    <App />
+                  </SnackbarProvider>
                 </SocketProvider>
               </AppThemeProvider>
             </LanguageProvider>

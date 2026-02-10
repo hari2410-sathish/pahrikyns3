@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Box,
@@ -30,7 +30,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 // =====================================================
-// MENU CONFIG (FINAL – CORRECT)
+// MENU CONFIG
 // =====================================================
 const menu = [
   {
@@ -46,8 +46,6 @@ const menu = [
     basePath: "/admin/orders",
     children: [
       { title: "All Orders", path: "/admin/orders" },
-      { title: "OrdersList", path: "/admin/OrdersList" },
-      { title: "OrderDetails", path: "/admin/Orders/OrderDetails"},
       { title: "Add Order", path: "/admin/orders/add" },
       { title: "Search", path: "/admin/orders/search" },
       { title: "Export", path: "/admin/orders/export" },
@@ -79,10 +77,12 @@ const menu = [
   {
     title: "Customers",
     icon: <PeopleIcon />,
-    basePath: "/admin/customers",
+    basePath: "/admin/Customers",
     children: [
-      { title: "All Customers", path: "/admin/customers" },
-      { title: "Add Customer", path: "/admin/customers/add" },
+      { title: "All Customers", path: "/admin/Customers/AllCustomers" },
+      { title: "Add Customer", path: "/admin/Customers/AddCustomer" },
+      { title: "Customer Details", path: "/admin/Customers/CustomerDetails" },
+      { title: "Customer Groups", path: "/admin/Customers/CustomerGroups" },
     ],
   },
 
@@ -121,7 +121,6 @@ const menu = [
     children: [
       { title: "All Certificates", path: "/admin/certificates" },
       { title: "Issue Certificate", path: "/admin/certificates/issue" },
-      { title: "CertificateDetails", path: "/admin/certificates/CertificateDetails" },
     ],
   },
 
@@ -133,8 +132,6 @@ const menu = [
       { title: "All Payments", path: "/admin/payments" },
       { title: "Invoices", path: "/admin/payments/invoices" },
       { title: "Refunds", path: "/admin/payments/refunds" },
-      { title: "PaymentDetails", path: "/admin/payments/PaymentDetails" },
-      { title: "Transactions", path: "/admin/payments/Transactions" },
     ],
   },
 
@@ -163,13 +160,11 @@ const menu = [
       { title: "Change Password", path: "/admin/settings/password" },
       { title: "Sessions", path: "/admin/settings/sessions" },
       { title: "Security Logs", path: "/admin/settings/security-logs" },
+      { title: "2FA", path: "/admin/settings/2fa" },
     ],
   },
 ];
 
-// =====================================================
-// COMPONENT
-// =====================================================
 export default function AdminSidebar({ notifyCount = 0 }) {
   const location = useLocation();
   const isMobile = useMediaQuery("(max-width:900px)");
@@ -178,7 +173,7 @@ export default function AdminSidebar({ notifyCount = 0 }) {
   const [openMenus, setOpenMenus] = useState({});
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // 🔥 ACTIVE MENU FIX
+  // AUTO EXPAND ACTIVE MENU
   useEffect(() => {
     const active = {};
     menu.forEach((m) => {
@@ -190,26 +185,50 @@ export default function AdminSidebar({ notifyCount = 0 }) {
   }, [location.pathname]);
 
   const sidebarContent = (
-    <Box sx={{ width: 260, height: "100vh", background: "#020617", color: "white", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        width: 280,
+        height: "100vh",
+        color: "white",
+        display: "flex",
+        flexDirection: "column",
+        background: "rgba(2, 6, 23, 0.7)",
+        backdropFilter: "blur(20px)",
+        borderRight: "1px solid rgba(0, 234, 255, 0.1)",
+      }}
+    >
       {/* HEADER */}
-      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
-        <Avatar sx={{ bgcolor: "#2563eb" }}>{userName[0]}</Avatar>
+      <Box
+        sx={{
+          p: 3,
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
+        }}
+      >
+        <Avatar
+          sx={{
+            bgcolor: "rgba(0, 234, 255, 0.1)",
+            color: "#00eaff",
+            fontWeight: "bold",
+            border: "1px solid rgba(0, 234, 255, 0.3)"
+          }}
+        >
+          {userName[0]}
+        </Avatar>
         <Box sx={{ flex: 1 }}>
-          <Typography fontWeight={700}>Admin Panel</Typography>
-          <Typography fontSize={12} color="#94a3b8">ADMIN</Typography>
+          <Typography fontWeight={800} sx={{ letterSpacing: "0.5px" }}>Admin Panel</Typography>
+          <Typography fontSize={11} sx={{ color: "#00eaff", opacity: 0.8, letterSpacing: "1px" }}>SUPER ADMIN</Typography>
         </Box>
-        <IconButton size="small" sx={{ color: "white" }}>
-          <Badge badgeContent={notifyCount} color="error">
-            <NotificationsIcon fontSize="small" />
-          </Badge>
-        </IconButton>
+        <Badge badgeContent={notifyCount} color="error" variant="dot">
+          <NotificationsIcon fontSize="small" sx={{ color: "rgba(255,255,255,0.5)" }} />
+        </Badge>
       </Box>
 
-      <Divider />
-
       {/* MENU */}
-      <Box sx={{ flex: 1, overflowY: "auto" }}>
-        <List>
+      <Box sx={{ flex: 1, overflowY: "auto", py: 2 }}>
+        <List component="nav" sx={{ px: 2 }}>
           {menu.map((item) =>
             item.single ? (
               <ListItemButton
@@ -219,8 +238,8 @@ export default function AdminSidebar({ notifyCount = 0 }) {
                 end
                 sx={sidebarItemStyle}
               >
-                <ListItemIcon sx={{ color: "inherit" }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 14, fontWeight: 500 }} />
               </ListItemButton>
             ) : (
               <Box key={item.title}>
@@ -230,17 +249,19 @@ export default function AdminSidebar({ notifyCount = 0 }) {
                     setOpenMenus((p) => ({ ...p, [item.title]: !p[item.title] }))
                   }
                 >
-                  <ListItemIcon sx={{ color: "inherit" }}>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.title} />
+                  <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 14, fontWeight: 500 }} />
                   <ExpandMoreIcon
                     sx={{
+                      fontSize: 18,
                       transform: openMenus[item.title] ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.2s"
                     }}
                   />
                 </ListItemButton>
 
-                <Collapse in={openMenus[item.title]}>
-                  <List sx={{ pl: 4 }}>
+                <Collapse in={openMenus[item.title]} timeout={300}>
+                  <List component="div" disablePadding sx={{ position: "relative", ml: 2, pl: 2, borderLeft: "1px solid rgba(255,255,255,0.1)" }}>
                     {item.children.map((sub) => (
                       <ListItemButton
                         key={sub.title}
@@ -248,7 +269,7 @@ export default function AdminSidebar({ notifyCount = 0 }) {
                         to={sub.path}
                         sx={sidebarChildStyle}
                       >
-                        <ListItemText primary={sub.title} />
+                        <ListItemText primary={sub.title} primaryTypographyProps={{ fontSize: 13 }} />
                       </ListItemButton>
                     ))}
                   </List>
@@ -264,10 +285,14 @@ export default function AdminSidebar({ notifyCount = 0 }) {
   if (isMobile) {
     return (
       <>
-        <IconButton onClick={() => setMobileOpen(true)}>
+        <IconButton onClick={() => setMobileOpen(true)} sx={{ m: 1 }}>
           <MenuIcon sx={{ color: "white" }} />
         </IconButton>
-        <Drawer open={mobileOpen} onClose={() => setMobileOpen(false)}>
+        <Drawer
+          open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
+          PaperProps={{ sx: { bgcolor: "transparent" } }}
+        >
           {sidebarContent}
         </Drawer>
       </>
@@ -278,17 +303,37 @@ export default function AdminSidebar({ notifyCount = 0 }) {
 }
 
 // =====================================================
+// STYLES
+// =====================================================
 const sidebarItemStyle = {
-  mx: 1,
   mb: 0.5,
-  borderRadius: 1,
-  color: "white",
-  "&.active": { bgcolor: "#2563eb" },
+  borderRadius: "10px",
+  color: "rgba(255,255,255,0.7)",
+  transition: "all 0.2s ease",
+  "&:hover": {
+    bgcolor: "rgba(255,255,255,0.05)",
+    color: "#fff",
+    transform: "translateX(4px)",
+  },
+  "&.active": {
+    bgcolor: "rgba(0, 234, 255, 0.1)",
+    color: "#00eaff",
+    border: "1px solid rgba(0, 234, 255, 0.2)",
+    fontWeight: 700,
+  },
 };
 
 const sidebarChildStyle = {
-  mb: 0.4,
-  borderRadius: 1,
-  color: "#cbd5f5",
-  "&.active": { bgcolor: "#2563eb" },
+  my: 0.2,
+  borderRadius: "6px",
+  color: "rgba(255,255,255,0.5)",
+  transition: "all 0.2s",
+  "&:hover": {
+    color: "#fff",
+    bgcolor: "rgba(255,255,255,0.03)",
+  },
+  "&.active": {
+    color: "#00eaff",
+    bgcolor: "rgba(0, 234, 255, 0.05)",
+  },
 };

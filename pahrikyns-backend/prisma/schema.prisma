@@ -7,9 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//////////////////////////
-// ADMIN
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Admin {
   id         String   @id @default(uuid())
   email      String   @unique
@@ -20,44 +19,44 @@ model Admin {
   createdAt  DateTime @default(now())
 }
 
-//////////////////////////
-// OTP STORE
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model OtpStore {
   id        String   @id @default(uuid())
   email     String
-  otpHash   String
   method    String   @default("email")
   expiresAt DateTime
-  attempts  Int      @default(0)
   createdAt DateTime @default(now())
+  attempts  Int      @default(0)
+  otpHash   String
 
   @@index([email])
 }
 
-//////////////////////////
-// USER
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  password   String
-  role       String   @default("student")
-  isVerified Boolean  @default(false)
-  avatar     String?
-  createdAt  DateTime @default(now())
-
-  payments      Payment[]
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  isVerified    Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  role          String         @default("student")
+  avatar        String?
+  fcmTokens     FcmToken[]
   notifications Notification[]
+  payments      Payment[]
   subscription  Subscription?
   progress      UserProgress[]
-  fcmTokens     FcmToken[]
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+  lastDevice    String?
+
 }
 
-//////////////////////////
-// TEMP USER (OTP)
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model TempUser {
   email     String   @id
   name      String
@@ -65,9 +64,8 @@ model TempUser {
   createdAt DateTime @default(now())
 }
 
-//////////////////////////
-// STUDENT (ADMIN TRACK)
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Student {
   id        String   @id @default(uuid())
   name      String
@@ -78,48 +76,41 @@ model Student {
   createdAt DateTime @default(now())
 }
 
-//////////////////////////
-// NOTIFICATIONS
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Notification {
   id        String   @id @default(uuid())
   userId    String?
   title     String
-  message   String
-  type      String   @default("system")
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  type      String   @default("system")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([type])
 }
 
-//////////////////////////
-// PAYMENTS (RAZORPAY)
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Payment {
-  id       String  @id @default(uuid())
-  userId   String
-  orderId  String?
-  amount   Float
-  currency String  @default("INR")
-  status   String  @default("PENDING")
-
+  id                String   @id @default(uuid())
+  userId            String
+  amount            Float
+  currency          String   @default("INR")
+  status            String   @default("PENDING")
   razorpayOrderId   String?
+  createdAt         DateTime @default(now())
   razorpayPaymentId String?
   razorpaySignature String?
-
-  createdAt DateTime @default(now())
-
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  order Order? @relation(fields: [orderId], references: [id])
+  orderId           String?
+  order             Order?   @relation(fields: [orderId], references: [id])
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-//////////////////////////
-// SUBSCRIPTION
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Subscription {
   id            String    @id @default(uuid())
   userId        String    @unique
@@ -128,37 +119,32 @@ model Subscription {
   lastPaymentId String?
   expiresAt     DateTime?
   createdAt     DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-//////////////////////////
-// COURSE
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Course {
-  id            String  @id @default(uuid())
+  id            String         @id @default(uuid())
   title         String
   description   String?
   category      String
-  level         String  @default("Beginner")
-  lessons       Int     @default(0)
-  students      Int     @default(0)
-  price         Int     @default(0)
-  status        String  @default("Draft")
+  level         String         @default("Beginner")
+  lessons       Int            @default(0)
+  students      Int            @default(0)
+  price         Int            @default(0)
+  status        String         @default("Draft")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   lastUpdatedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  progress UserProgress[]
+  progress      UserProgress[]
 
   @@index([category])
   @@index([status])
 }
 
-//////////////////////////
-// USER PROGRESS
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model UserProgress {
   id        String   @id @default(uuid())
   userId    String
@@ -166,81 +152,80 @@ model UserProgress {
   lessonId  String
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId, lessonId])
 }
 
-//////////////////////////
-// FCM TOKENS
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model FcmToken {
   id        String   @id @default(uuid())
   userId    String
   token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
-//////////////////////////
-// ORDERS (FINAL – SINGLE SOURCE OF TRUTH)
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model Order {
-  id String @id @default(uuid())
-
+  id            String      @id @default(uuid())
   customerType  String
   customer      String
   customerEmail String?
-
-  fulfillment String
-  address     String?
-
+  fulfillment   String
+  address       String?
   paymentMethod String
   paymentStatus String
   status        String
-
-  totalAmount Float
-  gstAmount   Float?
-  grandTotal  Float?
-
-  invoiceNumber String? @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  items    OrderItem[]
-  payments Payment[]
+  totalAmount   Float
+  gstAmount     Float?
+  grandTotal    Float?
+  invoiceNumber String?     @unique
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+  payments      Payment[]
 }
 
-//////////////////////////
-// ORDER ITEMS
-//////////////////////////
+/// ///////////////////////
+/// ///////////////////////
 model OrderItem {
-  id      String @id @default(uuid())
-  orderId String
-
+  id       String @id @default(uuid())
+  orderId  String
   product  String
   quantity Int
   price    Float
-
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model EmailQueue {
-  id          String   @id @default(uuid())
-  to          String
-  subject     String
-  body        String?
-  attachment  String?
-  status      String   @default("PENDING") // PENDING | SENT | FAILED
-  attempts    Int      @default(0)
-  lastError   String?
+  id         String   @id @default(uuid())
+  to         String
+  subject    String
+  body       String?
+  attachment String?
+  status     String   @default("PENDING")
+  attempts   Int      @default(0)
+  lastError  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model UserCourse {
+  id        String   @id @default(uuid())
+  userId    String
+  courseId  String
+  paid      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
 }

@@ -6,6 +6,7 @@ D:.
 ³   firebase.js
 ³   index.css
 ³   load.txt
+³   loi.txt
 ³   main.jsx
 ³   structure.txt
 ³   theme.js
@@ -201,15 +202,9 @@ D:.
 ³   ÃÄÄÄCourse
 ³   ³       AutoLessonSidebar.jsx
 ³   ³       AutoLessonSidebarV2.jsx
+³   ³       GenericLesson.jsx
 ³   ³       LessonSidebar.jsx
 ³   ³       ToolHomeTemplate.jsx
-³   ³       
-³   ÃÄÄÄdashboard
-³   ³       CourseProgressList.jsx
-³   ³       LearningChart.jsx
-³   ³       LeftSidebar.jsx
-³   ³       TopBar.jsx
-³   ³       UserDetails.jsx
 ³   ³       
 ³   ÃÄÄÄglobal
 ³   ³       CookieBanner.jsx
@@ -222,14 +217,46 @@ D:.
 ³   ³       ThemeToggle.jsx
 ³   ³       WhatsAppLead.jsx
 ³   ³       
-³   ÀÄÄÄresume
+³   ÀÄÄÄUserdashboard
+³       ³   AchievementCard.jsx
+³       ³   AIRecommendation.jsx
+³       ³   CertificateCard.jsx
+³       ³   CourseCard.jsx
+³       ³   CourseCategoryFilter.jsx
+³       ³   CourseGridCard.jsx
+³       ³   CourseProgressList.jsx
+³       ³   Leaderboard.jsx
+³       ³   LearningChart.jsx
+³       ³   LearningPath.jsx
+³       ³   LeftSidebar.jsx
+³       ³   MiniCalendar.jsx
+³       ³   NotificationDrawer.jsx
+³       ³   ProfileQuickCard.jsx
+³       ³   QuickLinks.jsx
+³       ³   StreakWidget.jsx
+³       ³   TopBar.jsx
+³       ³   UpcomingTasks.jsx
+³       ³   UserDetails.jsx
+³       ³   WelcomeBanner.jsx
+³       ³   
+³       ÀÄÄÄchart
+³               ActivityChart.jsx
+³               StatCard.jsx
+³               
 ÃÄÄÄcontexts
 ³       AuthContext.jsx
 ³       LanguageContext.jsx
+³       SocketContext.jsx
 ³       
 ÃÄÄÄdata
-³       navbarCourses.js
-³       
+³   ³   navbarCourses.js
+³   ³   userMenu.js
+³   ³   
+³   ÀÄÄÄcourseData
+³           awsData.js
+³           devopsData.js
+³           osData.js
+³           
 ÃÄÄÄhooks
 ³       useLessonProgress.js
 ³       
@@ -404,11 +431,90 @@ D:.
 ³   ³           AdminProtectedRoute.jsx
 ³   ³           helpers.js
 ³   ³           
+³   ÃÄÄÄPahrikynschat
+³   ³   ³   index.js
+³   ³   ³   load.txt
+³   ³   ³   
+³   ³   ÃÄÄÄapi
+³   ³   ³       channelApi.js
+³   ³   ³       chatApi.js
+³   ³   ³       dmApi.js
+³   ³   ³       messageApi.js
+³   ³   ³       moderationApi.js
+³   ³   ³       presenceApi.js
+³   ³   ³       readReceiptApi.js
+³   ³   ³       threadApi.js
+³   ³   ³       typingApi.js
+³   ³   ³       
+³   ³   ÃÄÄÄcomponents
+³   ³   ³   ÃÄÄÄcommon
+³   ³   ³   ³       Avatar.jsx
+³   ³   ³   ³       EmojiPicker.jsx
+³   ³   ³   ³       MessageSearch.jsx
+³   ³   ³   ³       OnlineDot.jsx
+³   ³   ³   ³       
+³   ³   ³   ÃÄÄÄlayout
+³   ³   ³   ³       ChatFooter.jsx
+³   ³   ³   ³       ChatHeader.jsx
+³   ³   ³   ³       ChatLayout.jsx
+³   ³   ³   ³       ChatSidebar.jsx
+³   ³   ³   ³       
+³   ³   ³   ÃÄÄÄmessages
+³   ³   ³   ³       MessageActions.jsx
+³   ³   ³   ³       MessageInput.jsx
+³   ³   ³   ³       MessageItem.jsx
+³   ³   ³   ³       MessageList.jsx
+³   ³   ³   ³       MessageStatus.jsx
+³   ³   ³   ³       ThreadPanel.jsx
+³   ³   ³   ³       TypingIndicator.jsx
+³   ³   ³   ³       
+³   ³   ³   ÃÄÄÄmodals
+³   ³   ³   ³       CreateChannelModal.jsx
+³   ³   ³   ³       FilePreviewModal.jsx
+³   ³   ³   ³       InviteUserModal.jsx
+³   ³   ³   ³       
+³   ³   ³   ÀÄÄÄsidebar
+³   ³   ³           ChannelItem.jsx
+³   ³   ³           ChannelList.jsx
+³   ³   ³           DMList.jsx
+³   ³   ³           UserStatus.jsx
+³   ³   ³           WorkspaceInfo.jsx
+³   ³   ³           
+³   ³   ÃÄÄÄcontext
+³   ³   ³       ChannelContext.jsx
+³   ³   ³       ChatContext.jsx
+³   ³   ³       PresenceContext.jsx
+³   ³   ³       
+³   ³   ÃÄÄÄhooks
+³   ³   ³       useChannels.js
+³   ³   ³       useMessages.js
+³   ³   ³       useMessageSearch.js
+³   ³   ³       usePresence.js
+³   ³   ³       useTyping.js
+³   ³   ³       
+³   ³   ÃÄÄÄpages
+³   ³   ³       ChannelPage.jsx
+³   ³   ³       ChatHome.jsx
+³   ³   ³       DirectMessage.jsx
+³   ³   ³       
+³   ³   ÃÄÄÄroutes
+³   ³   ³       ChatRoutes.jsx
+³   ³   ³       
+³   ³   ÃÄÄÄstyles
+³   ³   ³       chat.css
+³   ³   ³       
+³   ³   ÀÄÄÄutils
+³   ³           messageFormatter.js
+³   ³           permissions.js
+³   ³           uploadFile.js
+³   ³           
 ³   ÀÄÄÄresume
 ³       ³   index.js
+³       ³   load.txt
 ³       ³   
 ³       ÃÄÄÄcomponents
 ³       ³   ÃÄÄÄcommon
+³       ³   ³       AutosaveStatus.jsx
 ³       ³   ³       ExportPDFButton.jsx
 ³       ³   ³       ResumeFooter.jsx
 ³       ³   ³       ResumeHistory.jsx
@@ -421,11 +527,22 @@ D:.
 ³       ³   ³       ResumeForm.jsx
 ³       ³   ³       SkillsForm.jsx
 ³       ³   ³       
+³       ³   ÃÄÄÄmobile
+³       ³   ³       AutoHideFAB.jsx
+³       ³   ³       DarkModeToggle.jsx
+³       ³   ³       FloatingButtons.jsx
+³       ³   ³       MobileHeader.jsx
+³       ³   ³       PinchZoom.jsx
+³       ³   ³       slide.css
+³       ³   ³       SlideTransition.jsx
+³       ³   ³       SwipeHandler.jsx
+³       ³   ³       
 ³       ³   ÀÄÄÄpreview
 ³       ³           ResumePreview.jsx
 ³       ³           ThemePreview.jsx
 ³       ³           
 ³       ÃÄÄÄcontext
+³       ³       DarkModeContext.jsx
 ³       ³       ResumeContext.jsx
 ³       ³       
 ³       ÃÄÄÄguards
@@ -435,6 +552,8 @@ D:.
 ³       ³       ResumeLayout.jsx
 ³       ³       
 ³       ÃÄÄÄpages
+³       ³       MobileRedirect.jsx
+³       ³       MobileResumeBuilder.jsx
 ³       ³       ResumeAdmin.jsx
 ³       ³       ResumeBuilder.jsx
 ³       ³       ResumeGallery.jsx
@@ -443,6 +562,7 @@ D:.
 ³       ³       ResumeTemplates.jsx
 ³       ³       
 ³       ÃÄÄÄservices
+³       ³       offlineAutosave.js
 ³       ³       resumeAnalyticsApi.js
 ³       ³       resumeApi.js
 ³       ³       
@@ -454,6 +574,8 @@ D:.
 ³       ³       UltraTemplate.jsx
 ³       ³       
 ³       ÀÄÄÄutils
+³               haptics.js
+³               offlineAutosave.js
 ³               versionStore.js
 ³               
 ÃÄÄÄpages
@@ -1715,6 +1837,7 @@ D:.
 ³           
 ÃÄÄÄroutes
 ³       AppRoutes.jsx
+³       CourseRoutes.jsx
 ³       
 ÀÄÄÄutils
     ³   auth.js

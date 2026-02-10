@@ -104,8 +104,8 @@ export default function MyCourses() {
                     {/* ✅ RAZORPAY BUTTON */}
                     <Box mt={2}>
                       <RazorpayButton
-                        amount={c.course.price || 999}
-                        course={c.course.title}
+                        courseId={c.course.id}
+                        courseTitle={c.course.title}
                         user={user}
                         onSuccess={load}   // ✅ Auto refresh after success
                       />

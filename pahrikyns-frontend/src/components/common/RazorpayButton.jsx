@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
-import { createPayment, updatePaymentStatus } from "../../api/payment";
+import axios from "../../api/axios"; // ✅ your axios instance
 
 export default function RazorpayButton({
-  amount,
-  course = "General Course",
+  courseId,
+  courseTitle,
   user,
   onSuccess,
 }) {
@@ -14,36 +14,37 @@ export default function RazorpayButton({
     try {
       setLoading(true);
 
-      // 1️⃣ Create Payment in Backend
-      const res = await createPayment(amount);
-      if (!res.ok) {
-        alert(res.error);
-        return;
-      }
+      // 1️⃣ Create payment + order (BACKEND)
+      const { data } = await axios.post(
+        "/payments/course/create",
+        { courseId }
+      );
 
-      const payment = res.data.payment;
+      const { orderId, amount, currency, key } = data;
 
-      // 2️⃣ Razorpay Popup
+      // 2️⃣ Razorpay options
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY, // ✅ Frontend env key
-        amount: payment.amount * 100, // in paise
-        currency: "INR",
+        key,
+        amount,
+        currency,
         name: "PAHRIKYNS",
-        description: course,
+        description: courseTitle,
         image: "/logo.png",
 
         handler: async function (response) {
-          // 3️⃣ Verify with Backend
-          const verify = await updatePaymentStatus(
-            payment.id,
-            "SUCCESS"
-          );
+          try {
+            // 3️⃣ Verify payment (BACKEND)
+            await axios.post("/payments/course/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
-          if (verify.ok) {
-            alert("✅ Payment Successful!");
+            alert("✅ Payment Successful! Course Unlocked");
             onSuccess && onSuccess();
-          } else {
-            alert("Verification Failed");
+          } catch (err) {
+            console.error(err);
+            alert("❌ Payment verification failed");
           }
         },
 
@@ -53,21 +54,16 @@ export default function RazorpayButton({
         },
 
         theme: {
-          color: "#00e5ff",
-        },
-
-        modal: {
-          ondismiss: async () => {
-            await updatePaymentStatus(payment.id, "FAILED");
-          },
+          color: "#7b3fe4",
         },
       };
 
+      // 4️⃣ Open Razorpay popup
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
       console.error(err);
-      alert("Payment failed");
+      alert("❌ Payment failed");
     } finally {
       setLoading(false);
     }
@@ -80,11 +76,11 @@ export default function RazorpayButton({
       disabled={loading}
       sx={{
         background: "linear-gradient(90deg,#00eaff,#7b3fe4)",
-        fontWeight: 800,
-        px: 3,
+        fontWeight: 700,
+        px: 4,
       }}
     >
-      {loading ? <CircularProgress size={22} /> : `Pay ₹${amount}`}
+      {loading ? <CircularProgress size={22} /> : "Buy Course"}
     </Button>
   );
 }

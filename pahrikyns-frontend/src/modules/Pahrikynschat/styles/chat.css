@@ -1,0 +1,13 @@
+:root{
+  --bg:#f8f9fb;
+  --panel:#ffffff;
+  --sidebar:#1a1d21;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --accent:#5b5fc7;
+  --border:#e5e7eb;
+}
+
+.chat-root{ background:var(--bg); color:var(--text); }
+.chat-panel{ background:var(--panel); border-left:1px solid var(--border); }
+.chat-header{ position:sticky; top:0; z-index:10; background:var(--panel); }

@@ -36,25 +36,20 @@ import PersonIcon from "@mui/icons-material/Person";
 import SendIcon from "@mui/icons-material/Send";
 
 import { useNavigate } from "react-router-dom";
-
-// ✅ CORRECT IMPORT
-import { AdminAuthContext } from "../context/AdminAuthContext";
-
+import { useAdminAuth } from "../context/AdminAuthContext";
 import axios from "../../../api/axios";
 
 export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
   const navigate = useNavigate();
-  const { logout, admin } = useContext(AdminAuthContext);
+  const { logout, admin } = useAdminAuth();
 
   const [anchorQuick, setAnchorQuick] = useState(null);
   const [anchorProfile, setAnchorProfile] = useState(null);
-
-  // 🔍 LIVE SEARCH
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  // 🔔 NOTIFICATION MODAL
+  // NOTIFICATION STATE
   const [openNotify, setOpenNotify] = useState(false);
   const [notifyTitle, setNotifyTitle] = useState("");
   const [notifyMessage, setNotifyMessage] = useState("");
@@ -63,27 +58,18 @@ export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
   const [targetUserId, setTargetUserId] = useState("");
   const [sending, setSending] = useState(false);
 
-  // ✅ LIVE SEARCH EFFECT
+  // LIVE SEARCH
   useEffect(() => {
     if (!search.trim()) {
       setResults([]);
       return;
     }
-
     const timer = setTimeout(async () => {
       try {
         setLoadingSearch(true);
-
-        const res = await fetch(
-          `http://localhost:5000/api/admin/search?q=${search}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " + localStorage.getItem("ADMIN_TOKEN"),
-            },
-          }
-        );
-
+        const res = await fetch(`http://localhost:5000/api/admin/search?q=${search}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("ADMIN_TOKEN") },
+        });
         const data = await res.json();
         setResults(data?.users || []);
       } catch (err) {
@@ -93,17 +79,14 @@ export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
         setLoadingSearch(false);
       }
     }, 400);
-
     return () => clearTimeout(timer);
   }, [search]);
 
-  // ✅ SEND NOTIFICATION (ADMIN)
+  // SEND NOTIFICATION
   const handleSendNotification = async () => {
     if (!notifyTitle.trim() || !notifyMessage.trim()) return;
-
     try {
       setSending(true);
-
       await axios.post(
         "/api/notifications",
         {
@@ -113,15 +96,8 @@ export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
           type: "admin",
           meta: redirectUrl ? { redirectUrl } : null,
         },
-        {
-          headers: {
-            Authorization:
-              "Bearer " + localStorage.getItem("ADMIN_TOKEN"),
-          },
-        }
+        { headers: { Authorization: "Bearer " + localStorage.getItem("ADMIN_TOKEN") } }
       );
-
-      // reset
       setNotifyTitle("");
       setNotifyMessage("");
       setRedirectUrl("");
@@ -138,90 +114,62 @@ export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
   return (
     <>
       <AppBar
-        position="sticky"
+        position="static"
         elevation={0}
         sx={{
-          bgcolor: "rgba(2,6,23,0.92)",
-          backdropFilter: "blur(14px)",
-          borderBottom: "1px solid #1e293b",
+          bgcolor: "rgba(2, 6, 23, 0.8)",
+          borderBottom: "1px solid rgba(255,255,255,0.05)",
         }}
       >
-        <Toolbar sx={{ minHeight: 64 }}>
-          {/* LEFT */}
-          <IconButton sx={{ color: "#60a5fa", mr: 1 }} onClick={onToggleSidebar}>
+        <Toolbar sx={{ minHeight: 70 }}>
+          <IconButton sx={{ color: "#fff", mr: 2, display: { md: 'none' } }} onClick={onToggleSidebar}>
             <MenuIcon />
           </IconButton>
 
-          <Typography
-            fontWeight={900}
-            sx={{
-              background: "linear-gradient(90deg,#60a5fa,#38bdf8)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              letterSpacing: 0.8,
-            }}
-          >
-            Admin Panel
-          </Typography>
-
-          <Box sx={{ flex: 1 }} />
-
-          {/* 🔍 SEARCH */}
-          <Box sx={{ position: "relative", mr: 2 }}>
+          {/* SEARCH BAR */}
+          <Box sx={{ position: "relative", width: { xs: 200, md: 400 } }}>
             <TextField
               size="small"
+              fullWidth
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search user..."
+              placeholder="Search users, orders, courses..."
               sx={{
-                width: { xs: 150, md: 260 },
-                input: { color: "white", fontSize: 13 },
+                "& .MuiOutlinedInput-root": {
+                  color: "white",
+                  bgcolor: "rgba(255,255,255,0.05)",
+                  borderRadius: "10px",
+                  "& fieldset": { borderColor: "transparent" },
+                  "&:hover fieldset": { borderColor: "rgba(255,255,255,0.1)" },
+                  "&.Mui-focused fieldset": { borderColor: "#00eaff" },
+                },
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ fontSize: 18, color: "#94a3b8" }} />
+                    <SearchIcon sx={{ color: "rgba(255,255,255,0.4)" }} />
                   </InputAdornment>
                 ),
               }}
             />
 
+            {/* SEARCH RESULTS DROPDOWN */}
             {search && (
-              <Paper
-                sx={{
-                  position: "absolute",
-                  top: 42,
-                  width: "100%",
-                  bgcolor: "#020617",
-                  border: "1px solid #1e293b",
-                  zIndex: 2000,
-                  maxHeight: 280,
-                  overflowY: "auto",
-                }}
-              >
+              <Paper sx={{
+                position: "absolute", top: 48, width: "100%", bgcolor: "#0f172a",
+                border: "1px solid rgba(255,255,255,0.1)", zIndex: 2000,
+                maxHeight: 300, overflowY: "auto", borderRadius: "10px", boxShadow: "0 10px 40px rgba(0,0,0,0.5)"
+              }}>
                 {loadingSearch ? (
-                  <Box sx={{ p: 1.5, display: "flex", justifyContent: "center" }}>
-                    <CircularProgress size={20} />
-                  </Box>
+                  <Box sx={{ p: 2, textAlign: "center" }}><CircularProgress size={20} /></Box>
                 ) : results.length === 0 ? (
-                  <Typography sx={{ p: 1.5 }} fontSize={12} color="#94a3b8">
-                    No users found
-                  </Typography>
+                  <Typography sx={{ p: 2, fontSize: 13, color: "rgba(255,255,255,0.5)" }}>No results found.</Typography>
                 ) : (
                   <List dense>
                     {results.map((u) => (
-                      <ListItemButton
-                        key={u._id}
-                        onClick={() => {
-                          navigate(`/admin/users/${u._id}`);
-                          setSearch("");
-                          setResults([]);
-                        }}
-                      >
-                        <ListItemText
-                          primary={u.name}
-                          secondary={u.email}
-                        />
+                      <ListItemButton key={u._id} onClick={() => { navigate(`/admin/users/${u._id}`); setSearch(""); }}>
+                        <ListItemText primary={u.name} secondary={u.email}
+                          primaryTypographyProps={{ color: "#fff" }} secondaryTypographyProps={{ color: "rgba(255,255,255,0.5)" }} />
                       </ListItemButton>
                     ))}
                   </List>
@@ -230,156 +178,90 @@ export function AdminTopbar({ notifyCount = 0, onToggleSidebar }) {
             )}
           </Box>
 
-          {/* ➕ QUICK ADD */}
-          <IconButton
-            onClick={(e) => setAnchorQuick(e.currentTarget)}
-            sx={{ color: "white", mr: 1 }}
-          >
+          <Box sx={{ flex: 1 }} />
+
+          {/* ACTIONS */}
+          <IconButton onClick={(e) => setAnchorQuick(e.currentTarget)} sx={{ color: "rgba(255,255,255,0.7)", mr: 1, "&:hover": { color: "#00eaff" } }}>
             <AddIcon />
           </IconButton>
 
-          <Menu
-            anchorEl={anchorQuick}
-            open={Boolean(anchorQuick)}
-            onClose={() => setAnchorQuick(null)}
-          >
-            <MenuItem
-              onClick={() => {
-                navigate("/admin/users/add");
-                setAnchorQuick(null);
-              }}
-            >
-              <PersonIcon fontSize="small" style={{ marginRight: 8 }} />
-              Add User
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => {
-                navigate("/admin/courses/add");
-                setAnchorQuick(null);
-              }}
-            >
-              <AddIcon fontSize="small" style={{ marginRight: 8 }} />
-              Add Course
-            </MenuItem>
-
-            <Divider />
-
-            <MenuItem
-              onClick={() => {
-                setOpenNotify(true);
-                setAnchorQuick(null);
-              }}
-            >
-              <SendIcon fontSize="small" style={{ marginRight: 8 }} />
-              Send Notification
-            </MenuItem>
-          </Menu>
-
-          {/* 🔔 NOTIFICATIONS ICON */}
-          <IconButton sx={{ color: "white", mr: 1 }}>
-            <Badge badgeContent={notifyCount} color="error">
+          <IconButton sx={{ color: "rgba(255,255,255,0.7)", mr: 2, "&:hover": { color: "#00eaff" } }}>
+            <Badge badgeContent={notifyCount} color="error" variant="dot">
               <NotificationsIcon />
             </Badge>
           </IconButton>
 
-          {/* 👤 PROFILE */}
+          {/* PROFILE DROPDOWN */}
           <Avatar
-            sx={{
-              bgcolor: "#2563eb",
-              color: "white",
-              ml: 1,
-              cursor: "pointer",
-            }}
             onClick={(e) => setAnchorProfile(e.currentTarget)}
+            sx={{
+              width: 38, height: 38,
+              bgcolor: "transparent",
+              border: "1px solid rgba(0, 234, 255, 0.5)",
+              color: "#00eaff",
+              cursor: "pointer",
+              transition: "all 0.2s",
+              "&:hover": { boxShadow: "0 0 10px rgba(0, 234, 255, 0.5)" }
+            }}
           >
             {admin?.email?.[0]?.toUpperCase() || "A"}
           </Avatar>
+
+          {/* MENUS */}
+          <Menu
+            anchorEl={anchorQuick}
+            open={Boolean(anchorQuick)}
+            onClose={() => setAnchorQuick(null)}
+            PaperProps={{ sx: { bgcolor: "#0f172a", color: "white", border: "1px solid rgba(255,255,255,0.1)" } }}
+          >
+            <MenuItem onClick={() => { navigate("/admin/users/add"); setAnchorQuick(null); }}>
+              <PersonIcon fontSize="small" sx={{ mr: 1, color: "#00eaff" }} /> Add User
+            </MenuItem>
+            <MenuItem onClick={() => { navigate("/admin/courses/add"); setAnchorQuick(null); }}>
+              <AddIcon fontSize="small" sx={{ mr: 1, color: "#00eaff" }} /> Add Course
+            </MenuItem>
+            <Divider sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
+            <MenuItem onClick={() => { setOpenNotify(true); setAnchorQuick(null); }}>
+              <SendIcon fontSize="small" sx={{ mr: 1, color: "#00eaff" }} /> Send Notification
+            </MenuItem>
+          </Menu>
 
           <Menu
             anchorEl={anchorProfile}
             open={Boolean(anchorProfile)}
             onClose={() => setAnchorProfile(null)}
+            PaperProps={{ sx: { bgcolor: "#0f172a", color: "white", border: "1px solid rgba(255,255,255,0.1)" } }}
           >
             <MenuItem onClick={() => navigate("/admin/settings")}>
-              <SettingsIcon fontSize="small" style={{ marginRight: 8 }} />
-              Settings
+              <SettingsIcon fontSize="small" sx={{ mr: 1 }} /> Settings
             </MenuItem>
-
-            <MenuItem
-              onClick={() => {
-                logout();
-                setAnchorProfile(null);
-              }}
-              sx={{ color: "#f87171" }}
-            >
-              <LogoutIcon fontSize="small" style={{ marginRight: 8 }} />
-              Logout
+            <MenuItem onClick={logout} sx={{ color: "#ef4444" }}>
+              <LogoutIcon fontSize="small" sx={{ mr: 1 }} /> Logout
             </MenuItem>
           </Menu>
+
         </Toolbar>
       </AppBar>
 
-      {/* ✅ ADMIN SEND NOTIFICATION MODAL */}
-      <Dialog open={openNotify} onClose={() => setOpenNotify(false)} fullWidth>
+      {/* NOTIFICATION DIALOG */}
+      <Dialog open={openNotify} onClose={() => setOpenNotify(false)} fullWidth PaperProps={{ sx: { bgcolor: "#0f172a", color: "white", border: "1px solid rgba(255,255,255,0.1)" } }}>
         <DialogTitle>Send Notification</DialogTitle>
-
         <DialogContent>
-          <TextField
-            fullWidth
-            label="Title"
-            margin="dense"
-            value={notifyTitle}
-            onChange={(e) => setNotifyTitle(e.target.value)}
-          />
-
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            label="Message"
-            margin="dense"
-            value={notifyMessage}
-            onChange={(e) => setNotifyMessage(e.target.value)}
-          />
-
-          <TextField
-            fullWidth
-            label="Redirect URL (optional)"
-            margin="dense"
-            value={redirectUrl}
-            onChange={(e) => setRedirectUrl(e.target.value)}
-          />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={sendToAll}
-                onChange={(e) => setSendToAll(e.target.checked)}
-              />
-            }
-            label="Broadcast to all users"
-          />
-
+          <TextField fullWidth label="Title" margin="dense" value={notifyTitle} onChange={(e) => setNotifyTitle(e.target.value)}
+            sx={{ "& .MuiInputBase-root": { color: "white" }, "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.5)" }, "& fieldset": { borderColor: "rgba(255,255,255,0.2)" } }} />
+          <TextField fullWidth multiline rows={3} label="Message" margin="dense" value={notifyMessage} onChange={(e) => setNotifyMessage(e.target.value)}
+            sx={{ "& .MuiInputBase-root": { color: "white" }, "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.5)" }, "& fieldset": { borderColor: "rgba(255,255,255,0.2)" } }} />
+          <TextField fullWidth label="Redirect URL (optional)" margin="dense" value={redirectUrl} onChange={(e) => setRedirectUrl(e.target.value)}
+            sx={{ "& .MuiInputBase-root": { color: "white" }, "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.5)" }, "& fieldset": { borderColor: "rgba(255,255,255,0.2)" } }} />
+          <FormControlLabel control={<Switch checked={sendToAll} onChange={(e) => setSendToAll(e.target.checked)} sx={{ "& .MuiSwitch-thumb": { color: "#00eaff" }, "& .MuiSwitch-track": { bgcolor: "rgba(255,255,255,0.3)" } }} />} label="Broadcast to all users" />
           {!sendToAll && (
-            <TextField
-              fullWidth
-              label="Target User ID"
-              margin="dense"
-              value={targetUserId}
-              onChange={(e) => setTargetUserId(e.target.value)}
-            />
+            <TextField fullWidth label="Target User ID" margin="dense" value={targetUserId} onChange={(e) => setTargetUserId(e.target.value)}
+              sx={{ "& .MuiInputBase-root": { color: "white" }, "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.5)" }, "& fieldset": { borderColor: "rgba(255,255,255,0.2)" } }} />
           )}
         </DialogContent>
-
         <DialogActions>
-          <Button onClick={() => setOpenNotify(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={handleSendNotification}
-            disabled={sending}
-            startIcon={<SendIcon />}
-          >
+          <Button onClick={() => setOpenNotify(false)} sx={{ color: "rgba(255,255,255,0.5)" }}>Cancel</Button>
+          <Button variant="contained" onClick={handleSendNotification} disabled={sending} sx={{ bgcolor: "#00eaff", color: "black", fontWeight: "bold", "&:hover": { bgcolor: "#00c4d6" } }}>
             {sending ? "Sending..." : "Send"}
           </Button>
         </DialogActions>

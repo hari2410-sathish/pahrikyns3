@@ -214,44 +214,59 @@ export default function OrderDetails() {
         <Divider sx={{ my: 2 }} />
 
         {/* ACTIONS */}
-        <Stack direction="row" spacing={2} flexWrap="wrap">
-          <Select
-            size="small"
-            value={order.status}
-            disabled={updating}
-            onChange={(e) => handleStatusChange(e.target.value)}
-          >
-            <MenuItem value="CREATED">CREATED</MenuItem>
-            <MenuItem value="COMPLETED">COMPLETED</MenuItem>
-            <MenuItem value="CANCELLED">CANCELLED</MenuItem>
-          </Select>
-
-          {order.paymentStatus !== "PAID" && (
-            <Button variant="contained" color="success" onClick={handlePayNow}>
-              Pay Now
+        {/* ACTION BUTTONS (Approve / Cancel) */}
+        {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
+          <>
+            <Button
+              variant="contained"
+              color="success"
+              disabled={updating}
+              onClick={() => handleStatusChange("COMPLETED")}
+            >
+              Approve & Complete Order
             </Button>
-          )}
-          <Button
-  variant="outlined"
-  color="info"
-  onClick={async () => {
-    await resendInvoice(order.id);
-    alert("Invoice resent to customer email");
-  }}
->
-  Resend Invoice Email
-</Button>
 
+            <Button
+              variant="contained"
+              color="error"
+              disabled={updating}
+              onClick={() => handleStatusChange("CANCELLED")}
+            >
+              Reject / Cancel Order
+            </Button>
+          </>
+        )}
 
-          <Button
-            variant="outlined"
-            color="secondary"
-            disabled={emailLoading}
-            onClick={handleEmailInvoice}
-          >
-            {emailLoading ? "Sending..." : "Resend Invoice Email"}
+        {/* Legacy Status Override (Optional) */}
+        <Select
+          size="small"
+          value={order.status}
+          disabled={updating}
+          onChange={(e) => handleStatusChange(e.target.value)}
+          sx={{ minWidth: 150 }}
+        >
+          <MenuItem value="CREATED">CREATED</MenuItem>
+          <MenuItem value="PENDING">PENDING</MenuItem>
+          <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+          <MenuItem value="CANCELLED">CANCELLED</MenuItem>
+        </Select>
+
+        {order.paymentStatus !== "PAID" && (
+          <Button variant="outlined" color="primary" onClick={handlePayNow}>
+            Pay Now (Admin)
           </Button>
-        </Stack>
+        )}
+
+        <Button
+          variant="outlined"
+          color="info"
+          onClick={async () => {
+            await resendInvoice(order.id);
+            showToast("Invoice resent to customer email");
+          }}
+        >
+          Resend Invoice Email
+        </Button>
       </Paper>
 
       {/* TOAST */}

@@ -4,9 +4,11 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const devopsTools = [
-  "Git", "Docker", "Jenkins", "Kubernetes",
-  "Splunk", "Terraform", "Prometheus",
-  "Grafana", "Ansible"
+  "DevOps Intro", "Linux For DevOps", "Git", "Jenkins",
+  "Docker", "K8s Architecture", "K8s Administration",
+  "Helm Charts", "Ansible", "Terraform", "Prometheus",
+  "Grafana", "Splunk", "Nagios", "Maven", "Gradle",
+  "SonarQube", "Azure DevOps", "DevSecOps", "SRE"
 ];
 
 export default function DevOpsHome() {
@@ -29,7 +31,7 @@ export default function DevOpsHome() {
           <Grid item xs={12} sm={6} md={4} key={tool}>
             <Paper
               component={Link}
-              to={`/courses/devops/${tool.toLowerCase()}`}
+              to={`/courses/devops/${tool.toLowerCase().replace(/\s/g, "-")}`}
               sx={{
                 p: 3,
                 textDecoration: "none",

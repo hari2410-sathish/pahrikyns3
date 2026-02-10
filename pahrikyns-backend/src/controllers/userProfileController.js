@@ -102,3 +102,28 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ error: "Failed to change password" });
   }
 };
+
+/* ============================================================
+   GET ALL USERS (FOR CHAT)
+============================================================ */
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        id: { not: req.user.id }, // Exclude self
+        role: "user", // Optional: only fetch normal users
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+      },
+    });
+
+    res.json(users);
+  } catch (err) {
+    console.error("getAllUsers error:", err);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};

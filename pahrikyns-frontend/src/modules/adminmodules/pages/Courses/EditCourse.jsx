@@ -152,18 +152,30 @@ export default function EditCourse() {
   }, [form.durationHours]);
 
   const validate = () => {
-    if (!form.title.trim()) return "Title is required";
-    if (!form.slug.trim()) return "Slug is required";
-    if (!form.shortDescription.trim())
-      return "Short description is required";
-    if (!form.price) return "Price is required";
+  if (!form.title.trim()) return "Title is required";
+  if (!form.slug.trim()) return "Slug is required";
+  if (!form.shortDescription.trim())
+    return "Short description is required";
 
-    if (form.discountPrice && Number(form.discountPrice) > Number(form.price)) {
-      return "Discount price cannot be greater than price";
-    }
-
+  // 🔐 Beginner → free
+  if (form.level === "Beginner") {
     return null;
-  };
+  }
+
+  // 🔐 Paid courses
+  if (!form.price || Number(form.price) <= 0) {
+    return "Price is required for paid courses";
+  }
+
+  if (
+    form.discountPrice &&
+    Number(form.discountPrice) > Number(form.price)
+  ) {
+    return "Discount price cannot be greater than price";
+  }
+
+  return null;
+};
 
   // ===========================
   // SUBMIT
@@ -218,6 +230,17 @@ export default function EditCourse() {
       </Box>
     );
   }
+const handleLevelChange = (e) => {
+  const level = e.target.value;
+
+  setForm((prev) => ({
+    ...prev,
+    level,
+    ...(level === "Beginner"
+      ? { price: 0, discountPrice: "" }
+      : {}),
+  }));
+};
 
   return (
     <Box>
@@ -336,43 +359,49 @@ export default function EditCourse() {
             </FormControl>
 
             <FormControl fullWidth margin="normal">
-              <InputLabel>Level</InputLabel>
-              <Select
-                label="Level"
-                value={form.level}
-                onChange={handleChange("level")}
-              >
-                {LEVELS.map((lvl) => (
-                  <MenuItem key={lvl} value={lvl}>
-                    {lvl}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+  <InputLabel>Level</InputLabel>
+  <Select
+    label="Level"
+    value={form.level}
+    onChange={handleLevelChange}
+  >
+    {LEVELS.map((lvl) => (
+      <MenuItem key={lvl} value={lvl}>
+        {lvl}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+<Grid container spacing={2}>
+  <Grid item xs={6}>
+    <TextField
+      label="Price (₹)"
+      type="number"
+      fullWidth
+      margin="normal"
+      value={form.price}
+      disabled={form.level === "Beginner"}
+      helperText={
+        form.level === "Beginner"
+          ? "Beginner courses are always FREE"
+          : ""
+      }
+      onChange={handleChange("price")}
+    />
+  </Grid>
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  label="Price (₹) *"
-                  type="number"
-                  fullWidth
-                  margin="normal"
-                  value={form.price}
-                  onChange={handleChange("price")}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Discount (₹)"
-                  type="number"
-                  fullWidth
-                  margin="normal"
-                  value={form.discountPrice}
-                  onChange={handleChange("discountPrice")}
-                />
-              </Grid>
-            </Grid>
-
+  <Grid item xs={6}>
+    <TextField
+      label="Discount (₹)"
+      type="number"
+      fullWidth
+      margin="normal"
+      value={form.discountPrice}
+      disabled={form.level === "Beginner"}
+      onChange={handleChange("discountPrice")}
+    />
+  </Grid>
+</Grid>
             <TextField
               label="Duration (hours)"
               type="number"

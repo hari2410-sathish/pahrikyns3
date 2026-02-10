@@ -5,8 +5,43 @@ import { Box } from "@mui/material";
 import AdminSidebar from "../components/AdminSidebar";
 import { AdminTopbar } from "../components/AdminTopbar";
 
+import { useSocket } from "../../../contexts/SocketContext";
+import { useSnackbar } from "notistack";
+import { useEffect } from "react";
+
 export default function AdminLayout() {
   const [notifyCount, setNotifyCount] = useState(3);
+  const socket = useSocket();
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNotification = (data) => {
+      // Only show admin-relevant notifications here if needed, or all.
+      // Assuming 'admin_notification' event name from backend
+      if (data) {
+        enqueueSnackbar(data.message || "New Notification", {
+          variant: data.type || "info",
+          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          autoHideDuration: 5000
+        });
+        setNotifyCount(prev => prev + 1);
+
+        // Optional: Play sound
+        try {
+          const audio = new Audio("/notification.mp3");
+          audio.play();
+        } catch (e) { console.log("Audio play failed", e); }
+      }
+    };
+
+    socket.on("admin_notification", handleNotification);
+
+    return () => {
+      socket.off("admin_notification", handleNotification);
+    };
+  }, [socket, enqueueSnackbar]);
 
   return (
     <Box
@@ -15,6 +50,8 @@ export default function AdminLayout() {
         minHeight: "100vh",
         bgcolor: "#020617",
         color: "white",
+        backgroundImage: "radial-gradient(circle at 15% 50%, rgba(0, 234, 255, 0.03), transparent 25%), radial-gradient(circle at 85% 30%, rgba(123, 63, 228, 0.03), transparent 25%)",
+        backgroundAttachment: "fixed"
       }}
     >
       {/* SIDEBAR */}
@@ -24,8 +61,7 @@ export default function AdminLayout() {
           top: 0,
           height: "100vh",
           zIndex: 1200,
-          bgcolor: "#020617",
-          borderRight: "1px solid #1e293b",
+          bgcolor: "transparent",
         }}
       >
         <AdminSidebar notifyCount={notifyCount} />
@@ -46,8 +82,7 @@ export default function AdminLayout() {
             position: "sticky",
             top: 0,
             zIndex: 1100,
-            bgcolor: "#020617",
-            borderBottom: "1px solid #1e293b",
+            backdropFilter: "blur(12px)",
           }}
         >
           <AdminTopbar
@@ -63,10 +98,8 @@ export default function AdminLayout() {
           sx={{
             flex: 1,
             overflowY: "auto",
-            px: { xs: 2, md: 3 },
-            py: { xs: 2, md: 3 },
-            background:
-              "radial-gradient(1200px 400px at 50% -5%, #0f172a, #020617 60%)",
+            px: { xs: 2, md: 4 },
+            py: { xs: 2, md: 4 },
           }}
         >
           <Outlet />

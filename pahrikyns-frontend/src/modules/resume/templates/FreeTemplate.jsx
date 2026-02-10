@@ -75,7 +75,7 @@ export default function FreeTemplate() {
 
       {/* ================= SKILLS ================= */}
       {skills?.length > 0 && (
-        <Box>
+        <Box className="mb-6">
           <h2 className="font-semibold text-xl mb-2">Skills</h2>
           <Box className="flex flex-wrap gap-2 text-gray-800">
             {skills.map((skill, i) => (
@@ -84,6 +84,22 @@ export default function FreeTemplate() {
               </span>
             ))}
           </Box>
+        </Box>
+      )}
+
+      {/* ================= EDUCATION ================= */}
+      {state.education?.length > 0 && (
+        <Box className="mb-6">
+          <h2 className="font-semibold text-xl mb-2">Education</h2>
+          {state.education.map((edu, i) => (
+            <Box key={i} className="mb-3">
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-semibold">{edu.school}</h3>
+                <span className="text-sm text-gray-600">{edu.year}</span>
+              </div>
+              <p className="text-gray-700">{edu.degree}</p>
+            </Box>
+          ))}
         </Box>
       )}
     </Box>

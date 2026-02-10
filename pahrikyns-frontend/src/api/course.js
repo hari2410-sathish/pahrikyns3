@@ -57,3 +57,11 @@ export const toggleCourseStatus = async (id, status) => {
   const res = await api.patch(`/admin/courses/${id}/status`, { status });
   return res.data;
 };
+
+/* ============================
+   GET USER ENROLLED COURSES
+   ============================ */
+export const getMyCourses = async () => {
+  const res = await api.get("/auth/user/my-courses");
+  return res.data;
+};

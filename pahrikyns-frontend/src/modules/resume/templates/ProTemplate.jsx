@@ -35,7 +35,21 @@ export default function ProTemplate() {
           {personal?.summary && (
             <Box>
               <h2 className="font-bold text-lg text-blue-700 mb-2">Summary</h2>
-              <p className="text-gray-700 leading-relaxed">{personal.summary}</p>
+              <p className="text-gray-700 leading-relaxed text-sm">{personal.summary}</p>
+            </Box>
+          )}
+
+          {/* EDUCATION */}
+          {state.education?.length > 0 && (
+            <Box>
+              <h2 className="font-bold text-lg text-blue-700 mb-2">Education</h2>
+              {state.education.map((edu, i) => (
+                <Box key={i} className="mb-3">
+                  <h3 className="font-semibold text-gray-900">{edu.school}</h3>
+                  <p className="text-sm text-gray-700">{edu.degree}</p>
+                  <p className="text-xs text-gray-500">{edu.year}</p>
+                </Box>
+              ))}
             </Box>
           )}
 
@@ -47,7 +61,7 @@ export default function ProTemplate() {
                 {skills.map((s, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm"
+                    className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold"
                   >
                     {s}
                   </span>
