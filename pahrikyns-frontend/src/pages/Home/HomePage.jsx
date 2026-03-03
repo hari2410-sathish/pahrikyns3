@@ -172,7 +172,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div style={{ position: "relative", background: "#020617", minHeight: "100vh", overflowX: "hidden" }}>
+    <div className="hp-home-root" style={{ position: "relative", background: "#020617", minHeight: "100vh", overflowX: "hidden" }}>
       {/* BACKGROUND CANVAS */}
       <canvas
         ref={canvasRef}
@@ -180,8 +180,8 @@ export default function HomePage() {
       />
 
       {/* HERO SECTION */}
-      <div style={{ position: "relative", zIndex: 1, paddingTop: "140px", paddingBottom: "80px", paddingLeft: "24px", paddingRight: "24px", maxWidth: "1280px", margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
+      <div className="hp-hero-wrap" style={{ position: "relative", zIndex: 1, paddingTop: "140px", paddingBottom: "80px", paddingLeft: "24px", paddingRight: "24px", maxWidth: "1280px", margin: "0 auto" }}>
+        <div className="hp-hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
 
           {/* LEFT CONTENT */}
           <div>
@@ -223,7 +223,7 @@ export default function HomePage() {
                 padding: "16px 32px",
                 borderRadius: "12px",
                 background: "linear-gradient(90deg, #00eaff, #7b3fe4)",
-                color: "#black",
+                color: "#000",
                 fontWeight: "800",
                 textDecoration: "none",
                 fontSize: "16px",
@@ -246,7 +246,7 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div style={{ marginTop: "60px", display: "flex", gap: "40px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "30px" }}>
+            <div className="hp-stats-row" style={{ marginTop: "60px", display: "flex", gap: "40px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "30px" }}>
               <AnimatedStat value="5000" label="Students" />
               <AnimatedStat value="25" label="Real Projects" />
               <AnimatedStat value="98" label="Success Rate" />
@@ -254,7 +254,7 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT CONTENT - JOURNEY CARD */}
-          <div style={{ display: "none", md: { display: "block" } }}> {/* Hidden on mobile, handled via CSS usually, but simple display here */}
+          <div className="hp-journey-wrap"> {/* Hidden on mobile with CSS */}
             <div style={{
               background: "rgba(10, 15, 30, 0.6)",
               backdropFilter: "blur(20px)",
@@ -289,12 +289,12 @@ export default function HomePage() {
       </div>
 
       {/* LOGOS SECTION */}
-      <div style={{ background: "rgba(255,255,255,0.02)", padding: "40px 0", borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="hp-logo-section" style={{ background: "rgba(255,255,255,0.02)", padding: "40px 0", borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
           <p style={{ textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "14px", marginBottom: "24px", letterSpacing: "1px", textTransform: "uppercase" }}>Trusted by engineers at</p>
-          <div style={{ display: "flex", justifyContent: "center", gap: "60px", flexWrap: "wrap", alignItems: "center", opacity: 0.6 }}>
-            {[infosys, tcs, wipro, accenture, amazon, zoho].map((logo, i) => (
-              <img key={i} src={logo} alt="Company Logo" style={{ height: "35px", filter: "grayscale(100%)", transition: "filter 0.3s" }}
+          <div className="hp-logos-row" style={{ display: "flex", justifyContent: "center", gap: "60px", flexWrap: "wrap", alignItems: "center", opacity: 0.6 }}>
+            {[{ src: infosys, name: "Infosys" }, { src: tcs, name: "TCS" }, { src: wipro, name: "Wipro" }, { src: accenture, name: "Accenture" }, { src: amazon, name: "Amazon" }, { src: zoho, name: "Zoho" }].map((logo, i) => (
+              <img key={i} src={logo.src} alt={logo.name} style={{ height: "35px", filter: "grayscale(100%)", transition: "filter 0.3s" }}
                 onMouseEnter={(e) => e.target.style.filter = "grayscale(0%)"}
                 onMouseLeave={(e) => e.target.style.filter = "grayscale(100%)"}
               />
@@ -304,7 +304,7 @@ export default function HomePage() {
       </div>
 
       {/* FEATURES SECTION */}
-      <div style={{ padding: "100px 24px", maxWidth: "1280px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+      <div className="hp-features-section" style={{ padding: "100px 24px", maxWidth: "1280px", margin: "0 auto", position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: "60px" }}>
           <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#fff", marginBottom: "16px" }}>Why PAHRIKYNS?</h2>
           <p style={{ color: "rgba(255,255,255,0.5)" }}>We don't just teach tools. We teach workflows.</p>
@@ -319,9 +319,9 @@ export default function HomePage() {
       </div>
 
       {/* TRACKS SECTION */}
-      <div style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0, 234, 255, 0.05) 100%)", padding: "100px 24px", position: "relative", zIndex: 1 }}>
+      <div className="hp-tracks-section" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0, 234, 255, 0.05) 100%)", padding: "100px 24px", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: "50px" }}>
+          <div className="hp-tracks-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "end", marginBottom: "50px" }}>
             <div>
               <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#fff", marginBottom: "10px" }}>Popular Tracks</h2>
               <p style={{ color: "rgba(255,255,255,0.5)" }}>Choose your specialization.</p>
@@ -339,7 +339,7 @@ export default function HomePage() {
       </div>
 
       {/* CTA FOOTER */}
-      <div style={{ padding: "100px 24px", maxWidth: "800px", margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+      <div className="hp-cta-section" style={{ padding: "100px 24px", maxWidth: "800px", margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
         <h2 style={{ fontSize: "42px", fontWeight: "900", color: "#fff", marginBottom: "20px" }}>
           Ready to launch your career?
         </h2>
